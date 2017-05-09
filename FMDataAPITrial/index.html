@@ -9,12 +9,51 @@
 <p>Masayuki Nii / nii@msyk.net</p>
 <p>April 24, 2017</p>
 <h2>Setup</h2>
+<ol>
+    <li>Setup FileMaker Server 16 or Cloud which supports FileMaker Data API.</li>
+    <li>Host the "TestDB.fmp12." You can download from
+        <a href="https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/TestDB.fmp12?raw=true">here
+            (in the repository of INTER-Mediator)</a> User "admin" and password "1234" is for login the database.</li>
+    <li>If your web server to execute PHP codes is different host of FileMaker Server, you have to modify
+        the "targetHost" function at the start of "lib.php" file.
+    </li>
+    <li>Open the "index.html" with web browser, for example set the address bat to
+        "http://your_fms_host/FMAataAPI/FMDataAPITrial/", and click the link of "Text1.php" so on.</li>
+</ol>
+<h3>Remarks</h3>
+<ul>
+    <li>These trial codes uses the CURL in PHP to access the REST APIs, and supposes the server responds self-signed certificate.
+        If you've already set the valid certificate, you can modify the "callAPI" function in "lib.php" file to activate
+        the following lines.
+        <ul>
+            <li>curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);<br>
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+            </li>
+        </ul>
+    </li>
+    <li>As far as I tried on macOS Sierra with several versions of PHP, the CURL with self-signed certificate
+        doesn't work fine. CURL reported error code 60 and 'SSL: invalid CA certificate #15 (offset 22528) in bundle'.
+        This might be an issue about macOS's openSSL.
+        So you have to handle the error yourself because it's not matter of FileMaker Server and FMDataAPI file set.
+    </li>
+</ul>
 <h2><a href="Test1.php">Test1.php</a></h2>
+<p>This is test for API calling with "http" protocol. FMS returns a redirect stats and should move to "https" protocol.</p>
 <h2><a href="Test2.php">Test2.php</a></h2>
+<p>This is just loging in FMS with REST API with FileMaker's account. From next trial, the token keyed data in response
+    has to set the FM-Data-token header to succeed the authentication.</p>
 <h2><a href="Test3.php">Test3.php</a></h2>
+<p>This trial includes query operation following by authentication. Check out the "Response Body" of
+    "/fmi/rest/api/find/TestDB/person_layout" call. It shows the single record object with some portals.
+    The "recordId" field is importa to update operation.</p>
 <h2><a href="Test4.php">Test4.php</a></h2>
+<p>The query condition shows how to set with the 'OR' operation. Two records is going to be respond.</p>
 <h2><a href="Test5.php">Test5.php</a></h2>
+<p>The query condition shows how to set with the 'AND' operation and the field in a portal.</p>
 <h2><a href="Test6.php">Test6.php</a></h2>
+<p>Set the sorting fields with the direction of order.</p>
 <h2><a href="Test7.php">Test7.php</a></h2>
+<p>Get the recordId value with getRecord operation and modify a data in field with PUT method.
+    The recordId of the target record has to be set in the last path of URL.</p>
 </body>
 </html>

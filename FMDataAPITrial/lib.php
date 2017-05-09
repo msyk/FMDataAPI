@@ -2,6 +2,7 @@
 
 function targetHost()
 {
+    //return "127.0.0.1";
     return "192.168.56.1";
 }
 
@@ -29,6 +30,9 @@ function callAPI($url, $headerAdding, $request = NULL, $method = 'GET')
     }
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+//    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+//    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
@@ -52,7 +56,7 @@ function resultOutput($result)
     list($method, $url, $requestHeader, $request, $errornumber,
         $error, $info, $responseHeader, $body) = $result;
 
-    echo "<a href='index.html'>Return to Menu</a>";
+    echo "<hr style='height:2px; border:0; background-color: black;'><a href='index.html'>Return to Menu</a>";
     echo "<hr>URL:<br>";
     echo $method . ' ' . htmlspecialchars($url);
     echo "<hr>Request Header:<br><pre>";
