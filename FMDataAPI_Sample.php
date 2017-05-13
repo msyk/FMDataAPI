@@ -16,7 +16,7 @@ try {
     // Instanticate the class FMDataAPI with database name, user name, password and host.
     // Although the port number and protocol can be set in parameters of constractor,
     // these parameters can be omitted with default values.
-    $fmdb = new FMDataAPI("TestDB", "web", "password", "192.168.56.1");
+    $fmdb = new FMDataAPI("TestDB", "web", "password", "127.0.0.1");
 
     // If you want to try this program just right now, it's convinient to download the FileMaker database file:
     // https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/TestDB.fmp12?raw=true

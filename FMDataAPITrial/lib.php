@@ -2,8 +2,8 @@
 
 function targetHost()
 {
-    //return "127.0.0.1";
-    return "192.168.56.1";
+    return "127.0.0.1";
+    //return "192.168.56.1";
 }
 
 function callAPI($url, $headerAdding, $request = NULL, $method = 'GET')
