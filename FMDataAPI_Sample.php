@@ -18,6 +18,14 @@ try {
     // these parameters can be omitted with default values.
     $fmdb = new FMDataAPI("TestDB", "web", "password", "127.0.0.1");
 
+    //==============================
+    //$fmdb = new FMDataAPI("TestDB", "web", "password", "localserver");
+    // "localserver" is added on Ver.2 and it's a magic term for FMDataAPI. It happendes direct connect to
+    // FileMaker Server in the same host. I've refered Atsushi Matsuo's script below and I got his way
+    // to be able to connect port number 3000.
+    // https://gist.github.com/matsuo/ef5cb7c98bb494d507731886883bcbc1
+    //==============================
+
     // If you want to try this program just right now, it's convinient to download the FileMaker database file:
     // https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/TestDB.fmp12?raw=true
 

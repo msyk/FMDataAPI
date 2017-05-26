@@ -43,6 +43,7 @@ class FMDataAPI
      * @param String $user The fmrest privilege accessible user to the database.
      * @param String $password The password of above user.
      * @param String $host FileMaker Server's host name or IP address. If omitted, 'localhost' is chosen.
+     * The value "localserver" tries to connect directory 127.0.0.1, and you don't have to set $port and $protocol.
      * @param int $port FileMaker Server's port number. If omitted, 443 is chosen.
      * @param String $protocol FileMaker Server's protocol name. If omitted, 'https' is chosen.
      */
@@ -818,6 +819,11 @@ class CommunicationProvider
      * @var
      * @ignore
      */
+    private $isLocalServer = false;
+    /**
+     * @var
+     * @ignore
+     */
     public $responseBody;
     /**
      * @var
@@ -872,15 +878,22 @@ class CommunicationProvider
         $this->user = $user;
         $this->password = $password;
         if (!is_null($host)) {
-            $this->host = $host;
+            if ($host == "localserver") {
+                $this->host = "127.0.0.1";
+                $this->port = "3000";
+                $this->isLocalServer = true;
+                $this->protocol = "http";
+            } else {
+                $this->host = $host;
+                if (!is_null($port)) {
+                    $this->port = $port;
+                }
+                if (!is_null($protocol)) {
+                    $this->protocol = $protocol;
+                }
+            }
         }
-        if (!is_null($port)) {
-            $this->port = $port;
-        }
-        if (!is_null($protocol)) {
-            $this->protocol = $protocol;
-        }
-    }
+     }
 
     /**
      * @param $action
@@ -957,6 +970,9 @@ class CommunicationProvider
         $methodLower = strtolower($method);
         $url = $this->getURL($action, $layout, $recordId);
         $header = array();
+        if ($this->isLocalServer){
+            $header[] = "X-Forwarded-For: 127.0.0.1";
+        }
         if (!is_null($request) && $methodLower != 'get') {
             $header[] = "Content-Type: application/json";
         }

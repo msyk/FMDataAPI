@@ -9,7 +9,7 @@ include_once "lib.php";
 
 $host = targetHost();
 $result = callAPI(
-    "https://{$host}/fmi/rest/api/auth/TestDB",
+    "http://{$host}/fmi/rest/api/auth/TestDB",
     null,
     json_encode(array(
         "user" => "web",

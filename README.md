@@ -79,9 +79,15 @@ Bug reports and contribution are welcome.
 
 MIT License
 
+## Acknoledgement
+
+Thanks to Atsushi Matsuo. Your script is quite helpful to implement the "localserver" feature.
+https://gist.github.com/matsuo/ef5cb7c98bb494d507731886883bcbc1
+
 ## History
 
 - April 2017: Start to create these classes and codes.
 - 2017-05-05: Described README.md
+- 2017-05-26: [Ver.2] Support the "localserver" as host name.
   
  
