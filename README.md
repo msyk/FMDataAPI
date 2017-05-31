@@ -1,4 +1,4 @@
-# FMDataAPI
+# FMDataAPI Ver.3
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -81,13 +81,14 @@ MIT License
 
 ## Acknoledgement
 
-Thanks to Atsushi Matsuo. Your script is quite helpful to implement the "localserver" feature.
+- Thanks to Atsushi Matsuo. Your script is quite helpful to implement the "localserver" feature.
 https://gist.github.com/matsuo/ef5cb7c98bb494d507731886883bcbc1
+- Thanks to Frank Gonzalez. Your bug report is brilliant and I could fix it quickly.
 
 ## History
 
 - April 2017: Start to create these classes and codes.
 - 2017-05-05: Described README.md
 - 2017-05-26: [Ver.2] Support the "localserver" as host name.
-  
- 
+- 2017-05-31: [Ver.3] The query() method of FileMakerLayout class is fixed.
+'Offset' and 'range' parameters could not set as an integer value.
