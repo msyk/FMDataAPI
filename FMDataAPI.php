@@ -295,7 +295,7 @@ class FileMakerLayout
                 $request["query"] = $condition;
                 $this->restAPI->callRestAPI("find", $this->layout, true, "POST", $request);
             } else {
-                $this->restAPI->callRestAPI("record", $this->layout, true);
+                $this->restAPI->callRestAPI("record", $this->layout, true, "GET", $request);
             }
             $this->restAPI->storeToProperties();
             $result = $this->restAPI->responseBody;
