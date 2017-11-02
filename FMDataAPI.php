@@ -982,6 +982,9 @@ class CommunicationProvider
         if ($methodLower == 'get' && !is_null($request)) {
             $url .= '?';
             foreach ($request as $key => $value) {
+                if (key($request) !== $key) {
+                    $url .= '&';
+                }
                 $url .= $key . '=' . (is_array($value) ? json_encode($value) : $value);
             }
         }
