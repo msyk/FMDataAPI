@@ -553,6 +553,36 @@ class FileMakerRelation implements \Iterator
     }
 
     /**
+     * @param string $type 'field' or 'portal'.
+     * @return array List of field name or portal name
+     */
+    public function name($type = 'field')
+    {
+        $list = array();
+        if (isset($this->data)) {
+            switch ($type) {
+                case 'portal':
+                    if (isset($this->data[$this->pointer])
+                        && isset($this->data[$this->pointer]->portalData)) {
+                        foreach($this->data[$this->pointer]->portalData as $key => $val) {
+                            array_push($list, $key);
+                        }
+                    }
+                    break;
+                default:
+                    if (isset($this->data[$this->pointer])
+                        && isset($this->data[$this->pointer]->fieldData)) {
+                        foreach($this->data[$this->pointer]->fieldData as $key => $val) {
+                            array_push($list, $key);
+                        }
+                    }
+                    break;
+            }
+        }
+        return $list;
+    }
+
+    /**
      * The field value of the first parameter. Or the FileMakerRelation object associated with the the first paramenter.
      * @param string $name The field or portal name.
      * The table occurrence name of the portal can be the portal name, and also the object name of the portal.
