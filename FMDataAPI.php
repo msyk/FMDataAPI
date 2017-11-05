@@ -553,30 +553,32 @@ class FileMakerRelation implements \Iterator
     }
 
     /**
-     * @param string $type 'field' or 'portal'.
-     * @return array List of field name or portal name
+     * @return array List of field name
      */
-    public function name($type = 'field')
+    public function getFieldNames()
     {
         $list = array();
-        if (isset($this->data)) {
-            switch ($type) {
-                case 'portal':
-                    if (isset($this->data[$this->pointer])
-                        && isset($this->data[$this->pointer]->portalData)) {
-                        foreach($this->data[$this->pointer]->portalData as $key => $val) {
-                            array_push($list, $key);
-                        }
-                    }
-                    break;
-                default:
-                    if (isset($this->data[$this->pointer])
-                        && isset($this->data[$this->pointer]->fieldData)) {
-                        foreach($this->data[$this->pointer]->fieldData as $key => $val) {
-                            array_push($list, $key);
-                        }
-                    }
-                    break;
+        if (isset($this->data)
+            && isset($this->data[$this->pointer])
+            && isset($this->data[$this->pointer]->fieldData)) {
+            foreach($this->data[$this->pointer]->fieldData as $key => $val) {
+                array_push($list, $key);
+            }
+        }
+        return $list;
+    }
+
+    /**
+     * @return array List of portal name
+     */
+    public function getPortalNames()
+    {
+        $list = array();
+        if (isset($this->data)
+            && isset($this->data[$this->pointer])
+            && isset($this->data[$this->pointer]->portalData)) {
+            foreach($this->data[$this->pointer]->portalData as $key => $val) {
+                array_push($list, $key);
             }
         }
         return $list;
