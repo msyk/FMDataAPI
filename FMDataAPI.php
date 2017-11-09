@@ -553,17 +553,30 @@ class FileMakerRelation implements \Iterator
     }
 
     /**
-     *
-     * @return array List of field name
+     * Return the array of field names.
+     * @return array List of field names
      */
     public function getFieldNames()
     {
         $list = array();
-        if (isset($this->data)
-            && isset($this->data[$this->pointer])
-            && isset($this->data[$this->pointer]->fieldData)) {
-            foreach($this->data[$this->pointer]->fieldData as $key => $val) {
-                array_push($list, $key);
+        if (isset($this->data)) {
+            switch ($this->result) {
+                case 'OK':
+                    if (isset($this->data[$this->pointer])
+                        && isset($this->data[$this->pointer]->fieldData)) {
+                        foreach($this->data[$this->pointer]->fieldData as $key => $val) {
+                            array_push($list, $key);
+                        }
+                    }
+                    break;
+                case 'PORTAL':
+                    if (isset($this->data[$this->pointer])) {
+                        foreach($this->data[$this->pointer] as $key => $val) {
+                            array_push($list, $key);
+                        }
+                    }
+                    break;
+                default:
             }
         }
         return $list;
@@ -571,7 +584,7 @@ class FileMakerRelation implements \Iterator
 
     /**
      * Return the array of portal names.
-     * @return array List of portal name
+     * @return array List of portal names
      */
     public function getPortalNames()
     {
@@ -927,7 +940,7 @@ class CommunicationProvider
                 }
             }
         }
-     }
+    }
 
     /**
      * @param $action
