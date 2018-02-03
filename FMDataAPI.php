@@ -1026,13 +1026,34 @@ class CommunicationProvider
         if ($isAddToken) {
             $header[] = "FM-Data-token: {$this->accessToken}";
         }
-        if ($methodLower == 'get' && !is_null($request)) {
+        if ($methodLower === 'get' && !is_null($request)) {
             $url .= '?';
             foreach ($request as $key => $value) {
                 if (key($request) !== $key) {
                     $url .= '&';
                 }
-                $url .= $key . '=' . (is_array($value) ? json_encode($value) : $value);
+                if ($key === 'sort' && is_array($value)) {
+                    $sortParam = $this->_buildSortParameters($value);
+                    if ($sortParam !== '[]') {
+                        $url .= $key . '=' . $sortParam;
+                    }
+                } else {
+                    $url .= $key . '=' . (is_array($value) ? json_encode($value) : $value);
+                }
+            }
+        } else if ($methodLower !== 'get' && !is_null($request)) {
+            if (isset($request['sort'])) {
+                $sort = array();
+                foreach($request['sort'] as $sortKey => $sortCondition) {
+                    if (isset($sortCondition[0])) {
+                        $sortOrder = 'ascend';
+                        if (isset($sortCondition[1])) {
+                            $sortOrder = $this->adjustSortDirection($sortCondition[1]);
+                        }
+                        $sort[] = array('fieldName' => $sortCondition[0], 'sortOrder' => $sortOrder);
+                    }
+                }
+                $request['sort'] = $sort;
             }
         }
         $ch = curl_init();
@@ -1115,6 +1136,22 @@ class CommunicationProvider
     }
 
     /**
+     * @param string $direction
+     * @return string
+     * @ignore
+     */
+    public function adjustSortDirection($direction)
+    {
+        if (strtoupper($direction) == 'ASC') {
+            $direction = 'ascend';
+        } else if (strtoupper($direction) == 'DESC') {
+            $direction = 'descend';
+        }
+
+        return $direction;
+    }
+
+    /**
      * @param $key
      * @return mixed
      * @ignore
@@ -1152,6 +1189,33 @@ class CommunicationProvider
         } else {
             echo $str;
         }
+    }
+
+    /**
+     * @param array $value
+     * @return string
+     * @ignore
+     */
+    private function _buildSortParameters($value)
+    {
+        $param = '[';
+        foreach ($value as $sortCondition) {
+            if (isset($sortCondition[0])) {
+                if ($param !== '[') {
+                    $param .= ',';
+                }
+                if (isset($sortCondition[1])) {
+                    $sortOrder = $this->adjustSortDirection($sortCondition[1]);
+                    $param .= '{"fieldName":' . json_encode($sortCondition[0]) .
+                        ',"sortOrder":' . json_encode($sortOrder) . '}';
+                } else {
+                    $param .= '{"fieldName":' . json_encode($sortCondition[0]) . '}';
+                }
+            }
+        }
+        $param .= ']';
+
+        return $param;
     }
 }
 

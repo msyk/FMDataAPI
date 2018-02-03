@@ -149,7 +149,17 @@ try {
     // The 'query()' method can have several parameters. The portal specification has to be an array
     // with the object name of the portal not the table occurrence name.
     $portal = array("Contact");
-    $result = $fmdb->person_layout->query(array(array("id" => "1")), null, 0, -1, $portal);
+    $result = $fmdb->person_layout->query(array(array("id" => "1")), null, 1, -1, $portal);
+    foreach ($result as $record) {
+        $recordId = $record->getRecordId();
+        $partialResult = $fmdb->person_layout->getRecord($recordId, $portal);
+        var_export($partialResult);
+        echo "<hr>";
+    }
+
+    // The 'query()' method can have several parameters. The second parameter is for sorting.
+    $portal = array("Contact");
+    $result = $fmdb->person_layout->query(array(array("id" => "1...")), array(array("id", "descend")), 1, -1, $portal);
     foreach ($result as $record) {
         $recordId = $record->getRecordId();
         $partialResult = $fmdb->person_layout->getRecord($recordId, $portal);
