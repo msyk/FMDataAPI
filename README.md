@@ -1,4 +1,4 @@
-# FMDataAPI Ver.4
+# FMDataAPI Ver.5
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -73,7 +73,6 @@ Bug reports and contribution are welcome.
 - Check any layout and field names without variable friendly name.
 - OAuth integrations.
 - Error handling for wider cases with exception based.
-- Documentation is always issue to do.
 
 ## Licence
 
@@ -84,6 +83,7 @@ MIT License
 - Thanks to Atsushi Matsuo. Your script is quite helpful to implement the "localserver" feature.
 (https://gist.github.com/matsuo/ef5cb7c98bb494d507731886883bcbc1) Moreover thanks for updating and fixing bugs.
 - Thanks to Frank Gonzalez. Your bug report is brilliant and I could fix it quickly.
+- Also thanks to fixing the bug for sorting parameters in query method.
 
 ## History
 
@@ -93,3 +93,4 @@ MIT License
 - 2017-05-31: [Ver.3] The query() method of FileMakerLayout class is fixed.
 'Offset' and 'range' parameters could not set as an integer value.
 - 2017-11-06: [Ver.4] The getFieldNames() and getPortalNames() methods are added.
+- 2018-02-03: [Ver.5] Bug fix of sorting parameters in query method. 
