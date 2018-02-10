@@ -1081,7 +1081,13 @@ class CommunicationProvider
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         if ($methodLower != 'get') {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($request));
+            if ($methodLower === 'post' && isset($request['data']) &&
+                $request['data'] === array() && $recordId === NULL) {
+                // create an empty record
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($request, JSON_FORCE_OBJECT));
+            } else {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($request));
+            }
         }
         $response = curl_exec($ch);
         $this->curlInfo = curl_getinfo($ch);
