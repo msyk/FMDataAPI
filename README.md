@@ -1,4 +1,4 @@
-# FMDataAPI Ver.5
+# FMDataAPI Ver.6
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -83,7 +83,8 @@ MIT License
 - Thanks to Atsushi Matsuo. Your script is quite helpful to implement the "localserver" feature.
 (https://gist.github.com/matsuo/ef5cb7c98bb494d507731886883bcbc1) Moreover thanks for updating and fixing bugs.
 - Thanks to Frank Gonzalez. Your bug report is brilliant and I could fix it quickly.
-- Also thanks to fixing the bug for sorting parameters in query method.
+- Also thanks Mr. Matsuo to fixing the bug for sorting parameters in query method.
+- Thanks again Mr. Matsuo to fixing the bug for creating record with no default value.
 
 ## History
 
@@ -94,3 +95,4 @@ MIT License
 'Offset' and 'range' parameters could not set as an integer value.
 - 2017-11-06: [Ver.4] The getFieldNames() and getPortalNames() methods are added.
 - 2018-02-03: [Ver.5] Bug fix of sorting parameters in query method. 
+- 2018-02-18: [Ver.6] Bug fix of creating record with no default value. 

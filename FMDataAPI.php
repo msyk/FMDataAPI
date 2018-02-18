@@ -16,7 +16,7 @@ namespace INTERMediator\FileMakerServer\RESTAPI;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @property-read FileMakerLayout $<<layout_name>> FileMakerLayout object named as the property name.
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
- * @version 5
+ * @version 6
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -176,7 +176,7 @@ namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 5
+ * @version 6
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -443,7 +443,7 @@ class FileMakerLayout
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
- * @version 5
+ * @version 6
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -780,7 +780,7 @@ class FileMakerRelation implements \Iterator
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 5
+ * @version 6
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -1230,7 +1230,7 @@ class CommunicationProvider
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 5
+ * @version 6
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
