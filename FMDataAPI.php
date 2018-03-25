@@ -3,7 +3,7 @@
 /**
  * Object-oriented class for the REST API in FileMaker Server 16/Cloud.
  *
- * @version 5.0
+ * @version 7.0
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -16,7 +16,7 @@ namespace INTERMediator\FileMakerServer\RESTAPI;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @property-read FileMakerLayout $<<layout_name>> FileMakerLayout object named as the property name.
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
- * @version 6
+ * @version 7
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -38,7 +38,8 @@ class FMDataAPI
     private $provider = NULL;
 
     /**
-     * FMDataAPI constructor.
+     * FMDataAPI constructor. If you want to activate OAuth authentication, $user and $pasword are set as
+     * oAuthRequestId and oAuthIdentifier. Moreover call useOAuth method before accessing layouts.
      * @param String $solution The database file name which is just hosting.
      * @param String $user The fmrest privilege accessible user to the database.
      * @param String $password The password of above user.
@@ -99,12 +100,29 @@ class FMDataAPI
     }
 
     /**
+     * On the authentication session, username and password are handled as OAuth parameters.
+     */
+    public function useOAuth()
+    {
+        $this->provider->useOAuth = true;
+    }
+
+    /**
      * Set to verify the server certificate. The default is to handle as self-signed certificate and doesn't verify.
      * @param bool $value Turn on to verify the certificate if the value is true.
      */
     public function setCertValidating($value)
     {
         $this->provider->isCertVaridating = $value;
+    }
+
+    /**
+     * The session token earned after authentication.
+     * @return string The session token.
+     */
+    public function getSessionToken()
+    {
+        return $this->provider->accessToken;
     }
 
     /**
@@ -176,7 +194,7 @@ namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 6
+ * @version 7
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -443,7 +461,7 @@ class FileMakerLayout
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
- * @version 6
+ * @version 7
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -563,15 +581,16 @@ class FileMakerRelation implements \Iterator
             switch ($this->result) {
                 case 'OK':
                     if (isset($this->data[$this->pointer])
-                        && isset($this->data[$this->pointer]->fieldData)) {
-                        foreach($this->data[$this->pointer]->fieldData as $key => $val) {
+                        && isset($this->data[$this->pointer]->fieldData)
+                    ) {
+                        foreach ($this->data[$this->pointer]->fieldData as $key => $val) {
                             array_push($list, $key);
                         }
                     }
                     break;
                 case 'PORTAL':
                     if (isset($this->data[$this->pointer])) {
-                        foreach($this->data[$this->pointer] as $key => $val) {
+                        foreach ($this->data[$this->pointer] as $key => $val) {
                             array_push($list, $key);
                         }
                     }
@@ -591,8 +610,9 @@ class FileMakerRelation implements \Iterator
         $list = array();
         if (isset($this->data)
             && isset($this->data[$this->pointer])
-            && isset($this->data[$this->pointer]->portalData)) {
-            foreach($this->data[$this->pointer]->portalData as $key => $val) {
+            && isset($this->data[$this->pointer]->portalData)
+        ) {
+            foreach ($this->data[$this->pointer]->portalData as $key => $val) {
                 array_push($list, $key);
             }
         }
@@ -652,7 +672,7 @@ class FileMakerRelation implements \Iterator
                 default:
             }
         }
-        if (is_null($value))    {
+        if (is_null($value)) {
             throw new Exception("Field {$fieldName} doesn't exist.");
         }
         return $value;
@@ -780,7 +800,7 @@ class FileMakerRelation implements \Iterator
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 6
+ * @version 7
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -821,7 +841,7 @@ class CommunicationProvider
      * @var string
      * @ignore
      */
-    private $accessToken = '';
+    public $accessToken = '';
     /**
      * @var
      * @ignore
@@ -908,6 +928,21 @@ class CommunicationProvider
      * @ignore
      */
     public $throwExceptionInError = true;
+    /**
+     * @var
+     * @ignore
+     */
+    public $useOAuth = false;
+    /**
+     * @var
+     * @ignore
+     */
+    private $oAuthRequestId;
+    /**
+     * @var
+     * @ignore
+     */
+    private $oAuthIdentifier;
 
     /**
      * CommunicationProvider constructor.
@@ -971,6 +1006,12 @@ class CommunicationProvider
             "password" => $this->password,
             "layout" => $layout,
         );
+        if ($this->useOAuth) {
+            $request["user"] = 'dummy';
+            $request["password"] = 'dummy';
+            $request["oAuthRequestId"] = $this->user;
+            $request["oAuthIdentifier"] = $this->password;
+        }
         try {
             $this->callRestAPI("auth", "", false, "POST", $request);
         } catch (Exception $e) {
@@ -1017,8 +1058,11 @@ class CommunicationProvider
         $methodLower = strtolower($method);
         $url = $this->getURL($action, $layout, $recordId);
         $header = array();
-        if ($this->isLocalServer){
+        if ($this->isLocalServer) {
             $header[] = "X-Forwarded-For: 127.0.0.1";
+        }
+        if ($this->useOAuth) {
+            $header[] = "X-FM-Data-Login-Type: oauth";
         }
         if (!is_null($request) && $methodLower != 'get') {
             $header[] = "Content-Type: application/json";
@@ -1044,7 +1088,7 @@ class CommunicationProvider
         } else if ($methodLower !== 'get' && !is_null($request)) {
             if (isset($request['sort'])) {
                 $sort = array();
-                foreach($request['sort'] as $sortKey => $sortCondition) {
+                foreach ($request['sort'] as $sortKey => $sortCondition) {
                     if (isset($sortCondition[0])) {
                         $sortOrder = 'ascend';
                         if (isset($sortCondition[1])) {
@@ -1082,7 +1126,8 @@ class CommunicationProvider
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         if ($methodLower != 'get') {
             if ($methodLower === 'post' && isset($request['data']) &&
-                $request['data'] === array() && $recordId === NULL) {
+                $request['data'] === array() && $recordId === NULL
+            ) {
                 // create an empty record
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($request, JSON_FORCE_OBJECT));
             } else {
@@ -1230,7 +1275,7 @@ class CommunicationProvider
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 6
+ * @version 7
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
