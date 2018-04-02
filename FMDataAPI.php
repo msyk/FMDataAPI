@@ -1059,7 +1059,12 @@ class CommunicationProvider
         $url = $this->getURL($action, $layout, $recordId);
         $header = array();
         if ($this->isLocalServer) {
-            $header[] = "X-Forwarded-For: 127.0.0.1";
+            $header[] = 'X-Forwarded-For: 127.0.0.1';
+            $host = filter_input(INPUT_SERVER, 'HTTP_HOST', FILTER_SANITIZE_URL);
+            if ($host === NULL || $host === FALSE) {
+                $host = 'localhost';
+            }
+            $header[] = 'X-Forwarded-Host: ' . $host;
         }
         if ($this->useOAuth) {
             $header[] = "X-FM-Data-Login-Type: oauth";
