@@ -1091,6 +1091,22 @@ class CommunicationProvider
                 }
             }
         } else if ($methodLower !== 'get' && !is_null($request)) {
+            // cast a number
+            if (isset($request['data'])) {
+                foreach ($request['data'] as $fieldName => $fieldValue) {
+                    if (is_numeric($fieldValue)) {
+                        $request['data'][$fieldName] = (string)$fieldValue;
+                    }
+                }
+            }
+            if (isset($request['query'])) {
+                foreach ($request['query'] as $key => $array) {
+                    foreach ($array as $fieldName => $fieldValue) {
+                        $request['query'][$key][$fieldName] = (string)$fieldValue;
+                    }
+                }
+            }
+
             if (isset($request['sort'])) {
                 $sort = array();
                 foreach ($request['sort'] as $sortKey => $sortCondition) {
