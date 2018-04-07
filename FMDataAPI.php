@@ -1102,7 +1102,9 @@ class CommunicationProvider
             if (isset($request['query'])) {
                 foreach ($request['query'] as $key => $array) {
                     foreach ($array as $fieldName => $fieldValue) {
-                        $request['query'][$key][$fieldName] = (string)$fieldValue;
+                        if (!is_array($fieldValue)) {
+                            $request['query'][$key][$fieldName] = (string)$fieldValue;
+                        }
                     }
                 }
             }
