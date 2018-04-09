@@ -117,6 +117,15 @@ class FMDataAPI
     }
 
     /**
+     * Set session token
+     * @param string $value The session token.
+     */
+    public function setSessionToken($value)
+    {
+        $this->provider->accessToken = $value;
+    }
+
+    /**
      * The session token earned after authentication.
      * @return string The session token.
      */
@@ -1012,16 +1021,18 @@ class CommunicationProvider
             $request["oAuthRequestId"] = $this->user;
             $request["oAuthIdentifier"] = $this->password;
         }
-        try {
-            $this->callRestAPI("auth", "", false, "POST", $request);
-        } catch (Exception $e) {
-            $this->accessToken = NULL;
-            throw $e;
-        }
-        if ($this->responseBody->errorCode != 0) {
-            $this->accessToken = NULL;
-        } else {
-            $this->accessToken = $this->responseBody->token;
+        if ($this->accessToken === '') {
+            try {
+                $this->callRestAPI('auth', '', false, 'POST', $request);
+            } catch (Exception $e) {
+                $this->accessToken = NULL;
+                throw $e;
+            }
+            if ($this->responseBody->errorCode != 0) {
+                $this->accessToken = NULL;
+            } else {
+                $this->accessToken = $this->responseBody->token;
+            }
         }
     }
 
