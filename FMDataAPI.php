@@ -9,6 +9,7 @@
  */
 
 namespace INTERMediator\FileMakerServer\RESTAPI;
+use \Exception;
 /**
  * Class FMDataAPI is the wrapper of The REST API in FileMaker Server 16/Cloud.
  *
@@ -62,7 +63,7 @@ class FMDataAPI
      */
     public function __set($key, $value)
     {
-        throw new Exception("The {$key} property is read-only, and can't set any value.");
+        throw new \Exception("The {$key} property is read-only, and can't set any value.");
     }
 
     /**
@@ -336,7 +337,7 @@ class FileMakerLayout
             }
             $this->restAPI->logout();
             return $fmrel;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
     }
@@ -365,7 +366,7 @@ class FileMakerLayout
             }
             $this->restAPI->logout();
             return $fmrel;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
     }
@@ -388,7 +389,7 @@ class FileMakerLayout
             $this->restAPI->storeToProperties();
             $this->restAPI->logout();
             return $result->recordId;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
     }
@@ -405,7 +406,7 @@ class FileMakerLayout
             $this->restAPI->callRestAPI("record", $this->layout, true, "DELETE", null, $recordId);
             $this->restAPI->storeToProperties();
             $this->restAPI->logout();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
     }
@@ -426,12 +427,12 @@ class FileMakerLayout
             $request = array("data" => $data);
             try {
                 $this->restAPI->callRestAPI("record", $this->layout, true, "PUT", $request, $recordId);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw $e;
             }
             $this->restAPI->storeToProperties();
             $this->restAPI->logout();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
     }
@@ -449,12 +450,12 @@ class FileMakerLayout
             $request = array("globalFields" => $fields);
             try {
                 $this->restAPI->callRestAPI("global", $this->layout, true, "PUT", $request);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw $e;
             }
             $this->restAPI->storeToProperties();
             $this->restAPI->logout();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
     }
@@ -682,7 +683,7 @@ class FileMakerRelation implements \Iterator
             }
         }
         if (is_null($value)) {
-            throw new Exception("Field {$fieldName} doesn't exist.");
+            throw new \Exception("Field {$fieldName} doesn't exist.");
         }
         return $value;
     }
@@ -1023,8 +1024,8 @@ class CommunicationProvider
         }
         if ($this->accessToken === '') {
             try {
-                $this->callRestAPI('auth', '', false, 'POST', $request);
-            } catch (Exception $e) {
+                $this->callRestAPI("auth", "", false, "POST", $request);
+            } catch (\Exception $e) {
                 $this->accessToken = NULL;
                 throw $e;
             }
@@ -1048,7 +1049,7 @@ class CommunicationProvider
         }
         try {
             $this->callRestAPI("auth", "", true, "DELETE");
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
         $this->accessToken = NULL;
@@ -1188,7 +1189,7 @@ class CommunicationProvider
         }
         if ($this->throwExceptionInError) {
             $httpStatus = $this->getCurlInfo("http_code");
-            $errorCode = property_exists($this->responseBody, 'errorCode') ? $this->responseBody->errorCode : -1;
+            $errorCode = property_exists($this->responseBody, 'errorCode') ? intval($this->responseBody->errorCode) : -1;
             $errorMessage = property_exists($this->responseBody, 'errorMessage') ? $this->responseBody->errorMessage : 'ERROR';
             $description = '';
             if ($this->curlErrorNumber > 0) {
@@ -1204,7 +1205,9 @@ class CommunicationProvider
             if ($description !== '') {
                 $description = date('Y-m-d H:i:s ') . "{$description}";
                 $description .= "[URL({$this->method}): {$this->url}]";
-                throw new Exception($description);
+                if ($errorCode !== 401) {
+                    throw new \Exception($description);
+                }
             }
         }
     }
@@ -1302,18 +1305,4 @@ class CommunicationProvider
 
         return $param;
     }
-}
-
-/**
- * Class CommunicationProvider is for internal use to communicate with FileMaker Server.
- *
- * @package INTER-Mediator\FileMakerServer\RESTAPI
- * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 7
- * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
- */
-class Exception extends \Exception
-{
-
 }
