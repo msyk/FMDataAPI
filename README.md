@@ -97,3 +97,4 @@ MIT License
 - 2018-02-03: [Ver.5] Bug fix of sorting parameters in query method. 
 - 2018-02-18: [Ver.6] Bug fix of creating record with no default value. 
 - 2018-03-25: [Ver.7] getSessionToken method is added. OAuth handling is implemented but not well debugged. 
+- 2018-05-09: The Version 7 is the last version which supports FileMaker 16 based Data API. 
