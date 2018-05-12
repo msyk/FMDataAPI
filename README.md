@@ -103,3 +103,20 @@ MIT License
 - 2018-05-09: The Version 7 is the last version which supports FileMaker 16 based Data API. 
 - 2018-05-13: [Ver.8] Update for FileMaker 17. FileMaker Data API v1 is supported from this version.
    The preview version of FileMaker Data API is not supported anymore.
+
+# API Differences between ver.8 and 7.
+## FMDataAPI class
+The setAPIVersion method is added. This is for future update of FileMaker Data API.
+As far as FMDataAPI Ver.8 goes, This isn't requred.
+- [New]public function setAPIVersion($vNum)
+
+## FileMakerRelation class
+The following methods are added script parameters. See the query method's document for specifying it.
+Twe methods are added portal parameter.
+
+- public function query($condition = NULL, $sort = NULL, $offset = -1, $range = -1, $portal = null, [New]$script = null)
+- public function getRecord($recordId, $portal = null, [New]$script = null)
+- public function create($data = null, [New]$portal = null, [New]$script = null)
+- public function delete($recordId, [New]$script = null)
+- public function update($recordId, $data, $modId = -1, [New]$portal = null, [New]$script = null)
+- [New]public function uploadFile($filePath, $recordId, $containerFieldName, $containerFieldRepetition = null)

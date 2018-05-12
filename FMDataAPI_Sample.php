@@ -133,6 +133,14 @@ try {
     // The "testtable" table has a container filed "vc1". One image file is going to be uploaded to it.
     // The file path, record id and field name are required.
     $fmdb->testtable->uploadFile("cat.jpg", $recId, "vc1");
+    // What kind of data does the container field which inserted an image return?
+    // For example, the returned value was like this:
+    // https://localhost/Streaming_SSL/MainDB/6A4A253F7CE33465DCDFBFF0704B34C0993D54AD85702396920E85249BD0271A.jpg?RCType=EmbeddedRCFileProcessor
+    // This url can get the content of the container field, and it means you can download with file_put_content() function and so on.
+    $result = $fmdb->testtable->getRecord($recId);
+    foreach ($result as $record) {
+        echo "vc1: {$record->vc1}<hr>";
+    }
 
     // If you call the 'startCommunication()' method, you can describe a series of database operation
     // calls. This means the authentication is going to be done at the 'startCommunication()' method,

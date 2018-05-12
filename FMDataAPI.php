@@ -350,6 +350,15 @@ class FileMakerLayout
      * in the query result. If you set the range of records to a portal, you have to build associated array as like:
      * array('portal1' => array('offset'=>1,'range'=>5), 'portal2' => null). The record 1 to 5 of portal1 include
      * the query result, and also all records in portal2 do.
+     * @param array $script scripts that should execute right timings.
+     * The most understandable description is an associated array with API's keywords "script", "script.param",
+     * "script.prerequest", "script.prerequest.param", "script.presort", "script.presort.param", "layout.response."
+     * These keywords have to be a key, and the value is script name or script parameter,
+     * ex. {"script"=>"StartingOver", "script.param"=>"344|21|abcd"}.
+     * If $script is array with one element, it's handled as the value of "script."
+     * If $script is array with two elements, these are handled as values of "script" and "layout.response."
+     * If it it's three elements, these are  "script", "script.param" and "layout.response."
+     * If it it's four elements, these are  "script.prerequest", "script.presort", "script" and "layout.response."
      * @return FileMakerRelation|null Query result.
      * @throws Exception In case of any error, an exception arises.
      */
@@ -402,6 +411,7 @@ class FileMakerLayout
      * Query to the FileMaker Database with recordId special field and returns the result as FileMakerRelation object.
      * @param int $recordId The recordId.
      * @param array $portal See the query() method's same parameter.
+     * @param array $script scripts that should execute right timings. See FileMakerRelation::query().
      * @return FileMakerRelation|null Query result.
      * @throws Exception In case of any error, an exception arises.
      */
@@ -438,6 +448,7 @@ class FileMakerLayout
      * Keys are field names and values is these initial values.
      * @param array $portal Associated array contains the modifying values in portal.
      * Ex.: {"<PortalName>"=>{"<FieldName>"=>"<Value>"...}}. FieldName has to "<TOCName>::<FieldName>".
+     * @param array $script scripts that should execute right timings. See FileMakerRelation::query().
      * @return integer The recordId of created record. If the returned value is an integer larger than 0,
      * it shows one record was created.
      * @throws Exception In case of any error, an exception arises.
@@ -468,6 +479,7 @@ class FileMakerLayout
     /**
      * Delete on record.
      * @param int $recordId The valid recordId value to delete.
+     * @param array $script scripts that should execute right timings. See FileMakerRelation::query().
      * @throws Exception In case of any error, an exception arises.
      */
     public function delete($recordId, $script = null)
@@ -493,14 +505,15 @@ class FileMakerLayout
      * @param int $recordId The valid recordId value to update.
      * @param array $data Associated array contains the modifying values.
      * Keys are field names and values is these initial values.
+     * @param int $modId The modId to allow to update. This parameter is for detect to modifying other users.
+     * If you omit this parameter, update operation does not care the value of modId special field.
      * @param array $portal Associated array contains the modifying values in portal.
      * Ex.: {"<PortalName>"=>{"<FieldName>"=>"<Value>", "recordId"=>"12"}}. FieldName has to "<TOCName>::<FieldName>".
      * The recordId key specifiy the record to edit in portal.
-     * @param int $modId The modId to allow to update. This parameter is for detect to modifying other users.
-     * If you omit this parameter, update operation does not care the value of modId special field.
+     * @param array $script scripts that should execute right timings. See FileMakerRelation::query().
      * @throws Exception In case of any error, an exception arises.
      */
-    public function update($recordId, $data, $portal = null, $modId = -1, $script = null)
+    public function update($recordId, $data, $modId = -1, $portal = null, $script = null)
     {
         try {
             $this->restAPI->login();
