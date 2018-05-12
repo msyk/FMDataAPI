@@ -1,4 +1,4 @@
-# FMDataAPI Ver.7
+# FMDataAPI Ver.8
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -34,7 +34,7 @@ The FileMaker Data API is the new feature of FileMaker Server 16,
 and it's a API with REST-based database operations.
 Although the Custom Web Publishing is the way to access the database 
 for a long while, FileMaker Inc. has introduced modern feature to operate
-database.
+database. Current version of FMDataAPI works on just FileMaker 17 platform.
 
 For now I'm focusing to develop the web application framework "INTER-Mediator"
 (https://inter-mediator.org/ or https://github.com/INTER-Mediator/INTER-Mediator.git)
@@ -57,6 +57,8 @@ Bug reports and contribution are welcome.
     - This directory contains just my "trial" for newly released
     File Maker's Rest APIs to understand how to handle these APIs.
     All explanations are described in "index.html" file in it.
+    These trials are Preview Version of Data API on FileMaker 16,
+    and they can't work on FileMaker 17.
 - README.md, .gitignore
     - These are for GitHub.
 
@@ -66,12 +68,13 @@ Bug reports and contribution are welcome.
 
 - Understand the FileMaker's REST API for me.
 - Support all API calls in FileMaker Data API.
+- OAuth integrations.
+- Supporting FileMaker 17.
 
 ### What's To Do
 
 - Create unit test suite.
 - Check any layout and field names without variable friendly name.
-- OAuth integrations.
 - Error handling for wider cases with exception based.
 
 ## Licence
@@ -98,3 +101,5 @@ MIT License
 - 2018-02-18: [Ver.6] Bug fix of creating record with no default value. 
 - 2018-03-25: [Ver.7] getSessionToken method is added. OAuth handling is implemented but not well debugged. 
 - 2018-05-09: The Version 7 is the last version which supports FileMaker 16 based Data API. 
+- 2018-05-13: [Ver.8] Update for FileMaker 17. FileMaker Data API v1 is supported from this version.
+   The preview version of FileMaker Data API is not supported anymore.

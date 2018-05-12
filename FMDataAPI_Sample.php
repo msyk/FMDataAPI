@@ -16,7 +16,7 @@ try {
     // Instanticate the class FMDataAPI with database name, user name, password and host.
     // Although the port number and protocol can be set in parameters of constractor,
     // these parameters can be omitted with default values.
-    $fmdb = new FMDataAPI("TestDB", "web", "password", "127.0.0.1");
+    $fmdb = new FMDataAPI("TestDB", "web", "password", "localhost");
 
     //==============================
     //$fmdb = new FMDataAPI("TestDB", "web", "password", "localserver");
@@ -30,7 +30,7 @@ try {
     // https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/TestDB.fmp12?raw=true
 
     // You can turn off to throw an exception in case of error. You have to handle errors with checking result error.
-    //$fmdb->setThrowException(false);
+    $fmdb->setThrowException(false);
 
     // If you call with true, the debug mode is activated. Debug mode echos the contents of communication
     // such as request and response.
@@ -44,7 +44,6 @@ try {
     // so '$fmdb->person_layout' refers FMLayout object fo the proxy of the layout. FMLayout class has the 'query' method
     // and returns FileMakerRelation class's object. The condition spefied in parameter is same as FileMaker's Find Record API.
     $result = $fmdb->person_layout->query(/*array(array("id" => ">1"))*/);
-
     // The 'httpStatus()' method returns the HTTP status code in the latest response.
     echo "HTTP Status: {$fmdb->httpStatus()}<hr>";
 
@@ -127,7 +126,13 @@ try {
     }
 
     // The 'delete()' method deletes the record specified by the parameter.
-    //$fmdb->postalcode->delete($recId);
+    $fmdb->postalcode->delete($recId);
+
+    // A new record is created in "testtable" table.
+    $recId = $fmdb->testtable->create();
+    // The "testtable" table has a container filed "vc1". One image file is going to be uploaded to it.
+    // The file path, record id and field name are required.
+    $fmdb->testtable->uploadFile("cat.jpg", $recId, "vc1");
 
     // If you call the 'startCommunication()' method, you can describe a series of database operation
     // calls. This means the authentication is going to be done at the 'startCommunication()' method,
