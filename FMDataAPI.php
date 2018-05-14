@@ -49,11 +49,14 @@ class FMDataAPI
      * The value "localserver" tries to connect directory 127.0.0.1, and you don't have to set $port and $protocol.
      * @param int $port FileMaker Server's port number. If omitted, 443 is chosen.
      * @param String $protocol FileMaker Server's protocol name. If omitted, 'https' is chosen.
+     * @param array $fmDataSource Authentication information for external data sources.
+     * Ex.  [{"database"=>"<databaseName>", "username"=>"<username>", "password"=>"<password>"].
+     * If you use OAuth, "oAuthRequestId" and "oAuthIdentifier" keys have to be spedified.
      */
     public function __construct(
-        $solution, $user, $password, $host = NULL, $port = NULL, $protocol = NULL)
+        $solution, $user, $password, $host = NULL, $port = NULL, $protocol = NULL, $fmDataSource = null)
     {
-        $this->provider = new Supporting\CommunicationProvider($solution, $user, $password, $host, $port, $protocol);
+        $this->provider = new Supporting\CommunicationProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource);
     }
 
     /**
@@ -487,7 +490,7 @@ class FileMakerLayout
         try {
             $this->restAPI->login();
             $request = [];
-            $headers = ["Content-Type" => "application/json"];
+            $headers = [];
             $params = ["layouts" => $this->layout, "records" => $recordId];
             if (!is_null($script)) {
                 $request = array_merge($request, $this->buildScriptParameters($script));
@@ -1105,12 +1108,7 @@ class CommunicationProvider
      * @var
      * @ignore
      */
-    private $oAuthRequestId;
-    /**
-     * @var
-     * @ignore
-     */
-    private $oAuthIdentifier;
+    private $fmDataSource;
 
     /**
      * CommunicationProvider constructor.
@@ -1122,7 +1120,7 @@ class CommunicationProvider
      * @param null $protocol
      * @ignore
      */
-    public function __construct($solution, $user, $password, $host = NULL, $port = NULL, $protocol = NULL)
+    public function __construct($solution, $user, $password, $host = NULL, $port = NULL, $protocol = NULL, $fmDataSource = NULL)
     {
         $this->solution = $solution;
         $this->user = $user;
@@ -1143,6 +1141,7 @@ class CommunicationProvider
                 }
             }
         }
+        $this->fmDataSource = $fmDataSource;
     }
 
     /**
@@ -1182,9 +1181,13 @@ class CommunicationProvider
             $headers = ["Content-Type" => "application/json", "Authorization" => $value,];
         }
         $params = ["sessions" => null];
+        $request = [];
+        if (!is_null($this->fmDataSource)) {
+            $request["fmDataSource"] = $this->fmDataSource;
+        }
         if (is_null($this->accessToken)) {
             try {
-                $this->callRestAPI($params, false, "POST", [], $headers);
+                $this->callRestAPI($params, false, "POST", $request, $headers);
             } catch (\Exception $e) {
                 $this->accessToken = NULL;
                 throw $e;

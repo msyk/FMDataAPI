@@ -101,13 +101,14 @@ MIT License
 - 2018-02-18: [Ver.6] Bug fix of creating record with no default value. 
 - 2018-03-25: [Ver.7] getSessionToken method is added. OAuth handling is implemented but not well debugged. 
 - 2018-05-09: The Version 7 is the last version which supports FileMaker 16 based Data API. 
-- 2018-05-13: [Ver.8] Update for FileMaker 17. FileMaker Data API v1 is supported from this version.
+- 2018-05-15: [Ver.8] Update for FileMaker 17. FileMaker Data API v1 is supported from this version.
    The preview version of FileMaker Data API is not supported anymore.
 
 # API Differences between ver.8 and 7.
 ## FMDataAPI class
 The setAPIVersion method is added. This is for future update of FileMaker Data API.
 As far as FMDataAPI Ver.8 goes, This isn't requred.
+- public function __construct($solution, $user, $password, $host = NULL, $port = NULL, $protocol = NULL, [New]$fmDataSource = null)
 - [New]public function setAPIVersion($vNum)
 
 ## FileMakerRelation class
