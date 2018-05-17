@@ -279,11 +279,11 @@ class FileMakerLayout
         } else {
             $request[$key] = array_keys($param);
             foreach ($param as $portalName => $options) {
-                if (!is_null($options) && $options['range']) {
-                    $request["range.{$portalName}"] = $options['range'];
+                if (!is_null($options) && $options['limit']) {
+                    $request["_limit.{$portalName}"] = $options['limit'];
                 }
                 if (!is_null($options) && $options['offset']) {
-                    $request["offset.{$portalName}"] = $options['offset'];
+                    $request["_offset.{$portalName}"] = $options['offset'];
                 }
             }
         }
@@ -1266,8 +1266,10 @@ class CommunicationProvider
                 if ($key === 'sort' && is_array($value)) {
                     $sortParam = $this->_buildSortParameters($value);
                     if ($sortParam !== '[]') {
-                        $url .= $key . '=' . $sortParam;
+                        $url .= '_' . $key . '=' . $sortParam;
                     }
+                } else if ($key === 'limit' || $key === 'offset') {
+                    $url .= '_' . $key . '=' . (is_array($value) ? json_encode($value) : $value);
                 } else {
                     $url .= $key . '=' . (is_array($value) ? json_encode($value) : $value);
                 }
