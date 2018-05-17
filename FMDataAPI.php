@@ -579,6 +579,7 @@ class FileMakerLayout
      * @param string $containerFieldName The field name of container field.
      * @param integer $containerFieldRepetition In case of repetiton field, this has to be the number from 1.
      * If omitted this, the number "1" is going to be specified.
+     * @param string $fileName 
      * @throws Exception In case of any error, an exception arises.
      */
     public function uploadFile($filePath, $recordId, $containerFieldName, $containerFieldRepetition = null, $fileName = null)
