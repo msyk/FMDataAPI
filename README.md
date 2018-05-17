@@ -120,4 +120,4 @@ Twe methods are added portal parameter.
 - public function create($data = null, [New]$portal = null, [New]$script = null)
 - public function delete($recordId, [New]$script = null)
 - public function update($recordId, $data, $modId = -1, [New]$portal = null, [New]$script = null)
-- [New]public function uploadFile($filePath, $recordId, $containerFieldName, $containerFieldRepetition = null)
+- [New]public function uploadFile($filePath, $recordId, $containerFieldName, $containerFieldRepetition = null, $fileName = null)

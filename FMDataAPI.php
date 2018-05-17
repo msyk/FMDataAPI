@@ -581,7 +581,7 @@ class FileMakerLayout
      * If omitted this, the number "1" is going to be specified.
      * @throws Exception In case of any error, an exception arises.
      */
-    public function uploadFile($filePath, $recordId, $containerFieldName, $containerFieldRepetition = null)
+    public function uploadFile($filePath, $recordId, $containerFieldName, $containerFieldRepetition = null, $fileName = null)
     {
         try {
             if (!file_exists($filePath)) {
@@ -590,7 +590,7 @@ class FileMakerLayout
             $CRLF = chr(13) . chr(10);
             $DQ = '"';
             $boundary = "FMDataAPI_UploadFile-" . uniqid();
-            $fileName = basename($filePath);
+            $fileName = is_null($fileName) ? basename($filePath) : $fileName;
             $this->restAPI->login();
             $headers = ["Content-Type" => "multipart/form-data; boundary={$boundary}"];
             $repNum = is_null($containerFieldRepetition) ? 1 : intval($containerFieldRepetition);
