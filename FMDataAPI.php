@@ -1317,11 +1317,13 @@ class CommunicationProvider
             curl_setopt($ch, CURLOPT_POST, 1);
         } else
             if ($methodLower == 'put') {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            } else if ($methodLower == 'patch') {
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
             } else if ($methodLower == 'delete') {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
             } else {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
             }
         if ($this->isCertVaridating) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
