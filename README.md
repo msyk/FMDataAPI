@@ -1,4 +1,4 @@
-# FMDataAPI Ver.8
+# FMDataAPI Ver.9
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -23,7 +23,7 @@ foreach ($result as $record) {
 }
 ```
 
-For more deitals, I'd like to read codes and comments in file FMDataAPI_Sample.php.
+For more deitals, I'd like to read codes and comments in file samples/FMDataAPI_Sample.php.
 
 API Document is here:
 http://inter-mediator.info/FMDataAPI/namespaces/INTERMediator.FileMakerServer.RESTAPI.html
@@ -50,15 +50,9 @@ Bug reports and contribution are welcome.
     - The core class, and you just use this for your application.
      This class and inner private classes are object-oriented REST API
      wrappers.
-- FMDataAPI_Sample.php
+- samlpes/FMDataAPI_Sample.php and cat.jpg
     - This is the sample program of FMDataAPI class, and shows how to
     use FMDataAPI class. Rich comments are described.
-- FMDataAPITrial and files in it
-    - This directory contains just my "trial" for newly released
-    File Maker's Rest APIs to understand how to handle these APIs.
-    All explanations are described in "index.html" file in it.
-    These trials are Preview Version of Data API on FileMaker 16,
-    and they can't work on FileMaker 17.
 - README.md, .gitignore
     - These are for GitHub.
 
@@ -103,6 +97,9 @@ MIT License
 - 2018-05-09: The Version 7 is the last version which supports FileMaker 16 based Data API. 
 - 2018-05-15: [Ver.8] Update for FileMaker 17. FileMaker Data API v1 is supported from this version.
    The preview version of FileMaker Data API is not supported anymore.
+- 2018-05-27: [Ver.9] composer.json is added, and can install "inter-mediator/fmdataapi".
+   FMDataAPITrial directory is deleted because it's already discontinued api.
+   Add the "samples" directory and move sample files into it.
 
 # API Differences between ver.8 and 7.
 ## FMDataAPI class
