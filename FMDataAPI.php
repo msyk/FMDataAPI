@@ -490,12 +490,12 @@ class FileMakerLayout
         try {
             $this->restAPI->login();
             $request = [];
-            $headers = [];
-            $params = ["layouts" => $this->layout, "records" => $recordId];
+            $headers = NULL;
+            $params = ['layouts' => $this->layout, 'records' => $recordId];
             if (!is_null($script)) {
-                $request = array_merge($request, $this->buildScriptParameters($script));
+                $request = $this->buildScriptParameters($script);
             }
-            $this->restAPI->callRestAPI($params, true, "DELETE", null, $headers);
+            $this->restAPI->callRestAPI($params, true, 'DELETE', $request, $headers);
             $this->restAPI->storeToProperties();
             $this->restAPI->logout();
         } catch (\Exception $e) {
@@ -1258,7 +1258,7 @@ class CommunicationProvider
         $jsonEncoding = true;
         if (is_string($request)) {
             $jsonEncoding = false;
-        } else if ($methodLower === 'get' && !is_null($request)) {
+        } else if (in_array($methodLower, array('get', 'delete')) && !is_null($request)) {
             $url .= '?';
             foreach ($request as $key => $value) {
                 if (key($request) !== $key) {
@@ -1317,11 +1317,13 @@ class CommunicationProvider
             curl_setopt($ch, CURLOPT_POST, 1);
         } else
             if ($methodLower == 'put') {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            } else if ($methodLower == 'patch') {
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
             } else if ($methodLower == 'delete') {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
             } else {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
             }
         if ($this->isCertVaridating) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
