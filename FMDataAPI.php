@@ -1123,7 +1123,7 @@ class CommunicationProvider
      */
     public function __construct($solution, $user, $password, $host = NULL, $port = NULL, $protocol = NULL, $fmDataSource = NULL)
     {
-        $this->solution = $solution;
+        $this->solution = rawurlencode($solution);
         $this->user = $user;
         $this->password = $password;
         if (!is_null($host)) {
