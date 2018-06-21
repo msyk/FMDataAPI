@@ -401,7 +401,7 @@ class FileMakerLayout
                 property_exists($result->response, 'data') &&
                 property_exists($result, 'messages')
             ) {
-                $fmrel = new FileMakerRelation($result->response->data, "OK", $result->messages->code);
+                $fmrel = new FileMakerRelation($result->response->data, "OK", $result->messages[0]->code);
             }
             $this->restAPI->logout();
             return $fmrel;
@@ -1193,7 +1193,7 @@ class CommunicationProvider
                 $this->accessToken = NULL;
                 throw $e;
             }
-            if (intval($this->responseBody->messages->code) != 0) {
+            if (intval($this->responseBody->messages[0]->code) != 0) {
                 $this->accessToken = NULL;
             } else {
                 $this->accessToken = $this->responseBody->response->token;
