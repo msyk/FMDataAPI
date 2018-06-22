@@ -6,7 +6,7 @@
  * Time: 17:41
  */
 // First of all, the FMDataAPI.php file has to be included. All classes are defined in it.
-include_once "FMDataAPI.php";
+include_once "../FMDataAPI.php";
 
 // For your convenience, the main class name FMDataAPI is defined at the current namespace.
 use INTERMediator\FileMakerServer\RESTAPI\FMDataAPI as FMDataAPI;
@@ -38,7 +38,7 @@ try {
 
     // If you call with true, the certificate from the server is going to verify.
     // In case of self-signed one (usually default situation), you don't have to call this method.
-    //$fm->setCertValidating(true);
+    //$fmdb->setCertValidating(true);
 
     // The FMDataAPI has the property as the same name of layout. This sample database has the 'person_layout' layout,
     // so '$fmdb->person_layout' refers FMLayout object fo the proxy of the layout. FMLayout class has the 'query' method
@@ -140,6 +140,7 @@ try {
     $result = $fmdb->testtable->getRecord($recId);
     foreach ($result as $record) {
         echo "vc1: {$record->vc1}<hr>";
+        echo "<p><img src='data:image/jpeg;base64," . $record->getContainerData('vc1') . "'></p>";
     }
 
     // If you call the 'startCommunication()' method, you can describe a series of database operation

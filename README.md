@@ -44,6 +44,21 @@ Web Publishing with FX.php, and I develop codes here for support REST APIs.
 
 Bug reports and contribution are welcome.
 
+## Installing to Your Project
+
+The file "FMDataAPI.php" contains all you need to access FileMaker Data API.
+You can download it or clone this repository.
+
+FMDataAPI has "composer.json," so you can add your composer.json file in your project as below.
+
+```
+...
+"require": {
+  ...
+  "inter-mediator/fmdataapi":"9"
+} ...
+```
+
 ## About Files and Directories
 
 - FMDataAPI.php
@@ -100,6 +115,8 @@ MIT License
 - 2018-05-27: [Ver.9] composer.json is added, and can install "inter-mediator/fmdataapi".
    FMDataAPITrial directory is deleted because it's already discontinued api.
    Add the "samples" directory and move sample files into it.
+- 2018-06-22: [Ver.10] Added the getContainerData method (Thanks to base64bits!), 
+   bug fix (Thanks to phpsa!).
 
 # API Differences between ver.8 and 7.
 ## FMDataAPI class

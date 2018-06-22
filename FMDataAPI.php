@@ -3,7 +3,7 @@
 /**
  * Object-oriented class for the REST API in FileMaker Server 17/Cloud.
  *
- * @version 9.0
+ * @version 10.0
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -16,7 +16,7 @@ namespace INTERMediator\FileMakerServer\RESTAPI;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @property-read FileMakerLayout $<<layout_name>> FileMakerLayout object named as the property name.
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
- * @version 9
+ * @version 10
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -217,7 +217,7 @@ namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 9
+ * @version 10
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -401,7 +401,8 @@ class FileMakerLayout
                 property_exists($result->response, 'data') &&
                 property_exists($result, 'messages')
             ) {
-                $fmrel = new FileMakerRelation($result->response->data, "OK", $result->messages[0]->code);
+                $fmrel = new FileMakerRelation($result->response->data, "OK",
+                    $result->messages[0]->code,null,$this->restAPI);
             }
             $this->restAPI->logout();
             return $fmrel;
@@ -436,7 +437,8 @@ class FileMakerLayout
             $result = $this->restAPI->responseBody;
             $fmrel = null;
             if ($result) {
-                $fmrel = new FileMakerRelation($result->response->data, "OK", $result->messages[0]->code);
+                $fmrel = new FileMakerRelation($result->response->data, "OK",
+                    $result->messages[0]->code,null, $this->restAPI);
             }
             $this->restAPI->logout();
             return $fmrel;
@@ -628,7 +630,7 @@ class FileMakerLayout
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
- * @version 9
+ * @version 10
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -659,6 +661,11 @@ class FileMakerRelation implements \Iterator
      * @ignore
      */
     private $portalName = null;
+    /**
+     * @var CommunicationProvider The instance of the communication class.
+     * @ignore
+     */
+    private $restAPI = NULL;
 
     /**
      * FileMakerRelation constructor.
@@ -668,12 +675,13 @@ class FileMakerRelation implements \Iterator
      * @param null $portalName
      * @ignore
      */
-    public function __construct($data, $result = "PORTAL", $errorCode = 0, $portalName = null)
+    public function __construct($data, $result = "PORTAL", $errorCode = 0, $portalName = null, $provider = null)
     {
         $this->data = $data;
         $this->result = $result;
         $this->errorCode = $errorCode;
         $this->portalName = $portalName;
+        $this->restAPI = $provider;
     }
 
     /**
@@ -810,7 +818,8 @@ class FileMakerRelation implements \Iterator
                         } else if (isset($this->data[$this->pointer]->portalData) &&
                             isset($this->data[$this->pointer]->portalData->$name)
                         ) {
-                            $value = new FileMakerRelation($this->data[$this->pointer]->portalData->$name, "PORTAL");
+                            $value = new FileMakerRelation($this->data[$this->pointer]->portalData->$name,
+                                "PORTAL",0,null, $this->restAPI);
                         }
                     }
                     break;
@@ -825,7 +834,8 @@ class FileMakerRelation implements \Iterator
                     if (isset($this->data->fieldData) && isset($this->data->fieldData->$name)) {
                         $value = $this->data->fieldData->$name;
                     } else if (isset($this->data->portalData) && isset($this->data->portalData->$name)) {
-                        $value = new FileMakerRelation($this->data->portalData->$name, "PORTAL", 0, $name);
+                        $value = new FileMakerRelation($this->data->portalData->$name,
+                            "PORTAL", 0, $name, $this->restAPI);
                     }
                     break;
                 case "PORTALRECORD":
@@ -912,6 +922,29 @@ class FileMakerRelation implements \Iterator
     }
 
     /**
+     * Return the base64 encoded data in container field with streaming interface. The access with
+     * streaming url depends on the setCertValidating(_) call, and it can work on self-signed certificate as a default.
+     * Thanks to 'base64bits' as https://github.com/msyk/FMDataAPI/issues/18.
+     * @param string $name The container field name.
+     * The table occurrence name of the portal can be the portal name, and also the object name of the portal.
+     * @param string $toName The table occurrence name of the portal as the prefix of the field name.
+     * @return string The base64 encoded data in container field.
+     */
+    public function getContainerData($name, $toName = null)
+    {
+        $fieldValue = $this->field($name, $toName);
+        if (strpos($fieldValue,"https://")!==0){
+            throw new \Exception("The field '{$name}' is not field name or container field.");
+        }
+        try {
+            return $this->restAPI->accessToContainer($fieldValue);
+        }catch (\Exception $e) {
+            throw $e;
+        }
+        return null;
+    }
+
+    /**
      * Return the current element. This method is implemented for Iterator interface.
      * @return FileMakerRelation|null The record set of the current pointing record.
      */
@@ -924,8 +957,7 @@ class FileMakerRelation implements \Iterator
             $value = new FileMakerRelation(
                 $this->data[$this->pointer],
                 ($this->result == "PORTAL") ? "PORTALRECORD" : "RECORD",
-                $this->errorCode,
-                $this->portalName);
+                $this->errorCode, $this->portalName, $this->restAPI);
         }
         return $value;
     }
@@ -967,7 +999,7 @@ class FileMakerRelation implements \Iterator
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 9
+ * @version 10
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -1390,6 +1422,52 @@ class CommunicationProvider
                 }
             }
         }
+    }
+    /**
+     * Return the base64 encoded data in container field.
+     * Thanks to 'base64bits' as https://github.com/msyk/FMDataAPI/issues/18.
+     * @param string $name The container field name.
+     * The table occurrence name of the portal can be the portal name, and also the object name of the portal.
+     * @param string $toName The table occurrence name of the portal as the prefix of the field name.
+     * @return string The base64 encoded data in container field.
+     */
+    public function accessToContainer($url)
+    {
+        $cookieFile = tempnam(sys_get_temp_dir(), "CURLCOOKIE");//create a cookie file
+
+        $ch = curl_init($url); //visit the container URL to set the cookie
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if ($this->isCertVaridating) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        } else {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+        curl_exec($ch);
+        if(curl_errno($ch)!==0){
+            $errMsg = curl_error($ch);
+            throw new \Exception("Error in creating cookie file. {$errMsg}");
+        }
+
+        $ch = curl_init($url); //visit container URL again
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if ($this->isCertVaridating) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        } else {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+        $output = curl_exec($ch);
+        if(curl_errno($ch)!==0){
+            $errMsg = curl_error($ch);
+            throw new \Exception("Error in downloading content of file. {$errMsg}");
+        }
+
+        return base64_encode($output); //process the image data as need it
     }
 
     /**

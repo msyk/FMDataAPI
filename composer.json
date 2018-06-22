@@ -1,6 +1,6 @@
 {
   "name": "inter-mediator/fmdataapi",
-  "version": "9",
+  "version": "10",
   "time": "2018-05-27",
   "repositories": [
     {
@@ -33,7 +33,7 @@
   "support": {
     "community-jp": "https://www.facebook.com/groups/233378356708157/",
     "community-en": "https://www.facebook.com/groups/254446237922985/",
-    "source": "https://github.com/INTER-Mediator/IMApp_SimpleBBS",
-    "manual": "http://inter-mediator.info/"
+    "source": "https://github.com/msyk/FMDataAPI.git",
+    "manual": "http://inter-mediator.info/FMDataAPI/namespaces/INTERMediator.FileMakerServer.RESTAPI.html"
   }
 }
