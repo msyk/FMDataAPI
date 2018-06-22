@@ -1,4 +1,4 @@
-# FMDataAPI Ver.9
+# FMDataAPI Ver.10
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -55,7 +55,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"9"
+  "inter-mediator/fmdataapi":"10"
 } ...
 ```
 
