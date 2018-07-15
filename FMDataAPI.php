@@ -207,6 +207,31 @@ class FMDataAPI
         $this->provider->keepAuth = false;
         $this->provider->logout();
     }
+
+    /**
+     * Set the value to the global field.
+     * @param array $fields Associated array contains the global field names (Field names must be Fully Qualified) and its values.
+     * Keys are global field names and values is these values.
+     * @throws Exception In case of any error, an exception arises.
+     */
+    public function setGlobalField($fields)
+    {
+        try {
+            $this->provider->login();
+            $headers = ["Content-Type" => "application/json"];
+            $params = ["globals" => null];
+            $request = ["globalFields" => $fields];
+            try {
+                $this->provider->callRestAPI($params, true, "PATCH", $request, $headers);
+            } catch (\Exception $e) {
+                throw $e;
+            }
+            $this->provider->storeToProperties();
+            $this->provider->logout();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 }
 
 namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
@@ -557,6 +582,12 @@ class FileMakerLayout
      */
     public function setGlobalField($fields)
     {
+        foreach ($fields as $name => $value) {
+            if ((function_exists('mb_strpos') && mb_strpos($name, '::') === FALSE) || strpos($name, '::') === FALSE) {
+                unset($fields[$name]);
+                $fields[$this->layout . '::' . $name] = $value;
+            }
+        }
         try {
             $this->restAPI->login();
             $headers = ["Content-Type" => "application/json"];
