@@ -117,6 +117,8 @@ MIT License
    Add the "samples" directory and move sample files into it.
 - 2018-06-22: [Ver.10] Added the getContainerData method (Thanks to base64bits!), 
    bug fix (Thanks to phpsa!).
+- 2018-07-22: [Ver.11] Global field methods bug fixed and were available in FMDataAPI class (Tanks to Mr.Matsuo).
+   The script errors and results can get from methods in FMLayout class.
 
 # API Differences between ver.8 and 7.
 ## FMDataAPI class

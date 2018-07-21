@@ -1,7 +1,7 @@
 {
   "name": "inter-mediator/fmdataapi",
-  "version": "10",
-  "time": "2018-05-27",
+  "version": "11",
+  "time": "2018-07-22",
   "repositories": [
     {
       "type": "git",

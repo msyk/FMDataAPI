@@ -128,6 +128,20 @@ try {
     // The 'delete()' method deletes the record specified by the parameter.
     $fmdb->postalcode->delete($recId);
 
+    // Call script
+    $result = $fmdb->person_layout->query(null, null, -1, 1, null, ["script" => "TestScript", "script.param" => "ok"]);
+    echo "Script Error: {$fmdb->person_layout->getScriptError()}<hr>";
+    echo "Script Result: {$fmdb->person_layout->getScriptResult()}<hr>";
+    $result = $fmdb->person_layout->query(null, null, -1, 1, null, ["script.prerequest" => "TestScript", "script.prerequest.param" => "ok"]);
+    echo "Script Error: {$fmdb->person_layout->getScriptErrorPrerequest()}<hr>";
+    echo "Script Result: {$fmdb->person_layout->getScriptResultPrerequest()}<hr>";
+    $result = $fmdb->person_layout->query(null, null, -1, 1, null, ["script" => "TestScript", "script.param" => "not"]);
+    echo "Script Error: {$fmdb->person_layout->getScriptError()}<hr>";
+    echo "Script Result: {$fmdb->person_layout->getScriptResult()}<hr>";
+    $result = $fmdb->person_layout->query(null, null, -1, 1);
+    echo "Script Error: {$fmdb->person_layout->getScriptError()}<hr>";
+    echo "Script Result: {$fmdb->person_layout->getScriptResult()}<hr>";
+
     // A new record is created in "testtable" table.
     $recId = $fmdb->testtable->create();
     // The "testtable" table has a container filed "vc1". One image file is going to be uploaded to it.

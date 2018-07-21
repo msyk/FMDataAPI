@@ -3,7 +3,7 @@
 /**
  * Object-oriented class for the REST API in FileMaker Server 17/Cloud.
  *
- * @version 10.0
+ * @version 11.0
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -16,7 +16,7 @@ namespace INTERMediator\FileMakerServer\RESTAPI;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @property-read FileMakerLayout $<<layout_name>> FileMakerLayout object named as the property name.
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
- * @version 10
+ * @version 11
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -242,7 +242,7 @@ namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 10
+ * @version 11
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -427,7 +427,7 @@ class FileMakerLayout
                 property_exists($result, 'messages')
             ) {
                 $fmrel = new FileMakerRelation($result->response->data, "OK",
-                    $result->messages[0]->code,null,$this->restAPI);
+                    $result->messages[0]->code, null, $this->restAPI);
             }
             $this->restAPI->logout();
             return $fmrel;
@@ -463,7 +463,7 @@ class FileMakerLayout
             $fmrel = null;
             if ($result) {
                 $fmrel = new FileMakerRelation($result->response->data, "OK",
-                    $result->messages[0]->code,null, $this->restAPI);
+                    $result->messages[0]->code, null, $this->restAPI);
             }
             $this->restAPI->logout();
             return $fmrel;
@@ -649,6 +649,66 @@ class FileMakerLayout
             throw $e;
         }
     }
+
+    /**
+     * Get the script error code.
+     * @return integer The value of the error code.
+     * If any script wasn't called, returns null.
+     */
+    public function getScriptError()
+    {
+        return $this->restAPI->scriptError;
+    }
+
+    /**
+     * Get the return value from the script.
+     * @return string  The return value from the script.
+     * If any script wasn't called, returns null.
+     */
+    public function getScriptResult()
+    {
+        return $this->restAPI->scriptResult;
+    }
+
+    /**
+     * Get the prerequest script error code.
+     * @return integer The value of the error code.
+     * If any script wasn't called, returns null.
+     */
+    public function getScriptErrorPrerequest()
+    {
+        return $this->restAPI->scriptErrorPrerequest;
+    }
+
+    /**
+     * Get the return value from the prerequest script.
+     * @return string  The return value from the prerequest script.
+     * If any script wasn't called, returns null.
+     */
+    public function getScriptResultPrerequest()
+    {
+        return $this->restAPI->scriptResultPrerequest;
+    }
+
+    /**
+     * Get the presort script error code.
+     * @return integer The value of the error code.
+     * If any script wasn't called, returns null.
+     */
+    public function getScriptErrorPresort()
+    {
+        return $this->restAPI->scriptErrorPresort;
+    }
+
+    /**
+     * Get the return value from the presort script.
+     * @return string  The return value from the presort script.
+     * If any script wasn't called, returns null.
+     */
+    public function getScriptResultPresort()
+    {
+        return $this->restAPI->scriptResultPresort;
+    }
 }
 
 /**
@@ -661,7 +721,7 @@ class FileMakerLayout
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
- * @version 10
+ * @version 11
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -850,7 +910,7 @@ class FileMakerRelation implements \Iterator
                             isset($this->data[$this->pointer]->portalData->$name)
                         ) {
                             $value = new FileMakerRelation($this->data[$this->pointer]->portalData->$name,
-                                "PORTAL",0,null, $this->restAPI);
+                                "PORTAL", 0, null, $this->restAPI);
                         }
                     }
                     break;
@@ -964,12 +1024,12 @@ class FileMakerRelation implements \Iterator
     public function getContainerData($name, $toName = null)
     {
         $fieldValue = $this->field($name, $toName);
-        if (strpos($fieldValue,"https://")!==0){
+        if (strpos($fieldValue, "https://") !== 0) {
             throw new \Exception("The field '{$name}' is not field name or container field.");
         }
         try {
             return $this->restAPI->accessToContainer($fieldValue);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
         return null;
@@ -1030,7 +1090,7 @@ class FileMakerRelation implements \Iterator
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 10
+ * @version 11
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -1173,6 +1233,37 @@ class CommunicationProvider
      * @ignore
      */
     private $fmDataSource;
+    /**
+     * @var
+     * @ignore
+     */
+    public $scriptError;
+    /**
+     * @var
+     * @ignore
+     */
+    public $scriptResult;
+    /**
+     * @var
+     * @ignore
+     */
+    public $scriptErrorPrerequest;
+    /**
+     * @var
+     * @ignore
+     */
+    public $scriptResultPrerequest;
+    /**
+     * @var
+     * @ignore
+     */
+    public $scriptErrorPresort;
+    /**
+     * @var
+     * @ignore
+     */
+    public $scriptResultPresort;
+
 
     /**
      * CommunicationProvider constructor.
@@ -1454,6 +1545,7 @@ class CommunicationProvider
             }
         }
     }
+
     /**
      * Return the base64 encoded data in container field.
      * Thanks to 'base64bits' as https://github.com/msyk/FMDataAPI/issues/18.
@@ -1461,6 +1553,7 @@ class CommunicationProvider
      * The table occurrence name of the portal can be the portal name, and also the object name of the portal.
      * @param string $toName The table occurrence name of the portal as the prefix of the field name.
      * @return string The base64 encoded data in container field.
+     * @ignore
      */
     public function accessToContainer($url)
     {
@@ -1477,7 +1570,7 @@ class CommunicationProvider
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         }
         curl_exec($ch);
-        if(curl_errno($ch)!==0){
+        if (curl_errno($ch) !== 0) {
             $errMsg = curl_error($ch);
             throw new \Exception("Error in creating cookie file. {$errMsg}");
         }
@@ -1493,7 +1586,7 @@ class CommunicationProvider
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         }
         $output = curl_exec($ch);
-        if(curl_errno($ch)!==0){
+        if (curl_errno($ch) !== 0) {
             $errMsg = curl_error($ch);
             throw new \Exception("Error in downloading content of file. {$errMsg}");
         }
@@ -1509,7 +1602,19 @@ class CommunicationProvider
         $result = $this->responseBody->messages[0];
         $this->httpStatus = $this->getCurlInfo("http_code");
         $this->errorCode = property_exists($result, 'code') ? $result->code : -1;
-        $this->errorMessage = property_exists($result, 'message') ? $result->message : null;
+        $result = $this->responseBody->response;
+        $this->scriptError = property_exists($result, 'scriptError') ?
+            $result->scriptError : null;
+        $this->scriptResult = property_exists($result, 'scriptResult') ?
+            $result->scriptResult : null;
+        $this->scriptErrorPrerequest = property_exists($result, 'scriptError.prerequest') ?
+            $result->{'scriptError.prerequest'} : null;
+        $this->scriptResultPrerequest = property_exists($result, 'scriptResult.prerequest') ?
+            $result->{'scriptResult.prerequest'} : null;
+        $this->scriptErrorPresort = property_exists($result, "scriptError.presort") ?
+            $result->{"scriptError.presort"} : null;
+        $this->scriptResultPresort = property_exists($result, "scriptResult.presort") ?
+            $result->{"scriptResult.presort"} : null;
     }
 
     /**
