@@ -1514,7 +1514,7 @@ class CommunicationProvider
         $this->requestHeader = $header;
         $this->requestBody = ($methodLower != 'get') ? $request : null;
         $this->responseHeader = substr($response, 0, $this->curlInfo["header_size"]);
-        $this->responseBody = json_decode(substr($response, $this->curlInfo["header_size"]));
+        $this->responseBody = json_decode(substr($response, $this->curlInfo["header_size"]), false, 512, JSON_BIGINT_AS_STRING);
 
         if ($this->isDebug) {
             $this->debugOutput();
