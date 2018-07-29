@@ -3,7 +3,7 @@
 /**
  * Object-oriented class for the REST API in FileMaker Server 17/Cloud.
  *
- * @version 11.0
+ * @version 12.0
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -16,7 +16,7 @@ namespace INTERMediator\FileMakerServer\RESTAPI;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @property-read FileMakerLayout $<<layout_name>> FileMakerLayout object named as the property name.
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
- * @version 11
+ * @version 12
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -52,11 +52,16 @@ class FMDataAPI
      * @param array $fmDataSource Authentication information for external data sources.
      * Ex.  [{"database"=>"<databaseName>", "username"=>"<username>", "password"=>"<password>"].
      * If you use OAuth, "oAuthRequestId" and "oAuthIdentifier" keys have to be spedified.
+     * @param boolean $isUnitTest It it's set to true, the communication provider just works locally.
      */
     public function __construct(
-        $solution, $user, $password, $host = NULL, $port = NULL, $protocol = NULL, $fmDataSource = null)
+        $solution, $user, $password, $host = NULL, $port = NULL, $protocol = NULL, $fmDataSource = null, $isUnitTest = false)
     {
-        $this->provider = new Supporting\CommunicationProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource);
+        if (! $isUnitTest) {
+            $this->provider = new Supporting\CommunicationProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource);
+        } else {
+            $this->provider = new Supporting\TestProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource);
+        }
     }
 
     /**
@@ -242,7 +247,7 @@ namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 11
+ * @version 12
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -721,7 +726,7 @@ class FileMakerLayout
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
- * @version 11
+ * @version 12
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -1090,7 +1095,7 @@ class FileMakerRelation implements \Iterator
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 11
+ * @version 12
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */

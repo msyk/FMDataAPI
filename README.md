@@ -1,4 +1,4 @@
-# FMDataAPI Ver.11
+# FMDataAPI Ver.12
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -95,8 +95,8 @@ MIT License
 - Thanks to Atsushi Matsuo. Your script is quite helpful to implement the "localserver" feature.
 (https://gist.github.com/matsuo/ef5cb7c98bb494d507731886883bcbc1) Moreover thanks for updating and fixing bugs.
 - Thanks to Frank Gonzalez. Your bug report is brilliant and I could fix it quickly.
-- Also thanks Mr. Matsuo to fixing the bug for sorting parameters in query method.
-- Thanks again Mr. Matsuo to fixing the bug for creating record with no default value.
+- Thanks to base64bits for coding about container field.
+- Thanks to phpsa for bug fix.
 
 ## History
 
@@ -119,6 +119,8 @@ MIT License
    bug fix (Thanks to phpsa!).
 - 2018-07-22: [Ver.11] Global field methods bug fixed and were available in FMDataAPI class (Tanks to Mr.Matsuo).
    The script errors and results can get from methods in FMLayout class.
+- 2018-07-29: [Ver.12] Bug fix for UUID Supporting (Thanks to Mr.Matsuo).
+   Unit tests is implemented but now limited methods are tested, als integrating Travis CI.
 
 # API Differences between ver.8 and 7.
 ## FMDataAPI class
