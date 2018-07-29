@@ -24,5 +24,6 @@ class FMDataAPIUnitTest extends TestCase
         $this->assertNotNull($this->fmdataapi, 'FMDataAPI class must be instanticate.');
         $this->assertEquals($this->fmdataapi->errorCode(), 0, 'It must be no error before calling.');
         $this->assertEquals($this->fmdataapi->errorMessage(), "", 'It must be no error before calling.');
+        $this->assertEquals($this->fmdataapi->httpStatus(), 0, 'It must be no status before calling.');
     }
 }
