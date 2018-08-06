@@ -95,6 +95,18 @@ class TestProvider extends CommunicationProvider
                 'curlerrormessage' => '',
                 'curlinfo' => ['http_code' => 500]
             ],
+            'b6870bced70be79d465ed2dfc2278d5258682762' => [// Error Simulation - illegal host name
+                'response' => null,
+                'curlerror' => '6',
+                'curlerrormessage' => 'Could not resolve host: localserver123',
+                'curlinfo' => ['http_code' => 0]
+            ],
+            '28e45313d9bae5ddd2a30de2a0284e09f24edf9f' => [// Error Simulation - old version server
+                'response' => null,
+                'curlerror' => '0',
+                'curlerrormessage' => '',
+                'curlinfo' => ['http_code' => 404]
+            ],
             'hash' => [
                 'response' => '',
                 'curlerror' => '0',
