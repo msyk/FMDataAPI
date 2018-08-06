@@ -15,7 +15,7 @@
   "require-dev": {},
   "autoload": {
     "classmap": [
-      "FMDataAPI.php","test/FMDataAPIUnitTest.php"
+      "FMDataAPI.php","test/FMDataAPIUnitTest.php","test/TestProvider.php"
     ]
   },
   "description": "FMDataAPI is a class developed by PHP to access FileMaker database with FileMaker Data API.",

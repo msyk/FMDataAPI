@@ -57,7 +57,7 @@ class FMDataAPI
     public function __construct(
         $solution, $user, $password, $host = NULL, $port = NULL, $protocol = NULL, $fmDataSource = null, $isUnitTest = false)
     {
-        if (! $isUnitTest) {
+        if (!$isUnitTest) {
             $this->provider = new Supporting\CommunicationProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource);
         } else {
             $this->provider = new Supporting\TestProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource);
@@ -1146,37 +1146,37 @@ class CommunicationProvider
      * @var
      * @ignore
      */
-    private $method;
+    protected $method;
     /**
      * @var
      * @ignore
      */
-    private $url;
+    protected $url;
     /**
      * @var
      * @ignore
      */
-    private $requestHeader;
+    protected $requestHeader;
     /**
      * @var
      * @ignore
      */
-    private $requestBody;
+    protected $requestBody;
     /**
      * @var
      * @ignore
      */
-    private $curlErrorNumber;
+    protected $curlErrorNumber;
     /**
      * @var
      * @ignore
      */
-    private $curlError;
+    protected $curlError;
     /**
      * @var
      * @ignore
      */
-    private $curlInfo;
+    protected $curlInfo;
     /**
      * @var
      * @ignore
@@ -1311,21 +1311,111 @@ class CommunicationProvider
      * @return string
      * @ignore
      */
-    public function getURL($params)
+    public function getURL($params, $request, $methodLower)
     {
         $vStr = $this->vNum < 1 ? 'Latest' : strval($this->vNum);
         $url = "{$this->protocol}://{$this->host}:{$this->port}/fmi/data/v{$vStr}/databases/{$this->solution}";
         foreach ($params as $key => $value) {
             $url .= "/{$key}" . (is_null($value) ? "" : "/{$value}");
         }
+        if (!is_string($request) &&
+            in_array($methodLower, array('get', 'delete')) &&
+            !is_null($request) &&
+            count($request) > 0
+        ) {
+            $url .= '?';
+            foreach ($request as $key => $value) {
+                if (key($request) !== $key) {
+                    $url .= '&';
+                }
+                if ($key === 'sort' && is_array($value)) {
+                    $sortParam = $this->_buildSortParameters($value);
+                    if ($sortParam !== '[]') {
+                        $url .= '_' . $key . '=' . $sortParam;
+                    }
+                } else if ($key === 'limit' || $key === 'offset') {
+                    $url .= '_' . $key . '=' . (is_array($value) ? json_encode($value) : $value);
+                } else {
+                    $url .= $key . '=' . (is_array($value) ? json_encode($value) : $value);
+                }
+            }
+        }
         return $url;
+    }
+
+    /**
+     * @param $isAddToken
+     * @param $addHeader
+     * @return array
+     * @ignore
+     */
+    public
+    function getHeaders($isAddToken, $addHeader)
+    {
+        $header = [];
+        if ($this->isLocalServer) {
+            $header[] = 'X-Forwarded-For: 127.0.0.1';
+            $host = filter_input(INPUT_SERVER, 'HTTP_HOST', FILTER_SANITIZE_URL);
+            if ($host === NULL || $host === FALSE) {
+                $host = 'localhost';
+            }
+            $header[] = 'X-Forwarded-Host: ' . $host;
+        }
+        if ($this->useOAuth) {
+            $header[] = "X-FM-Data-Login-Type: oauth";
+        }
+        if ($isAddToken) {
+            $header[] = "Authorization: Bearer {$this->accessToken}";
+        }
+        if (!is_null($addHeader)) {
+            foreach ($addHeader as $key => $value) {
+                $header[] = "{$key}: {$value}";
+            }
+        }
+        return $header;
+    }
+
+    public function justifyRequest($request)
+    {
+        $result = $request;
+        // cast a number
+        if (isset($result['fieldData'])) {
+            foreach ($result['fieldData'] as $fieldName => $fieldValue) {
+                $result['fieldData'][$fieldName] = (string)$fieldValue;
+            }
+        }
+        if (isset($result['query'])) {
+            foreach ($result['query'] as $key => $array) {
+                foreach ($array as $fieldName => $fieldValue) {
+                    if (!is_array($fieldValue)) {
+                        $result['query'][$key][$fieldName] = (string)$fieldValue;
+                    }
+                }
+            }
+        }
+
+        if (isset($result['sort'])) {
+            $sort = [];
+            foreach ($result['sort'] as $sortKey => $sortCondition) {
+                if (isset($sortCondition[0])) {
+                    $sortOrder = 'ascend';
+                    if (isset($sortCondition[1])) {
+                        $sortOrder = $this->adjustSortDirection($sortCondition[1]);
+                    }
+                    $sort[] = ['fieldName' => $sortCondition[0], 'sortOrder' => $sortOrder];
+                }
+            }
+            $result['sort'] = $sort;
+        }
+        return $result;
     }
 
     /**
      * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function login()
+    public
+    function login()
     {
         if ($this->keepAuth) {
             return;
@@ -1365,7 +1455,8 @@ class CommunicationProvider
      * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function logout()
+    public
+    function logout()
     {
         if ($this->keepAuth) {
             return;
@@ -1389,83 +1480,17 @@ class CommunicationProvider
      * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function callRestAPI($params, $isAddToken, $method = 'GET', $request = NULL, $addHeader = null)
+    public
+    function callRestAPI($params, $isAddToken, $method = 'GET', $request = NULL, $addHeader = null)
     {
         $methodLower = strtolower($method);
-        $url = $this->getURL($params);
-        $header = [];
-        if ($this->isLocalServer) {
-            $header[] = 'X-Forwarded-For: 127.0.0.1';
-            $host = filter_input(INPUT_SERVER, 'HTTP_HOST', FILTER_SANITIZE_URL);
-            if ($host === NULL || $host === FALSE) {
-                $host = 'localhost';
-            }
-            $header[] = 'X-Forwarded-Host: ' . $host;
-        }
-        if ($this->useOAuth) {
-            $header[] = "X-FM-Data-Login-Type: oauth";
-        }
-        if ($isAddToken) {
-            $header[] = "Authorization: Bearer {$this->accessToken}";
-        }
-        if (!is_null($addHeader)) {
-            foreach ($addHeader as $key => $value) {
-                $header[] = "{$key}: {$value}";
-            }
-        }
-
+        $url = $this->getURL($params, $request, $methodLower);
+        $header = $this->getHeaders($isAddToken, $addHeader);
         $jsonEncoding = true;
         if (is_string($request)) {
             $jsonEncoding = false;
-        } else if (in_array($methodLower, array('get', 'delete')) && !is_null($request)) {
-            $url .= '?';
-            foreach ($request as $key => $value) {
-                if (key($request) !== $key) {
-                    $url .= '&';
-                }
-                if ($key === 'sort' && is_array($value)) {
-                    $sortParam = $this->_buildSortParameters($value);
-                    if ($sortParam !== '[]') {
-                        $url .= '_' . $key . '=' . $sortParam;
-                    }
-                } else if ($key === 'limit' || $key === 'offset') {
-                    $url .= '_' . $key . '=' . (is_array($value) ? json_encode($value) : $value);
-                } else {
-                    $url .= $key . '=' . (is_array($value) ? json_encode($value) : $value);
-                }
-            }
         } else if ($methodLower !== 'get' && !is_null($request)) {
-            // cast a number
-            if (isset($request['fieldData'])) {
-                foreach ($request['fieldData'] as $fieldName => $fieldValue) {
-                    if (is_numeric($fieldValue)) {
-                        $request['fieldData'][$fieldName] = (string)$fieldValue;
-                    }
-                }
-            }
-            if (isset($request['query'])) {
-                foreach ($request['query'] as $key => $array) {
-                    foreach ($array as $fieldName => $fieldValue) {
-                        if (!is_array($fieldValue)) {
-                            $request['query'][$key][$fieldName] = (string)$fieldValue;
-                        }
-                    }
-                }
-            }
-
-            if (isset($request['sort'])) {
-                $sort = [];
-                foreach ($request['sort'] as $sortKey => $sortCondition) {
-                    if (isset($sortCondition[0])) {
-                        $sortOrder = 'ascend';
-                        if (isset($sortCondition[1])) {
-                            $sortOrder = $this->adjustSortDirection($sortCondition[1]);
-                        }
-                        $sort[] = ['fieldName' => $sortCondition[0], 'sortOrder' => $sortOrder];
-                    }
-                }
-                $request['sort'] = $sort;
-            }
+            $request = $this->justifyRequest($request);
         }
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -1560,7 +1585,8 @@ class CommunicationProvider
      * @return string The base64 encoded data in container field.
      * @ignore
      */
-    public function accessToContainer($url)
+    public
+    function accessToContainer($url)
     {
         $cookieFile = tempnam(sys_get_temp_dir(), "CURLCOOKIE");//create a cookie file
 
@@ -1602,7 +1628,8 @@ class CommunicationProvider
     /**
      * @ignore
      */
-    public function storeToProperties()
+    public
+    function storeToProperties()
     {
         $result = $this->responseBody->messages[0];
         $this->httpStatus = $this->getCurlInfo("http_code");
@@ -1627,7 +1654,8 @@ class CommunicationProvider
      * @return string
      * @ignore
      */
-    public function adjustSortDirection($direction)
+    public
+    function adjustSortDirection($direction)
     {
         if (strtoupper($direction) == 'ASC') {
             $direction = 'ascend';
@@ -1643,7 +1671,8 @@ class CommunicationProvider
      * @return mixed
      * @ignore
      */
-    public function getCurlInfo($key)
+    public
+    function getCurlInfo($key)
     {
         return $this->curlInfo[$key];
     }
@@ -1653,7 +1682,8 @@ class CommunicationProvider
      * @return string
      * @ignore
      */
-    public function debugOutput($isReturnValue = false)
+    public
+    function debugOutput($isReturnValue = false)
     {
         $str = "<div style='background-color: #DDDDDD'>URL: ";
         $str .= $this->method . ' ' . htmlspecialchars($this->url);
@@ -1687,7 +1717,8 @@ class CommunicationProvider
      * @return string
      * @ignore
      */
-    private function _buildSortParameters($value)
+    private
+    function _buildSortParameters($value)
     {
         $param = '[';
         foreach ($value as $sortCondition) {

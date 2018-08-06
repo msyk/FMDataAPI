@@ -44,6 +44,8 @@ try {
     // so '$fmdb->person_layout' refers FMLayout object fo the proxy of the layout. FMLayout class has the 'query' method
     // and returns FileMakerRelation class's object. The condition spefied in parameter is same as FileMaker's Find Record API.
     $result = $fmdb->person_layout->query(/*array(array("id" => ">1"))*/);
+    // $result = $fmdb->person_layout2->query(/*array(array("id" => ">1"))*/);
+    // exit;
     // The 'httpStatus()' method returns the HTTP status code in the latest response.
     echo "HTTP Status: {$fmdb->httpStatus()}<hr>";
 
@@ -188,6 +190,15 @@ try {
     // The 'query()' method can have several parameters. The second parameter is for sorting.
     $portal = array("Contact");
     $result = $fmdb->person_layout->query(array(array("id" => "1...")), array(array("id", "descend")), 1, -1, $portal);
+    foreach ($result as $record) {
+        $recordId = $record->getRecordId();
+        $partialResult = $fmdb->person_layout->getRecord($recordId, $portal);
+        var_export($partialResult);
+        echo "<hr>";
+    }
+
+    // The 'query()' method can have several parameters. The second parameter is for sorting.
+    $result = $fmdb->person_layout->query(null, null, 2, 2);
     foreach ($result as $record) {
         $recordId = $record->getRecordId();
         $partialResult = $fmdb->person_layout->getRecord($recordId, $portal);
