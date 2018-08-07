@@ -45,18 +45,18 @@ echo sha1(json_encode(
 echo sha1(json_encode(
     [   // Error Simulation - illegal host name
         'url' => "https://localserver123:443/fmi/data/vLatest/databases/TestDB/sessions",
-        'method' => 'get',
+        'method' => 'post',
         'header' => [0 => 'Content-Type: application/json', 1 => 'Authorization: Basic d2ViOnBhc3N3b3Jk'],
-        'request' => []
+        'request' => ['fmDataSource' => false]
     ]
 )), "\n";
 
 echo sha1(json_encode(
     [   // Error Simulation - Old version server
         'url' => "https://10.0.1.21:443/fmi/data/vLatest/databases/TestDB/sessions",
-        'method' => 'get',
+        'method' => 'post',
         'header' => [0 => 'Content-Type: application/json', 1 => 'Authorization: Basic d2ViOnBhc3N3b3Jk'],
-        'request' => []
+        'request' => ['fmDataSource' => false]
     ]
 )), "\n";
 

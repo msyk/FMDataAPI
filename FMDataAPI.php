@@ -155,6 +155,15 @@ class FMDataAPI
     }
 
     /**
+     * The error number of curl, i.e. kind of communication error code.
+     * @return int The error number of curl.
+     */
+    public function curlErrorCode()
+    {
+        return $this->provider->curlErrorNumber;
+    }
+
+    /**
      * The HTTP status code of the latest response from the REST API.
      * @return int The HTTP status code.
      */
@@ -1206,7 +1215,7 @@ class CommunicationProvider
      * @var
      * @ignore
      */
-    protected $curlErrorNumber;
+    public $curlErrorNumber;
     /**
      * @var
      * @ignore
