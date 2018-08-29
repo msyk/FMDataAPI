@@ -1,7 +1,7 @@
 {
   "name": "inter-mediator/fmdataapi",
-  "version": "9",
-  "time": "2018-05-27",
+  "version": "12",
+  "time": "2018-07-22",
   "repositories": [
     {
       "type": "git",
@@ -13,7 +13,11 @@
     "php": ">=5.4.0"
   },
   "require-dev": {},
-  "autoload": {},
+  "autoload": {
+    "classmap": [
+      "FMDataAPI.php","test/FMDataAPIUnitTest.php","test/TestProvider.php"
+    ]
+  },
   "description": "FMDataAPI is a class developed by PHP to access FileMaker database with FileMaker Data API.",
   "type": "library",
   "keywords": [
@@ -33,7 +37,7 @@
   "support": {
     "community-jp": "https://www.facebook.com/groups/233378356708157/",
     "community-en": "https://www.facebook.com/groups/254446237922985/",
-    "source": "https://github.com/INTER-Mediator/IMApp_SimpleBBS",
-    "manual": "http://inter-mediator.info/"
+    "source": "https://github.com/msyk/FMDataAPI.git",
+    "manual": "http://inter-mediator.info/FMDataAPI/namespaces/INTERMediator.FileMakerServer.RESTAPI.html"
   }
 }

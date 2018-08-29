@@ -1,4 +1,4 @@
-# FMDataAPI Ver.9
+# FMDataAPI Ver.12 [![Build Status](https://travis-ci.org/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -44,6 +44,21 @@ Web Publishing with FX.php, and I develop codes here for support REST APIs.
 
 Bug reports and contribution are welcome.
 
+## Installing to Your Project
+
+The file "FMDataAPI.php" contains all you need to access FileMaker Data API.
+You can download it or clone this repository.
+
+FMDataAPI has "composer.json," so you can add your composer.json file in your project as below.
+
+```
+...
+"require": {
+  ...
+  "inter-mediator/fmdataapi":"10"
+} ...
+```
+
 ## About Files and Directories
 
 - FMDataAPI.php
@@ -80,8 +95,8 @@ MIT License
 - Thanks to Atsushi Matsuo. Your script is quite helpful to implement the "localserver" feature.
 (https://gist.github.com/matsuo/ef5cb7c98bb494d507731886883bcbc1) Moreover thanks for updating and fixing bugs.
 - Thanks to Frank Gonzalez. Your bug report is brilliant and I could fix it quickly.
-- Also thanks Mr. Matsuo to fixing the bug for sorting parameters in query method.
-- Thanks again Mr. Matsuo to fixing the bug for creating record with no default value.
+- Thanks to base64bits for coding about container field.
+- Thanks to phpsa for bug fix.
 
 ## History
 
@@ -100,6 +115,12 @@ MIT License
 - 2018-05-27: [Ver.9] composer.json is added, and can install "inter-mediator/fmdataapi".
    FMDataAPITrial directory is deleted because it's already discontinued api.
    Add the "samples" directory and move sample files into it.
+- 2018-06-22: [Ver.10] Added the getContainerData method (Thanks to base64bits!), 
+   bug fix (Thanks to phpsa!).
+- 2018-07-22: [Ver.11] Global field methods bug fixed and were available in FMDataAPI class (Tanks to Mr.Matsuo).
+   The script errors and results can get from methods in FMLayout class.
+- 2018-07-29: [Ver.12] Bug fix for UUID Supporting (Thanks to Mr.Matsuo).
+   Unit tests is implemented but now limited methods are tested, als integrating Travis CI.
 
 # API Differences between ver.8 and 7.
 ## FMDataAPI class

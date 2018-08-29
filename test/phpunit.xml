@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+    <!--<filter>-->
+        <!--<blacklist>-->
+            <!--<directory suffix=".php">../</directory>-->
+            <!--<directory suffix=".php">../test</directory>-->
+        <!--</blacklist>-->
+    <!--</filter>-->
+</phpunit>
