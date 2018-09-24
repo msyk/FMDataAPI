@@ -684,7 +684,7 @@ class FileMakerLayout
     }
 
     /**
-     * Delete on record.
+     * Get metadata information.
      * @param int $recordId The valid recordId value to delete.
      * @param array $script scripts that should execute right timings. See FileMakerRelation::query().
      * @throws Exception In case of any error, an exception arises.
@@ -703,6 +703,15 @@ class FileMakerLayout
         } catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    /**
+     * Get debug information includes internal request URL and request body.
+     * @return string
+     */
+    public function getDebugInfo()
+    {
+        return $this->restAPI->url . " " . json_encode($this->restAPI->requestBody);
     }
 
     /**
@@ -1238,7 +1247,7 @@ class CommunicationProvider
      * @var
      * @ignore
      */
-    protected $url;
+    public $url;
     /**
      * @var
      * @ignore
@@ -1248,7 +1257,7 @@ class CommunicationProvider
      * @var
      * @ignore
      */
-    protected $requestBody;
+    public $requestBody;
     /**
      * @var
      * @ignore
