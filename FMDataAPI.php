@@ -1432,7 +1432,8 @@ class CommunicationProvider
                 } else if ($key === 'limit' || $key === 'offset') {
                     $url .= '_' . $key . '=' . (is_array($value) ? json_encode($value) : $value);
                 } else {
-                    $url .= $key . '=' . (is_array($value) ? json_encode($value) : $value);
+                    // handling portal object name etc.
+                    $url .= $key . '=' . (is_array($value) ? $this->_json_urlencode($value) : $value);
                 }
             }
         }
@@ -1839,5 +1840,26 @@ class CommunicationProvider
         $param .= ']';
 
         return $param;
+    }
+
+    /**
+     * @param array $value
+     * @return string
+     * @ignore
+     */
+    private function _json_urlencode($value)
+    {
+        $str = '[';
+        if (count($value) > 0) {
+            foreach ($value as $el) {
+                if ($str !== '[') {
+                    $str .= ',';
+                }
+                $str .= '"' . urlencode($el) . '"';
+            }
+        }
+        $str .= ']';
+
+        return $str;
     }
 }
