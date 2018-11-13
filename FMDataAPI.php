@@ -1106,7 +1106,7 @@ class FileMakerRelation implements \Iterator
             case "RECORD":
             case "PORTALRECORD":
                 if (isset($this->data) && isset($this->data->modId)) {
-                    $value = $this->data->recordId;
+                    $value = $this->data->modId;
                 }
                 break;
         }
