@@ -53,8 +53,8 @@ try {
 
     // The following two methods return the error code and message of the latest API call which is submitted in query() method.
     // You can check API calling succeed or fail if error code is or isn't 0 every after API calling methods.
-    echo "HTTP Status: {$fmdb->errorCode()}<hr>";
-    echo "HTTP Status: {$fmdb->errorMessage()}<hr>";
+    echo "Error Code: {$fmdb->errorCode()}<hr>";
+    echo "Error Message: {$fmdb->errorMessage()}<hr>";
 
     // The FileMakerRelation class implements the Iterator interface and it can repeat with 'foreach.'
     // The $record also refers a FileMakerRelation object but it is for single record.
