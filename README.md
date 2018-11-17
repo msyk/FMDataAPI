@@ -1,4 +1,4 @@
-# FMDataAPI Ver.13 [![Build Status](https://travis-ci.org/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
+# FMDataAPI Ver.14 [![Build Status](https://travis-ci.org/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -55,7 +55,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"10"
+  "inter-mediator/fmdataapi":"14"
 } ...
 ```
 
@@ -65,11 +65,20 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
     - The core class, and you just use this for your application.
      This class and inner private classes are object-oriented REST API
      wrappers.
+- composer.json, composer.lock
+    - Composer information files.
+- Sample_results.ipynb
+    - Sample program and resutls with Jupyter Notebook style.
 - samlpes/FMDataAPI_Sample.php and cat.jpg
     - This is the sample program of FMDataAPI class, and shows how to
-    use FMDataAPI class. Rich comments are described.
+    use FMDataAPI class. Rich comments are described,
+    but Sample_results.ipynb is more informative.
 - README.md, .gitignore
     - These are for GitHub.
+- test
+    - Some files for unit testing.
+- .travis.yml
+    - Setting file for TravisCI.
 
 ## What's Finished and To Do
 
@@ -125,7 +134,9 @@ MIT License
     Added getDebugInfo method (Thanks to Mr.Matsuo),
     modified and fixed the getFieldNames method (Thanks to phpsa),
     fixed handling porital object name (Thanks to Mr.Matsuo)
-    fixed the getModId method (Thanks to Flexboom),
+    fixed the getModId method (Thanks to Flexboom)
+- 2018-11-17: [Ver.15]
+    Jupyter Notebook style sample and results.
 
 # API Differences between ver.8 and 7.
 ## FMDataAPI class
