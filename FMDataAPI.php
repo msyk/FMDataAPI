@@ -851,7 +851,7 @@ class FileMakerRelation implements \Iterator
     /**
      * The record pointer goes back to previous record. This does not care the range of pointer value.
      */
-    public function previos()
+    public function previous()
     {
         $this->pointer--;
     }
