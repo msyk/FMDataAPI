@@ -851,7 +851,7 @@ class FileMakerRelation implements \Iterator
     /**
      * The record pointer goes back to previous record. This does not care the range of pointer value.
      */
-    public function previos()
+    public function previous()
     {
         $this->pointer--;
     }
@@ -976,10 +976,9 @@ class FileMakerRelation implements \Iterator
     {
         $list = [];
         if (isset($this->data)
-            && isset($this->data[$this->pointer])
-            && isset($this->data[$this->pointer]->portalData)
+            && isset($this->data->portalData)
         ) {
-            foreach ($this->data[$this->pointer]->portalData as $key => $val) {
+            foreach ($this->data->portalData as $key => $val) {
                 array_push($list, $key);
             }
         }
