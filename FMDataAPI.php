@@ -976,10 +976,9 @@ class FileMakerRelation implements \Iterator
     {
         $list = [];
         if (isset($this->data)
-            && isset($this->data[$this->pointer])
-            && isset($this->data[$this->pointer]->portalData)
+            && isset($this->data->portalData)
         ) {
-            foreach ($this->data[$this->pointer]->portalData as $key => $val) {
+            foreach ($this->data->portalData as $key => $val) {
                 array_push($list, $key);
             }
         }
