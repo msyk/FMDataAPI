@@ -1,9 +1,17 @@
-# FMDataAPI Ver.15 [![Build Status](https://travis-ci.org/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
+# FMDataAPI Ver.16 [![Build Status](https://travis-ci.org/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
 
 by Masayuki Nii (nii@msyk.net)
 
 FMDataAPI is a class developed by PHP to access FileMaker database
 with FileMaker Data API.
+
+## Contributers
+
+They created pull requests. Thanks for cooperating.
+
+- Atsushi Matsuo
+- darnel
+- Craig Smith
 
 ## At a Glance
 
@@ -137,6 +145,8 @@ MIT License
     fixed the getModId method (Thanks to Flexboom)
 - 2018-11-17: [Ver.15]
     Jupyter Notebook style sample and results.
+- 2019-05-19: [Ver.16]
+    This is final version for FileMaker 17 platform, and bug fix (Thanks to darnel)
 
 # API Differences between ver.8 and 7.
 ## FMDataAPI class

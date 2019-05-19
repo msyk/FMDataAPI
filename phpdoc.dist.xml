@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+    <title>FMDataAPI Documentation</title>
+    <parser>
+        <target>../INTER-Mediator_Documents/FMDataAPI</target>
+        <encoding>utf8</encoding>
+    </parser>
+    <transformer>
+        <target>../INTER-Mediator_Documents/FMDataAPI</target>
+    </transformer>
+    <files>
+        <file>FMDataAPI.php</file>
+    </files>
+</phpdoc>

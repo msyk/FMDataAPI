@@ -1,7 +1,7 @@
 {
   "name": "inter-mediator/fmdataapi",
-  "version": "15",
-  "time": "2018-11-13",
+  "version": "16",
+  "time": "2019-05-19",
   "repositories": [
     {
       "type": "git",
@@ -12,7 +12,10 @@
   "require": {
     "php": ">=5.4.0"
   },
-  "require-dev": {},
+  "require-dev": {
+    "phpunit/phpunit": "*",
+    "phpdocumentor/phpdocumentor": "*"
+  },
   "autoload": {
     "classmap": [
       "FMDataAPI.php","test/FMDataAPIUnitTest.php","test/TestProvider.php"
@@ -39,5 +42,13 @@
     "community-en": "https://www.facebook.com/groups/254446237922985/",
     "source": "https://github.com/msyk/FMDataAPI.git",
     "manual": "http://inter-mediator.info/FMDataAPI/namespaces/INTERMediator.FileMakerServer.RESTAPI.html"
+  },
+  "scripts": {
+    "test": [
+      "./vendor/bin/phpunit --bootstrap ./vendor/autoload.php --configuration ./test/phpunit.xml ./test/FMDataAPIUnitTest.php"
+    ],
+    "doc": [
+      "./vendor/bin/phpdoc -f ./FMDataAPI.php -t ../INTER-Mediator_Documents/FMDataAPI"
+    ]
   }
 }
