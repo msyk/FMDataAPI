@@ -1,4 +1,4 @@
-# FMDataAPI Ver.16 [![Build Status](https://travis-ci.org/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
+# FMDataAPI Ver.17 [![Build Status](https://travis-ci.org/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -45,7 +45,7 @@ for a long while, FileMaker Inc. has introduced modern feature to operate
 database. Current version of FMDataAPI works on just FileMaker 17 platform.
 
 For now I'm focusing to develop the web application framework "INTER-Mediator"
-(https://inter-mediator.org/ or https://github.com/INTER-Mediator/INTER-Mediator.git)
+(https://inter-mediator.com/ or https://github.com/INTER-Mediator/INTER-Mediator.git)
 which can develop the core features of database-driven web application
 with declarative descriptions. INTER-Mediator has already supported the Custom
 Web Publishing with FX.php, and I develop codes here for support REST APIs.
@@ -63,7 +63,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"15"
+  "inter-mediator/fmdataapi":"17"
 } ...
 ```
 
@@ -87,21 +87,6 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
     - Some files for unit testing.
 - .travis.yml
     - Setting file for TravisCI.
-
-## What's Finished and To Do
-
-### Already Finished
-
-- Understand the FileMaker's REST API for me.
-- Support all API calls in FileMaker Data API.
-- OAuth integrations.
-- Supporting FileMaker 17.
-
-### What's To Do
-
-- Create unit test suite.
-- Check any layout and field names without variable friendly name.
-- Error handling for wider cases with exception based.
 
 ## Licence
 
@@ -127,6 +112,7 @@ MIT License
 - 2018-02-18: [Ver.6] Bug fix of creating record with no default value.
 - 2018-03-25: [Ver.7] getSessionToken method is added. OAuth handling is implemented but not well debugged.
 - 2018-05-09: The Version 7 is the last version which supports FileMaker 16 based Data API.
+---
 - 2018-05-15: [Ver.8] Update for FileMaker 17. FileMaker Data API v1 is supported from this version.
    The preview version of FileMaker Data API is not supported anymore.
 - 2018-05-27: [Ver.9] composer.json is added, and can install "inter-mediator/fmdataapi".
@@ -147,15 +133,19 @@ MIT License
     Jupyter Notebook style sample and results.
 - 2019-05-19: [Ver.16]
     This is final version for FileMaker 17 platform, and bug fix (Thanks to darnel)
-
-# API Differences between ver.8 and 7.
-## FMDataAPI class
+---
+- 2019-05-20: [Ver.17]
+    Support the FileMaker 18 platform.
+    Add getMetadataOld() and getMetadata() to FileMakerLayout class.
+    Add getProductInfo(), getDatabaseNames(), getLayoutNames() and getScriptNames() to FMDataAPI class.
+## API Differences between ver.8 and 7.
+### FMDataAPI class
 The setAPIVersion method is added. This is for future update of FileMaker Data API.
 As far as FMDataAPI Ver.8 goes, This isn't requred.
 - public function __construct($solution, $user, $password, $host = NULL, $port = NULL, $protocol = NULL, [New]$fmDataSource = null)
 - [New]public function setAPIVersion($vNum)
 
-## FileMakerRelation class
+### FileMakerRelation class
 The following methods are added script parameters. See the query method's document for specifying it.
 Twe methods are added portal parameter.
 

@@ -1,7 +1,7 @@
 {
   "name": "inter-mediator/fmdataapi",
-  "version": "16",
-  "time": "2019-05-19",
+  "version": "17",
+  "time": "2019-05-20",
   "repositories": [
     {
       "type": "git",
@@ -18,7 +18,9 @@
   },
   "autoload": {
     "classmap": [
-      "FMDataAPI.php","test/FMDataAPIUnitTest.php","test/TestProvider.php"
+      "FMDataAPI.php",
+      "test/FMDataAPIUnitTest.php",
+      "test/TestProvider.php"
     ]
   },
   "description": "FMDataAPI is a class developed by PHP to access FileMaker database with FileMaker Data API.",
@@ -33,8 +35,17 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Masayuki Nii",
+      "name": "Masayuki Nii (Auther)",
       "homepage": "http://msyk.net/"
+    },
+    {
+      "name": "Atsushi Matsuo (Contributor)"
+    },
+    {
+      "name": "darnel (Contributor)"
+    },
+    {
+      "name": "Craig Smith (Contributor)"
     }
   ],
   "support": {

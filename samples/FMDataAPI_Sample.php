@@ -13,10 +13,10 @@ use INTERMediator\FileMakerServer\RESTAPI\FMDataAPI as FMDataAPI;
 
 // FMDataAPI class handles an error as an exception by default.
 try {
-    // Instanticate the class FMDataAPI with database name, user name, password and host.
-    // Although the port number and protocol can be set in parameters of constractor,
+    // Instantiate the class FMDataAPI with database name, user name, password and host.
+    // Although the port number and protocol can be set in parameters of constructor,
     // these parameters can be omitted with default values.
-    $fmdb = new FMDataAPI("TestDB", "web", "password", "localserver");
+    $fmdb = new FMDataAPI("TestDB", "web", "password", "localhost");
 
     //==============================
     //$fmdb = new FMDataAPI("TestDB", "web", "password", "localserver");
@@ -40,8 +40,21 @@ try {
     // In case of self-signed one (usually default situation), you don't have to call this method.
     //$fmdb->setCertValidating(true);
 
-    // The metadata api call is undocumented thing.
-    //$result = $fmdb->person_layout->getMetadata();
+    // Metadata API is the new feature of FMS18.
+    $pInfo = var_export($fmdb->getProductInfo(), true);
+    echo "Product Info: {$pInfo}<hr>";
+    $pInfo = var_export($fmdb->getDatabaseNames(), true);
+    echo "Database Names: {$pInfo}<hr>";
+    $pInfo = var_export($fmdb->getLayoutNames(), true);
+    echo "Layout Names: {$pInfo}<hr>";
+    $pInfo = var_export($fmdb->getScriptNames(), true);
+    echo "Script Names: {$pInfo}<hr>";
+    $result = $fmdb->person_layout->getMetadata();
+    $pInfo = var_export($result, true);
+    echo "Layout Metadata: {$pInfo}<hr>";
+    $result = $fmdb->person_layout->getMetadataOld();
+    $pInfo = var_export($result, true);
+    echo "Layout Metadata (Old): {$pInfo}<hr>";
 
     // The FMDataAPI has the property as the same name of layout. This sample database has the 'person_layout' layout,
     // so '$fmdb->person_layout' refers FMLayout object fo the proxy of the layout. FMLayout class has the 'query' method
@@ -158,6 +171,7 @@ try {
         echo "Script Error: {$fmdb->person_layout->getScriptError()}<hr>";
         echo "Script Result: {$fmdb->person_layout->getScriptResult()}<hr>";
     }
+
     // A new record is created in "testtable" table.
     $recId = $fmdb->testtable->create();
     // The "testtable" table has a container filed "vc1". One image file is going to be uploaded to it.
@@ -168,12 +182,13 @@ try {
     // https://localhost/Streaming_SSL/MainDB/6A4A253F7CE33465DCDFBFF0704B34C0993D54AD85702396920E85249BD0271A.jpg?RCType=EmbeddedRCFileProcessor
     // This url can get the content of the container field, and it means you can download with file_put_content() function and so on.
     $result = $fmdb->testtable->getRecord($recId);
-    if(!is_null($result)) {
+    if (!is_null($result)) {
         foreach ($result as $record) {
             echo "vc1: {$record->vc1}<hr>";
             echo "<p><img src='data:image/jpeg;base64," . $record->getContainerData('vc1') . "'></p>";
         }
     }
+
     // If you call the 'startCommunication()' method, you can describe a series of database operation
     // calls. This means the authentication is going to be done at the 'startCommunication()' method,
     // and the token is going to be shared with following statements. The 'endCommunication()' calls
@@ -195,7 +210,7 @@ try {
     // with the object name of the portal not the table occurrence name.
     $portal = array("Contact");
     $result = $fmdb->person_layout->query(array(array("id" => "1")), null, 1, -1, $portal);
-    if(!is_null($result)) {
+    if (!is_null($result)) {
         foreach ($result as $record) {
             $recordId = $record->getRecordId();
             $partialResult = $fmdb->person_layout->getRecord($recordId, $portal);
@@ -206,7 +221,7 @@ try {
     // The 'query()' method can have several parameters. The second parameter is for sorting.
     $portal = array("Contact");
     $result = $fmdb->person_layout->query(array(array("id" => "1...")), array(array("id", "descend")), 1, -1, $portal);
-    if(!is_null($result)) {
+    if (!is_null($result)) {
         foreach ($result as $record) {
             $recordId = $record->getRecordId();
             $partialResult = $fmdb->person_layout->getRecord($recordId, $portal);
@@ -214,9 +229,9 @@ try {
             echo "<hr>";
         }
     }
-    // The 'query()' method can have several parameters. The second parameter is for sorting.
+    // The 'query()' method can have several parameters. The forth parameter is limit record number to query, and third is offset.
     $result = $fmdb->person_layout->query(null, null, 2, 2);
-    if(!is_null($result)) {
+    if (!is_null($result)) {
         foreach ($result as $record) {
             $recordId = $record->getRecordId();
             $partialResult = $fmdb->person_layout->getRecord($recordId, $portal);
