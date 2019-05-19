@@ -1537,7 +1537,7 @@ class CommunicationProvider
     /**
      * @ignore
      */
-    private function justifyRequest($request)
+    public function justifyRequest($request)
     {
         $result = $request;
         // cast a number
