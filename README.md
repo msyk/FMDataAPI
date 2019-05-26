@@ -1,4 +1,4 @@
-# FMDataAPI Ver.17 [![Build Status](https://travis-ci.org/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
+# FMDataAPI Ver.18 [![Build Status](https://travis-ci.org/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -42,7 +42,7 @@ The FileMaker Data API is the new feature of FileMaker Server 16,
 and it's a API with REST-based database operations.
 Although the Custom Web Publishing is the way to access the database
 for a long while, FileMaker Inc. has introduced modern feature to operate
-database. Current version of FMDataAPI works on just FileMaker 17 platform.
+database. Current version of FMDataAPI works on just FileMaker 18 platform.
 
 For now I'm focusing to develop the web application framework "INTER-Mediator"
 (https://inter-mediator.com/ or https://github.com/INTER-Mediator/INTER-Mediator.git)
@@ -63,7 +63,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"17"
+  "inter-mediator/fmdataapi":"18"
 } ...
 ```
 
@@ -138,6 +138,10 @@ MIT License
     Support the FileMaker 18 platform.
     Add getMetadataOld() and getMetadata() to FileMakerLayout class.
     Add getProductInfo(), getDatabaseNames(), getLayoutNames() and getScriptNames() to FMDataAPI class.
+- 2019-05-27: [Ver.18]
+    Add getTargetTable(), getTotalCount(), getFoundCount(), getReturnedCount() to FileMakerRelation class.
+    Add getTargetTable(), getTotalCount(), getFoundCount(), getReturnedCount() to FMDataAPI class.
+
 ## API Differences between ver.8 and 7.
 ### FMDataAPI class
 The setAPIVersion method is added. This is for future update of FileMaker Data API.

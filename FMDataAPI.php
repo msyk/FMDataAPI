@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Object-oriented class for the REST API in FileMaker Server 17/Cloud.
+ * Object-oriented class for the REST API in FileMaker Server 18/Cloud.
  *
- * @version 15.0
+ * @version 18.0
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -11,15 +11,16 @@
 namespace INTERMediator\FileMakerServer\RESTAPI;
 
 /**
- * Class FMDataAPI is the wrapper of The REST API in FileMaker Server 17/Cloud.
+ * Class FMDataAPI is the wrapper of The REST API in FileMaker Server 18/Cloud.
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @property-read FileMakerLayout $<<layout_name>> FileMakerLayout object named as the property name.
+ * @property-read FileMakerLayout $<<layout_name>> Returns the FileMakerLayout object from the layout named with the property.
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
- * @version 17
+ * @version 18
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @copyright 2017-2019 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @source 1 100000 The source code.
  */
 class FMDataAPI
 {
@@ -120,7 +121,7 @@ class FMDataAPI
 
     /**
      * FileMaker Data API's version is going to be set. If you don't call, the "vLatest" is specified.
-     * As far as FileMaker 17 supports just "v1", no one has to call this method.
+     * As far as FileMaker 18 supports just "v1", no one has to call this method.
      * @param integer $vNum FileMaker Data API's version number.
      */
     public function setAPIVersion($vNum)
@@ -205,8 +206,10 @@ class FMDataAPI
     }
 
     /**
-     * Start a transaction which is a serial calling of any database operations,
-     * and login with the layout in parameter.
+     * Start a transaction which is a serial calling of multiple database operations before the single authentication.
+     * Usually most methods login and logout before/after the database operation, and so a little bit time is going to
+     * take. The startCommunication() login and endCommunication() logout, and methods between them don't login/out, and
+     * it can expect faster operations.
      */
     public function startCommunication()
     {
@@ -252,6 +255,9 @@ class FMDataAPI
 
     /**
      * Get the product information, such as the version, etc. This isn't required to authenticate.
+     * @return object The information of this FileMaker product. Ex.: {'name' => 'FileMaker Data API Engine',
+     * 'buildDate' => '03/27/2019', 'version' => '18.0.1.109', 'dateFormat' => 'MM/dd/yyyy', 'timeFormat' => 'HH:mm:ss',
+     * 'timeStampFormat' => 'MM/dd/yyyy HH:mm:ss'}.
      * @throws Exception In case of any error, an exception arises.
      */
     public function getProductInfo()
@@ -260,7 +266,10 @@ class FMDataAPI
     }
 
     /**
-     * Get the information about hosting database. This is required to authenticate.
+     * Get the information about hosting database. It includes the target database and others in FileMaker Server.
+     * This is required to authenticate.
+     * @return array The information of hosting databases. Every element is an object and just having 'name'
+     * property.Ex.: [{"name": "TestDB"},{"name": "sample_db"},]
      * @throws Exception In case of any error, an exception arises.
      */
     public function getDatabaseNames()
@@ -270,6 +279,9 @@ class FMDataAPI
 
     /**
      * Get the list of layout name in database.
+     * @return array The information of layouts in the target database. Every element is an object and just having 'name'
+     * property.
+     * Ex.: [{"name": "person_layout"},{"name": "contact_to"},{"name": "history_to"},...]
      * @throws Exception In case of any error, an exception arises.
      */
     public function getLayoutNames()
@@ -279,11 +291,60 @@ class FMDataAPI
 
     /**
      * Get the list of script name in database.
+     * @return array The information of scripts in the target database. Every element is an object and having 'name' property.
+     * The 'isFolder' property is true if it's a folder item and it has the 'folderScriptNames' property and includes
+     * object with the same structure.
+     * Ex.: [{"name": "TestScript1","isFolder": false},{"name": "TestScript2","isFolder": false},{"name": "Mentenance",
+     * "isFolder": true, "folderScriptNames": [{"name": "DataImport","isFolder": false}],}]
      * @throws Exception In case of any error, an exception arises.
      */
     public function getScriptNames()
     {
         return $this->provider->getScriptNames();
+    }
+
+    /**
+     * Get the table occurrence name of just previous query. Usually this method returns the information of
+     * the FileMakerRelation class.
+     * @return string  The table name.
+     * @see FileMakerRelation::getTargetTable()
+     */
+    public function getTargetTable()
+    {
+        return $this->provider->targetTable;
+    }
+
+    /**
+     * Get the total record count of just previous query. Usually this method returns the information of
+     * the FileMakerRelation class.
+     * @return integer  The total record count.
+     * @see FileMakerRelation::getTotalCount()
+     */
+    public function getTotalCount()
+    {
+        return $this->provider->totalCount;
+    }
+
+    /**
+     * Get the founded record count of just previous query. Usually this method returns the information of
+     * the FileMakerRelation class.
+     * @return integer  The founded record count.
+     * @see FileMakerRelation::getFoundCount()
+     */
+    public function getFoundCount()
+    {
+        return $this->provider->foundCount;
+    }
+
+    /**
+     * Get the returned record count of just previous query. Usually this method returns the information of
+     * the FileMakerRelation class.
+     * @return integer  The returned record count.
+     * @see FileMakerRelation::getReturnedCount()
+     */
+    public function getReturnedCount()
+    {
+        return $this->provider->returnedCount;
     }
 }
 
@@ -296,9 +357,9 @@ namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 17
+ * @version 18
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @copyright 2017-2019 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
 class FileMakerLayout
 {
@@ -481,8 +542,8 @@ class FileMakerLayout
                     property_exists($result->response, 'data') &&
                     property_exists($result, 'messages')
                 ) {
-                    $fmrel = new FileMakerRelation($result->response->data, "OK",
-                        $result->messages[0]->code, null, $this->restAPI);
+                    $fmrel = new FileMakerRelation($result->response->data, $result->response->dataInfo,
+                        "OK", $result->messages[0]->code, null, $this->restAPI);
                 }
                 $this->restAPI->logout();
                 return $fmrel;
@@ -520,8 +581,10 @@ class FileMakerLayout
                 $result = $this->restAPI->responseBody;
                 $fmrel = null;
                 if ($result) {
-                    $fmrel = new FileMakerRelation($result->response->data, "OK",
-                        $result->messages[0]->code, null, $this->restAPI);
+                    $dataInfo = clone $result->response->dataInfo;
+                    $dataInfo->returnedCount = 1;
+                    $fmrel = new FileMakerRelation($result->response->data, $dataInfo,
+                        "OK", $result->messages[0]->code, null, $this->restAPI);
                 }
                 $this->restAPI->logout();
                 return $fmrel;
@@ -721,7 +784,11 @@ class FileMakerLayout
     }
 
     /**
-     * Get metadata information of the layout. Until ver.16 this method was 'getMetadata'.
+     * Get the metadata information of the layout. Until ver.16 this method was 'getMetadata'.
+     * @return object The metadata information of the layout. It has just 1 property 'metaData' the array of the field
+     * information is set under the 'metaData' property. There is no information about portals. Ex.:
+     * {"metaData": [{"name": "id","type": "normal","result": "number","global": "false","repetitions": 1,"id": "1"},
+     *{"name": "name","type": "normal","result": "text","global": "false","repetitions": 1,"id": "2"},,....,]}
      * @throws Exception In case of any error, an exception arises.
      */
     public function getMetadataOld()
@@ -746,6 +813,14 @@ class FileMakerLayout
 
     /**
      * Get metadata information of the layout.
+     * @return object The metadata information of the layout. It has 2 properties 'fieldMetaData' and  'fieldMetaData'.
+     * The later one has properties having portal object name of TO name. The array of the field information is set under
+     * 'fieldMetaData' and the portal named properties.
+     * Ex.: {"fieldMetaData": [{"name": "id","type": "normal","displayType": "editText","result": "number","global": false,
+     * "autoEnter": true,"fourDigitYear": false,"maxRepeat": 1,"maxCharacters": 0,"notEmpty": false,"numeric": false,
+     * "timeOfDay": false,"repetitionStart": 1,"repetitionEnd": 1},....,],"portalMetaData": {"Contact": [{
+     * "name": "contact_to::id","type": "normal",...},...], "history_to": [{"name": "history_to::id","type": "normal",
+     * ...}...]}
      * @throws Exception In case of any error, an exception arises.
      */
     public function getMetadata()
@@ -836,10 +911,11 @@ class FileMakerLayout
     {
         return $this->restAPI->scriptResultPresort;
     }
+
 }
 
 /**
- * Class FileMakerRelation is the record set of queried data.
+ * Class FileMakerRelation is the record set of queried data. This class implements Iterator interface.
  * The object of this class is going to be generated by the FileMakerLayout class,
  * and you shouldn't call the constructor of this class.
  *
@@ -848,9 +924,9 @@ class FileMakerLayout
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
- * @version 17
+ * @version 18
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @copyright 2017-2019 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
 class FileMakerRelation implements \Iterator
 {
@@ -859,6 +935,11 @@ class FileMakerRelation implements \Iterator
      * @ignore
      */
     private $data = null;
+    /**
+     * @var null
+     * @ignore
+     */
+    private $dataInfo = null;
     /**
      * @var null|string
      * @ignore
@@ -893,13 +974,70 @@ class FileMakerRelation implements \Iterator
      * @param null $portalName
      * @ignore
      */
-    public function __construct($data, $result = "PORTAL", $errorCode = 0, $portalName = null, $provider = null)
+    public function __construct($responseData, $infoData,
+                                $result = "PORTAL", $errorCode = 0, $portalName = null, $provider = null)
     {
-        $this->data = $data;
+        $this->data = $responseData;
+        $this->dataInfo = $infoData;
         $this->result = $result;
         $this->errorCode = $errorCode;
         $this->portalName = $portalName;
         $this->restAPI = $provider;
+        if ($errorCode === 0 && $portalName && is_array($infoData)) {
+            foreach ($infoData as $pdItem) {
+                if (property_exists($pdItem, 'portalObjectName') && $pdItem->portalObjectName == $portalName ||
+                    !property_exists($pdItem, 'portalObjectName') && $pdItem->table == $portalName) {
+                    $this->dataInfo = $pdItem;
+                }
+            }
+        }
+    }
+
+    /**
+     * @ignore
+     */
+    public function getDataInfo()
+    {
+        return $this->dataInfo;
+    }
+
+    /**
+     * Get the table occurrence name of query to get this relation.
+     * @return string  The table occurrence name.
+     */
+    public function getTargetTable()
+    {
+        return ($this->dataInfo) ? $this->dataInfo->table : null;
+    }
+
+    /**
+     * Get the total record count of query to get this relation. Portal relation doesn't have this information and returns NULL.
+     * @return integer  The total record count.
+     */
+    public function getTotalCount()
+    {
+        return ($this->dataInfo && property_exists($this->dataInfo, 'totalRecordCount')) ?
+            $this->dataInfo->totalRecordCount : null;
+    }
+
+    /**
+     * Get the founded record count of query to get this relation. If the relation comes from getRecord() method,
+     * this method returns 1.
+     * @return integer  The founded record count.
+     */
+    public function getFoundCount()
+    {
+        return ($this->dataInfo) ? $this->dataInfo->foundCount : null;
+    }
+
+    /**
+     * Get the returned record count of query to get this relation. If the relation comes from getRecord() method,
+     * this method returns 1.
+     * @return integer  The rreturned record count.
+     */
+    public function getReturnedCount()
+    {
+        return ($this->dataInfo) ? $this->dataInfo->returnedCount : null;
     }
 
     /**
@@ -946,6 +1084,7 @@ class FileMakerRelation implements \Iterator
 
     /**
      * Count the number of records.
+     * This method is defined in the Iterator interface.
      * @return int The number of records.
      */
     public function count()
@@ -955,7 +1094,7 @@ class FileMakerRelation implements \Iterator
 
     /**
      * @param $key
-     * @return FileMakerRelation|null
+     * @return FileMakerRelation|string|null
      * @ignore
      */
     public function __get($key)
@@ -1072,7 +1211,8 @@ class FileMakerRelation implements \Iterator
                         } else if (isset($this->data[$this->pointer]->portalData) &&
                             isset($this->data[$this->pointer]->portalData->$name)
                         ) {
-                            $value = new FileMakerRelation($this->data[$this->pointer]->portalData->$name,
+                            $value = new FileMakerRelation(
+                                $this->data[$this->pointer]->portalData->$name, $this->data->portalDataInfo,
                                 "PORTAL", 0, null, $this->restAPI);
                         }
                     }
@@ -1088,7 +1228,8 @@ class FileMakerRelation implements \Iterator
                     if (isset($this->data->fieldData) && isset($this->data->fieldData->$name)) {
                         $value = $this->data->fieldData->$name;
                     } else if (isset($this->data->portalData) && isset($this->data->portalData->$name)) {
-                        $value = new FileMakerRelation($this->data->portalData->$name,
+                        $value = new FileMakerRelation(
+                            $this->data->portalData->$name, $this->data->portalDataInfo,
                             "PORTAL", 0, $name, $this->restAPI);
                     }
                     break;
@@ -1208,8 +1349,10 @@ class FileMakerRelation implements \Iterator
         if (isset($this->data) &&
             isset($this->data[$this->pointer])
         ) {
+            $dataInfo = clone $this->getDataInfo();
+            $dataInfo->returnedCount = 1;
             $value = new FileMakerRelation(
-                $this->data[$this->pointer],
+                $this->data[$this->pointer], $dataInfo,
                 ($this->result == "PORTAL") ? "PORTALRECORD" : "RECORD",
                 $this->errorCode, $this->portalName, $this->restAPI);
         }
@@ -1253,9 +1396,9 @@ class FileMakerRelation implements \Iterator
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 17
+ * @version 18
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2018 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @copyright 2017-2019 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
 class CommunicationProvider
 {
@@ -1345,6 +1488,26 @@ class CommunicationProvider
      * @ignore
      */
     private $isLocalServer = false;
+    /**
+     * @var
+     * @ignore
+     */
+    public $targetTable = '';
+    /**
+     * @var
+     * @ignore
+     */
+    public $totalCount = 0;
+    /**
+     * @var
+     * @ignore
+     */
+    public $foundCount = 0;
+    /**
+     * @var
+     * @ignore
+     */
+    public $returnedCount = 0;
     /**
      * @var
      * @ignore
@@ -1904,6 +2067,11 @@ class CommunicationProvider
         $this->scriptResultPrerequest = null;
         $this->scriptErrorPresort = null;
         $this->scriptResultPresort = null;
+        $this->targetTable = null;
+        $this->totalCount = null;
+        $this->foundCount = null;
+        $this->returnedCount = null;
+
 
         if (property_exists($this, 'responseBody')) {
             $rbody = $this->responseBody;
@@ -1917,10 +2085,25 @@ class CommunicationProvider
                     $result = $rbody->response;
                     $this->scriptError = property_exists($result, 'scriptError') ? $result->scriptError : null;
                     $this->scriptResult = property_exists($result, 'scriptResult') ? $result->scriptResult : null;
-                    $this->scriptErrorPrerequest = property_exists($result, 'scriptError.prerequest') ? $result->{'scriptError.prerequest'} : null;
-                    $this->scriptResultPrerequest = property_exists($result, 'scriptResult.prerequest') ? $result->{'scriptResult.prerequest'} : null;
-                    $this->scriptErrorPresort = property_exists($result, "scriptError.presort") ? $result->{"scriptError.presort"} : null;
-                    $this->scriptResultPresort = property_exists($result, "scriptResult.presort") ? $result->{"scriptResult.presort"} : null;
+                    $this->scriptErrorPrerequest = property_exists($result, 'scriptError.prerequest') ?
+                        $result->{'scriptError.prerequest'} : null;
+                    $this->scriptResultPrerequest = property_exists($result, 'scriptResult.prerequest') ?
+                        $result->{'scriptResult.prerequest'} : null;
+                    $this->scriptErrorPresort = property_exists($result, "scriptError.presort") ?
+                        $result->{"scriptError.presort"} : null;
+                    $this->scriptResultPresort = property_exists($result, "scriptResult.presort") ?
+                        $result->{"scriptResult.presort"} : null;
+                    if (property_exists($result, 'dataInfo')) {
+                        $dataInfo = $result->dataInfo;
+                        $this->targetTable = property_exists($dataInfo, 'table') ?
+                            $dataInfo->table : null;
+                        $this->totalCount = property_exists($dataInfo, 'totalRecordCount') ?
+                            $dataInfo->totalRecordCount : null;
+                        $this->foundCount = property_exists($dataInfo, 'foundCount') ?
+                            $dataInfo->foundCount : null;
+                        $this->returnedCount = property_exists($dataInfo, 'returnedCount') ?
+                            $dataInfo->returnedCount : null;
+                    }
                 }
             }
         }

@@ -32,6 +32,11 @@ class FMDataAPIUnitTest extends TestCase
         $result = $this->fmdataapi->person_layout->query();
         $this->assertNotNull($result, 'Returned something.');
         $this->assertEquals($result->count(), 3, 'Checking the record number.');
+        $this->assertEquals($result->getTargetTable(), 'person_to', 'Checking the table occurrence name.');
+        $this->assertEquals($result->getTotalCount(), 3, 'Checking the total record number.');
+        $this->assertEquals($result->getFoundCount(), 3, 'Checking the found record number.');
+        $this->assertEquals($result->getReturnedCount(), 3, 'Checking the returned record number.');
+
         $counter = 0;
         foreach ($result as $record) {
             $contacts = $record->Contact;
@@ -41,6 +46,11 @@ class FMDataAPIUnitTest extends TestCase
                 $this->assertEquals($record->mail, 'msyk@msyk.net', 'Field value has to match with defined value.');
                 $pcounter = 0;
                 $this->assertEquals($contacts->count(), 3, 'Checking the record number.');
+                $this->assertEquals($contacts->getTargetTable(), 'contact_to', 'Checking the table occurrence name.');
+                $this->assertNull($contacts->getTotalCount(), 'Checking NULL as the total record number.');
+                $this->assertEquals($contacts->getFoundCount(), 3, 'Checking the found record number.');
+                $this->assertEquals($contacts->getReturnedCount(), 3, 'Checking the returned record number.');
+
                 foreach ($contacts as $item) {
                     if ($pcounter === 0) {
                         $this->assertEquals($item->field("datetime", "contact_to"), '12/01/2009 15:23:00', 'Portal field value has to match with defined value.');
@@ -82,6 +92,9 @@ class FMDataAPIUnitTest extends TestCase
                     $pcounter += 1;
                 }
                 $this->assertEquals($pcounter, 2, 'Cheking the record number in portal.');
+
+                $recId= $record->getRecordId();
+                $this->assertEquals($recId, 333, 'The record id of last record must be 333.');
             }
             $counter += 1;
         }

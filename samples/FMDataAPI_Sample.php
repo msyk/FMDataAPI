@@ -69,11 +69,22 @@ try {
     echo "Error Code: {$fmdb->errorCode()}<hr>";
     echo "Error Message: {$fmdb->errorMessage()}<hr>";
 
+    // If the query is succeed, the following information can be detected.
+    echo "Target Table: {$fmdb->getTargetTable()}<hr>";
+    echo "Total Count: {$fmdb->getTotalCount()}<hr>";
+    echo "Found Count: {$fmdb->getFoundCount()}<hr>";
+    echo "Returned Count: {$fmdb->getReturnedCount()}<hr>";
+
     // The FileMakerRelation class implements the Iterator interface and it can repeat with 'foreach.'
     // The $record also refers a FileMakerRelation object but it is for single record.
     // This layout has fields as like 'id', 'name', 'mail' and so on, and the field name can be handle
     // as a property name of the the record referring with $record.
     if (!is_null($result)) {
+        // If the query is succeed, the following information can be detected.
+        echo "Target Table: {$result->getTargetTable()}<hr>";
+        echo "Total Count: {$result->getTotalCount()}<hr>";
+        echo "Found Count: {$result->getFoundCount()}<hr>";
+        echo "Returned Count: {$result->getReturnedCount()}<hr>";
         foreach ($result as $record) {
             echo "id: {$record->id},";
             echo "name: {$record->name},";
@@ -83,6 +94,13 @@ try {
 
             // A portal name property returns records of portal as FileMakerRelation object.
             $contacts = $record->Contact;
+
+            // If the query is succeed, the following information can be detected.
+            var_dump($contacts);
+            echo "Target Table: {$contacts->getTargetTable()}<hr>";
+            echo "Total Count: {$contacts->getTotalCount()}<hr>";
+            echo "Found Count: {$contacts->getFoundCount()}<hr>";
+            echo "Returned Count: {$contacts->getReturnedCount()}<hr>";
 
             // You can repeat with foreach for the portal records.
             foreach ($contacts as $item) {
@@ -111,6 +129,7 @@ try {
             echo "name: {$result->name},";
             echo "mail: {$result->mail}<hr>";
             $contacts = $result->Contact;
+
             for ($j = 0; $j < $contacts->count(); $j++) {
                 echo "[PORTAL(contact_to)] id: {$contacts->field("id", "contact_to")},";
                 echo "summary: {$contacts->field("summary", "contact_to")}<hr>";
@@ -182,6 +201,11 @@ try {
     // https://localhost/Streaming_SSL/MainDB/6A4A253F7CE33465DCDFBFF0704B34C0993D54AD85702396920E85249BD0271A.jpg?RCType=EmbeddedRCFileProcessor
     // This url can get the content of the container field, and it means you can download with file_put_content() function and so on.
     $result = $fmdb->testtable->getRecord($recId);
+    echo "Target Table(getRecord): {$result->getTargetTable()}<hr>";
+    echo "Total Count(getRecord): {$result->getTotalCount()}<hr>";
+    echo "Found Count(getRecord): {$result->getFoundCount()}<hr>";
+    echo "Returned Count(getRecord): {$result->getReturnedCount()}<hr>";
+
     if (!is_null($result)) {
         foreach ($result as $record) {
             echo "vc1: {$record->vc1}<hr>";

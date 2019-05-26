@@ -84,7 +84,236 @@ class TestProvider extends CommunicationProvider
                 'curlinfo' => ['http_code' => 200]
             ],
             'd973a3dff40c30a307a9872714c88f9ee6873dd5' => [     //Simple Query
-                'response' => '{"response":{"data":[{"fieldData":{"id":1,"name":"Masayuki Nii","address":"Saitama, Japan","mail":"msyk@msyk.net","category":102,"checking":1,"location":201,"memo":""},"portalData":{"Contact":[{"recordId":"1","contact_to::id":1,"contact_to::person_id":1,"contact_to::summary":"Telephone","contact_to::datetime":"12/01/2009 15:23:00","contact_to::description":"a\rb","contact_to::important":"","contact_to::way":4,"contact_to::kind":4,"modId":"1"},{"recordId":"2","contact_to::id":2,"contact_to::person_id":1,"contact_to::summary":"Meetings","contact_to::datetime":"12/02/2009 15:23:00","contact_to::description":"aq","contact_to::important":1,"contact_to::way":4,"contact_to::kind":7,"modId":"3"},{"recordId":"3","contact_to::id":3,"contact_to::person_id":1,"contact_to::summary":"Mail","contact_to::datetime":"12/03/2009 15:23:00","contact_to::description":"","contact_to::important":"","contact_to::way":5,"contact_to::kind":8,"modId":"0"}],"History":[{"recordId":"1","history_to::id":1,"history_to::person_id":1,"history_to::description":"Hight School","history_to::startdate":"04/01/2001","history_to::enddate":"03/31/2003","history_to::username":"","modId":"0"},{"recordId":"2","history_to::id":2,"history_to::person_id":1,"history_to::description":"University","history_to::startdate":"04/01/2003","history_to::enddate":"03/31/2007","history_to::username":"","modId":"0"}]},"recordId":"1","modId":"6"},{"fieldData":{"id":2,"name":"Someone","address":"Tokyo, Japan","mail":"msyk@msyk.net","category":"","checking":"","location":"","memo":""},"portalData":{"Contact":[{"recordId":"4","contact_to::id":4,"contact_to::person_id":2,"contact_to::summary":"Calling","contact_to::datetime":"12/04/2009 15:23:00","contact_to::description":"","contact_to::important":"","contact_to::way":6,"contact_to::kind":12,"modId":"0"},{"recordId":"5","contact_to::id":5,"contact_to::person_id":2,"contact_to::summary":"Telephone","contact_to::datetime":"12/01/2009 15:23:00","contact_to::description":"","contact_to::important":"","contact_to::way":4,"contact_to::kind":4,"modId":"0"}],"History":[]},"recordId":"2","modId":"0"},{"fieldData":{"id":3,"name":"Anyone","address":"Osaka, Japan","mail":"msyk@msyk.net","category":101,"checking":1,"location":202,"memo":""},"portalData":{"Contact":[{"recordId":"6","contact_to::id":6,"contact_to::person_id":3,"contact_to::summary":"Meeting","contact_to::datetime":"12/02/2009 15:23:00","contact_to::description":"","contact_to::important":1,"contact_to::way":4,"contact_to::kind":7,"modId":"0"},{"recordId":"7","contact_to::id":7,"contact_to::person_id":3,"contact_to::summary":"Mail etcsss","contact_to::datetime":"12/03/2009 15:23:00","contact_to::description":"aaaqq","contact_to::important":"","contact_to::way":5,"contact_to::kind":8,"modId":"4"}],"History":[]},"recordId":"3","modId":"6"}]},"messages":[{"code":"0","message":"OK"}]}',
+                'response' => '{
+  "response": {
+    "dataInfo": {
+      "database": "TestDB",
+      "layout": "person_layout",
+      "table": "person_to",
+      "totalRecordCount": 3,
+      "foundCount": 3,
+      "returnedCount": 3
+    },
+    "data": [
+      {
+        "fieldData": {
+          "id": 1,
+          "name": "Masayuki Nii",
+          "address": "Saitama, Japan",
+          "mail": "msyk@msyk.net",
+          "category": 102,
+          "checking": 1,
+          "location": 201,
+          "memo": ""
+        },
+        "portalData": {
+          "Contact": [
+            {
+              "recordId": "1",
+              "contact_to::id": 1,
+              "contact_to::person_id": 1,
+              "contact_to::summary": "Telephone",
+              "contact_to::datetime": "12/01/2009 15:23:00",
+              "contact_to::description": "a\rb",
+              "contact_to::important": "",
+              "contact_to::way": 4,
+              "contact_to::kind": 4,
+              "modId": "1"
+            },
+            {
+              "recordId": "2",
+              "contact_to::id": 2,
+              "contact_to::person_id": 1,
+              "contact_to::summary": "Meetings",
+              "contact_to::datetime": "12/02/2009 15:23:00",
+              "contact_to::description": "aq",
+              "contact_to::important": 1,
+              "contact_to::way": 4,
+              "contact_to::kind": 7,
+              "modId": "3"
+            },
+            {
+              "recordId": "3",
+              "contact_to::id": 3,
+              "contact_to::person_id": 1,
+              "contact_to::summary": "Mail",
+              "contact_to::datetime": "12/03/2009 15:23:00",
+              "contact_to::description": "",
+              "contact_to::important": "",
+              "contact_to::way": 5,
+              "contact_to::kind": 8,
+              "modId": "0"
+            }
+          ],
+          "History": [
+            {
+              "recordId": "1",
+              "history_to::id": 1,
+              "history_to::person_id": 1,
+              "history_to::description": "Hight School",
+              "history_to::startdate": "04/01/2001",
+              "history_to::enddate": "03/31/2003",
+              "history_to::username": "",
+              "modId": "0"
+            },
+            {
+              "recordId": "2",
+              "history_to::id": 2,
+              "history_to::person_id": 1,
+              "history_to::description": "University",
+              "history_to::startdate": "04/01/2003",
+              "history_to::enddate": "03/31/2007",
+              "history_to::username": "",
+              "modId": "0"
+            }
+          ]
+        },
+        "recordId": "1",
+        "modId": "6",
+        "portalDataInfo": [
+          {
+            "portalObjectName": "Contact",
+            "database": "TestDB",
+            "table": "contact_to",
+            "foundCount": 3,
+            "returnedCount": 3
+          },
+          {
+            "portalObjectName": "History",
+            "database": "TestDB",
+            "table": "history_to",
+            "foundCount": 2,
+            "returnedCount": 2
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "id": 2,
+          "name": "Someone",
+          "address": "Tokyo, Japan",
+          "mail": "msyk@msyk.net",
+          "category": "",
+          "checking": "",
+          "location": "",
+          "memo": ""
+        },
+        "portalData": {
+          "Contact": [
+            {
+              "recordId": "4",
+              "contact_to::id": 4,
+              "contact_to::person_id": 2,
+              "contact_to::summary": "Calling",
+              "contact_to::datetime": "12/04/2009 15:23:00",
+              "contact_to::description": "",
+              "contact_to::important": "",
+              "contact_to::way": 6,
+              "contact_to::kind": 12,
+              "modId": "0"
+            },
+            {
+              "recordId": "5",
+              "contact_to::id": 5,
+              "contact_to::person_id": 2,
+              "contact_to::summary": "Telephone",
+              "contact_to::datetime": "12/01/2009 15:23:00",
+              "contact_to::description": "",
+              "contact_to::important": "",
+              "contact_to::way": 4,
+              "contact_to::kind": 4,
+              "modId": "0"
+            }
+          ],
+          "History": []
+        },
+        "recordId": "2",
+        "modId": "0",
+        "portalDataInfo": [
+          {
+            "portalObjectName": "Contact",
+            "database": "TestDB",
+            "table": "contact_to",
+            "foundCount": 2,
+            "returnedCount": 2
+          },
+          {
+            "portalObjectName": "History",
+            "database": "TestDB",
+            "table": "history_to",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      },
+      {
+        "fieldData": {
+          "id": 3,
+          "name": "Anyone",
+          "address": "Osaka, Japan",
+          "mail": "msyk@msyk.net",
+          "category": 101,
+          "checking": 1,
+          "location": 202,
+          "memo": ""
+        },
+        "portalData": {
+          "Contact": [
+            {
+              "recordId": "6",
+              "contact_to::id": 6,
+              "contact_to::person_id": 3,
+              "contact_to::summary": "Meeting",
+              "contact_to::datetime": "12/02/2009 15:23:00",
+              "contact_to::description": "",
+              "contact_to::important": 1,
+              "contact_to::way": 4,
+              "contact_to::kind": 7,
+              "modId": "0"
+            },
+            {
+              "recordId": "7",
+              "contact_to::id": 7,
+              "contact_to::person_id": 3,
+              "contact_to::summary": "Mail etcsss",
+              "contact_to::datetime": "12/03/2009 15:23:00",
+              "contact_to::description": "aaaqq",
+              "contact_to::important": "",
+              "contact_to::way": 5,
+              "contact_to::kind": 8,
+              "modId": "4"
+            }
+          ],
+          "History": []
+        },
+        "recordId": "333",
+        "modId": "6",
+        "portalDataInfo": [
+          {
+            "portalObjectName": "Contact",
+            "database": "TestDB",
+            "table": "contact_to",
+            "foundCount": 2,
+            "returnedCount": 2
+          },
+          {
+            "portalObjectName": "History",
+            "database": "TestDB",
+            "table": "history_to",
+            "foundCount": 0,
+            "returnedCount": 0
+          }
+        ]
+      }
+    ]
+  },
+  "messages": [
+    {
+      "code": "0",
+      "message": "OK"
+    }
+  ]
+}',
                 'curlerror' => '0',
                 'curlerrormessage' => '',
                 'curlinfo' => ['http_code' => 200]
