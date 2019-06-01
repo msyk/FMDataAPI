@@ -542,7 +542,8 @@ class FileMakerLayout
                     property_exists($result->response, 'data') &&
                     property_exists($result, 'messages')
                 ) {
-                    $fmrel = new FileMakerRelation($result->response->data, $result->response->dataInfo,
+                    $fmrel = new FileMakerRelation($result->response->data, 
+                        property_exists($result->response, 'dataInfo') ? $result->response->dataInfo : null,
                         "OK", $result->messages[0]->code, null, $this->restAPI);
                 }
                 $this->restAPI->logout();
@@ -1349,8 +1350,12 @@ class FileMakerRelation implements \Iterator
         if (isset($this->data) &&
             isset($this->data[$this->pointer])
         ) {
-            $dataInfo = clone $this->getDataInfo();
-            $dataInfo->returnedCount = 1;
+            $tmpInfo = $this->getDataInfo();
+            $dataInfo = null;
+            if ($tmpInfo !== null) {
+                $dataInfo = clone $tmpInfo;
+                $dataInfo->returnedCount = 1;
+            }
             $value = new FileMakerRelation(
                 $this->data[$this->pointer], $dataInfo,
                 ($this->result == "PORTAL") ? "PORTALRECORD" : "RECORD",
@@ -1751,7 +1756,11 @@ class CommunicationProvider
                 $returnValue = $this->responseBody->response->productInfo;
             }
         } catch (\Exception $e) {
-            throw $e;
+            if ($this->httpStatus == 200 && $this->errorCode == 0) {
+                $returnValue = array("version" => 17);
+            } else {
+                throw $e;
+            }
         }
         return $returnValue;
     }
