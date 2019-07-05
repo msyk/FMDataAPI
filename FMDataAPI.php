@@ -542,7 +542,7 @@ class FileMakerLayout
                     property_exists($result->response, 'data') &&
                     property_exists($result, 'messages')
                 ) {
-                    $fmrel = new FileMakerRelation($result->response->data, 
+                    $fmrel = new FileMakerRelation($result->response->data,
                         property_exists($result->response, 'dataInfo') ? $result->response->dataInfo : null,
                         "OK", $result->messages[0]->code, null, $this->restAPI);
                 }
@@ -1997,9 +1997,9 @@ class CommunicationProvider
         }
         if ($this->throwExceptionInError) {
             $httpStatus = $this->getCurlInfo("http_code");
-            $errorCode = property_exists($this->responseBody->messages[0], 'code') ?
+            $errorCode = $this->responseBody && property_exists($this->responseBody->messages[0], 'code') ?
                 intval($this->responseBody->messages[0]->code) : -1;
-            $errorMessage = property_exists($this->responseBody->messages[0], 'message') ?
+            $errorMessage = $this->responseBody && property_exists($this->responseBody->messages[0], 'message') ?
                 $this->responseBody->messages[0]->message : 'ERROR';
             $description = '';
             if ($this->curlErrorNumber > 0) {
