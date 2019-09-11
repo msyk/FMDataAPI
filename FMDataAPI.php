@@ -638,6 +638,33 @@ class FileMakerLayout
     }
 
     /**
+     * Duplicate record.
+     * @param int $recordId The valid recordId value to duplicate.
+     * @param array $script scripts that should execute right timings. See FileMakerRelation::query().
+     * @throws Exception In case of any error, an exception arises.
+     */
+    public function duplicate($recordId, $script = null)
+    {
+    	try {
+    		if ($this->restAPI->login()) {
+    			$request = "{}"; //FileMaker expects an empty object, so we have to set "{}" here
+    			$headers = ["Content-Type" => "application/json"];
+    			$params = ['layouts' => $this->layout, 'records' => $recordId];
+    			if (!is_null($script)) {
+    				$request = $this->buildScriptParameters($script);
+    			}
+    			$this->restAPI->callRestAPI($params, true, 'POST', $request, $headers);
+    			$this->restAPI->storeToProperties();
+    			$this->restAPI->logout();
+    		} else {
+    			return null;
+    		}
+    	} catch (\Exception $e) {
+    		throw $e;
+    	}
+    }
+    
+    /**
      * Delete on record.
      * @param int $recordId The valid recordId value to delete.
      * @param array $script scripts that should execute right timings. See FileMakerRelation::query().
