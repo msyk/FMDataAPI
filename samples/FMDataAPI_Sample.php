@@ -93,7 +93,7 @@ try {
             // set the name to any variable such as $fname = 'field_name'; echo $record->$fname;.
 
             // A portal name property returns records of portal as FileMakerRelation object.
-            $contacts = $record->Contact;
+            $contacts = $record->contact_to;
 
             // If the query is succeed, the following information can be detected.
             var_dump($contacts);
@@ -128,7 +128,7 @@ try {
             echo "id: {$result->id},";
             echo "name: {$result->name},";
             echo "mail: {$result->mail}<hr>";
-            $contacts = $result->Contact;
+            $contacts = $result->contact_to;
 
             for ($j = 0; $j < $contacts->count(); $j++) {
                 echo "[PORTAL(contact_to)] id: {$contacts->field("id", "contact_to")},";
@@ -232,7 +232,7 @@ try {
 
     // The 'query()' method can have several parameters. The portal specification has to be an array
     // with the object name of the portal not the table occurrence name.
-    $portal = array("Contact");
+    $portal = array("contact_to");
     $result = $fmdb->person_layout->query(array(array("id" => "1")), null, 1, -1, $portal);
     if (!is_null($result)) {
         foreach ($result as $record) {
@@ -243,7 +243,7 @@ try {
         }
     }
     // The 'query()' method can have several parameters. The second parameter is for sorting.
-    $portal = array("Contact");
+    $portal = array("contact_to");
     $result = $fmdb->person_layout->query(array(array("id" => "1...")), array(array("id", "descend")), 1, -1, $portal);
     if (!is_null($result)) {
         foreach ($result as $record) {

@@ -1,4 +1,4 @@
-# FMDataAPI Ver.18 [![Build Status](https://travis-ci.org/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
+# FMDataAPI Ver.19 [![Build Status](https://travis-ci.org/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -63,7 +63,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"18"
+  "inter-mediator/fmdataapi":"19"
 } ...
 ```
 
@@ -141,6 +141,8 @@ MIT License
 - 2019-05-27: [Ver.18]
     Add getTargetTable(), getTotalCount(), getFoundCount(), getReturnedCount() to FileMakerRelation class.
     Add getTargetTable(), getTotalCount(), getFoundCount(), getReturnedCount() to FMDataAPI class.
+- 2019-09-12: [Ver.19]
+    Add the duplicate() method to the FileMakerLayout class. Thanks to schube.
 
 ## API Differences between ver.8 and 7.
 ### FMDataAPI class
