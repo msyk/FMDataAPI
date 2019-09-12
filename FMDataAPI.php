@@ -2043,7 +2043,7 @@ class CommunicationProvider
                 $description = date('Y-m-d H:i:s ') . "{$description}";
                 $description .= "[URL({$this->method}): {$this->url}]";
                 if ($errorCode !== 401) {
-                    throw new \Exception($description);
+                	throw new \Exception($description, $errorCode);
                 }
             }
         }
