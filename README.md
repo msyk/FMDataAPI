@@ -12,6 +12,7 @@ They created pull requests. Thanks for cooperating.
 - Atsushi Matsuo
 - darnel
 - Craig Smith
+- Bernhard Schulz
 
 ## At a Glance
 
