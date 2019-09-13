@@ -512,7 +512,7 @@ class FileMakerLayout
      * @return FileMakerRelation|null Query result.
      * @throws Exception In case of any error, an exception arises.
      */
-    public function query($condition = null, $sort = null, $offset = -1, $range = -1, $portal = null, $script = null)
+    public function query($condition = null, $sort = null, $offset = 0, $range = 0, $portal = null, $script = null)
     {
         try {
             if ($this->restAPI->login()) {
@@ -521,10 +521,10 @@ class FileMakerLayout
                 if (!is_null($sort)) {
                     $request["sort"] = $sort;
                 }
-                if ($offset > -1) {
+                if ($offset > 0) {
                     $request["offset"] = (string)$offset;
                 }
-                if ($range > -1) {
+                if ($range > 0) {
                     $request["limit"] = (string)$range;
                 }
                 if (!is_null($portal)) {
