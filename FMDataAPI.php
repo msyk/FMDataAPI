@@ -10,6 +10,10 @@
 
 namespace INTERMediator\FileMakerServer\RESTAPI;
 
+use INTERMediator\FileMakerServer\RESTAPI\Supporting\FileMakerLayout;
+use INTERMediator\FileMakerServer\RESTAPI\Supporting\FileMakerRelation;
+use Exception;
+
 /**
  * Class FMDataAPI is the wrapper of The REST API in FileMaker Server 18/Cloud.
  *
@@ -349,6 +353,8 @@ class FMDataAPI
 }
 
 namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
+
+use Exception;
 
 /**
  * Class FileMakerLayout is the proxy of layout in FileMaker database.
