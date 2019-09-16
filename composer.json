@@ -1,7 +1,7 @@
 {
   "name": "inter-mediator/fmdataapi",
-  "version": "18",
-  "time": "2019-05-27",
+  "version": "20",
+  "time": "2019-09-16",
   "repositories": [
     {
       "type": "git",
@@ -46,6 +46,9 @@
     },
     {
       "name": "Craig Smith (Contributor)"
+    },
+    {
+      "name": "Bernhard Schulz (Contributor)"
     }
   ],
   "support": {

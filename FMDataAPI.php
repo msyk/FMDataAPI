@@ -3,7 +3,7 @@
 /**
  * Object-oriented class for the REST API in FileMaker Server 18/Cloud.
  *
- * @version 19.0
+ * @version 20.0
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2019 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -21,7 +21,7 @@ use Exception;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @property-read FileMakerLayout $<<layout_name>> Returns the FileMakerLayout object from the layout named with the property.
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
- * @version 19
+ * @version 20
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2019 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  * @source 1 100000 The source code.
@@ -363,7 +363,7 @@ use Exception;
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 19
+ * @version 20
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2019 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -669,7 +669,7 @@ class FileMakerLayout
     		throw $e;
     	}
     }
-    
+
     /**
      * Delete on record.
      * @param int $recordId The valid recordId value to delete.
@@ -961,7 +961,7 @@ class FileMakerLayout
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
- * @version 19
+ * @version 02
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2019 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
@@ -1441,7 +1441,7 @@ class FileMakerRelation implements \Iterator
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 19
+ * @version 20
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2019 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
