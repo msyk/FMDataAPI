@@ -651,23 +651,23 @@ class FileMakerLayout
      */
     public function duplicate($recordId, $script = null)
     {
-    	try {
-    		if ($this->restAPI->login()) {
-    			$request = "{}"; //FileMaker expects an empty object, so we have to set "{}" here
-    			$headers = ["Content-Type" => "application/json"];
-    			$params = ['layouts' => $this->layout, 'records' => $recordId];
-    			if (!is_null($script)) {
-    				$request = $this->buildScriptParameters($script);
-    			}
-    			$this->restAPI->callRestAPI($params, true, 'POST', $request, $headers);
-    			$this->restAPI->storeToProperties();
-    			$this->restAPI->logout();
-    		} else {
-    			return null;
-    		}
-    	} catch (\Exception $e) {
-    		throw $e;
-    	}
+        try {
+            if ($this->restAPI->login()) {
+                $request = "{}"; //FileMaker expects an empty object, so we have to set "{}" here
+                $headers = ["Content-Type" => "application/json"];
+                $params = ['layouts' => $this->layout, 'records' => $recordId];
+                if (!is_null($script)) {
+                    $request = $this->buildScriptParameters($script);
+                }
+                $this->restAPI->callRestAPI($params, true, 'POST', $request, $headers);
+                $this->restAPI->storeToProperties();
+                $this->restAPI->logout();
+            } else {
+                return null;
+            }
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     /**
@@ -1677,11 +1677,15 @@ class CommunicationProvider
      * @return string
      * @ignore
      */
-    public function getURL($params, $request, $methodLower, $isSystem = false)
+    public function getURL($params, $request, $methodLower, $isSystem = false, $directPath = false)
     {
         $vStr = $this->vNum < 1 ? 'Latest' : strval($this->vNum);
-        $url = "{$this->protocol}://{$this->host}:{$this->port}/fmi/data/v{$vStr}" .
-            ((!$isSystem) ? "/databases/{$this->solution}" : "");
+        $url = "{$this->protocol}://{$this->host}:{$this->port}";
+        if ($directPath) {
+            $url .= $directPath;
+        } else {
+            $url .= "/fmi/data/v{$vStr}" . ((!$isSystem) ? "/databases/{$this->solution}" : "");
+        }
         foreach ($params as $key => $value) {
             $url .= "/{$key}" . (is_null($value) ? "" : "/{$value}");
         }
@@ -1949,21 +1953,58 @@ class CommunicationProvider
         }
     }
 
+    private function getSupportingProviders()
+    {
+        try {
+            $this->callRestAPI([], [], 'GET', [], [], false, "/fmws/oauthproviderinfo");
+            $result = [];
+            foreach ($this->responseBody as $key => $item) {
+
+            }
+            return $result;
+        } catch (\Exception $ex) {
+            return null;
+        }
+    }
+
+    private function getOAuthIdentifier($provider)
+    {
+        try {
+            $this->callRestAPI([], [
+                "trackingID" => rand(10000000,99999999),
+                "provider" => $provider,
+                "address" => "127.0.0.1",
+                "X-FMS-OAuth-AuthType" => 2
+            ], 'GET', [], [
+                "X-FMS-Application-Type" => 9,
+                "X-FMS-Application-Version" => 15,
+                "X-FMS-Return-URL" => "http://127.0.0.1/",
+            ], false, "/oauth/getoauthurl");
+            $result = [];
+            foreach ($this->responseBody as $key => $item) {
+
+            }
+            return $result;
+        } catch (\Exception $ex) {
+            return null;
+        }
+    }
+
     /**
      * @param $params
      * @param $layout
-     * @param $isAddToken
+     * @param boolean $isAddToken
      * @param string $method
-     * @param null $request
-     * @param null $recordId
-     * @param false $isSystem for Metadata
+     * @param array $request
+     * @param array $addHeader
+     * @param boolean $isSystem for Metadata
      * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function callRestAPI($params, $isAddToken, $method = 'GET', $request = null, $addHeader = null, $isSystem = false)
+    public function callRestAPI($params, $isAddToken, $method = 'GET', $request = null, $addHeader = null, $isSystem = false, $directPath = false)
     {
         $methodLower = strtolower($method);
-        $url = $this->getURL($params, $request, $methodLower, $isSystem);
+        $url = $this->getURL($params, $request, $methodLower, $isSystem, $directPath);
         $header = $this->getHeaders($isAddToken, $addHeader);
         $jsonEncoding = true;
         if (is_string($request)) {
@@ -2049,7 +2090,7 @@ class CommunicationProvider
                 $description = date('Y-m-d H:i:s ') . "{$description}";
                 $description .= "[URL({$this->method}): {$this->url}]";
                 if ($errorCode !== 401) {
-                	throw new \Exception($description, $errorCode);
+                    throw new \Exception($description, $errorCode);
                 }
             }
         }
