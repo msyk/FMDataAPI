@@ -17,6 +17,7 @@ try {
     // Although the port number and protocol can be set in parameters of constructor,
     // these parameters can be omitted with default values.
     $fmdb = new FMDataAPI("TestDB", "web", "password", "localhost");
+    $fmdb = new FMDataAPI("TestDB", "msyk.nii83@gmail", "password", "homeserver.msyk.net");
 
     //==============================
     //$fmdb = new FMDataAPI("TestDB", "web", "password", "localserver");
@@ -40,6 +41,10 @@ try {
     // In case of self-signed one (usually default situation), you don't have to call this method.
     //$fmdb->setCertValidating(true);
 
+    $fmdb->useOAuth("Google");
+
+
+
     // Metadata API is the new feature of FMS18.
     $pInfo = var_export($fmdb->getProductInfo(), true);
     echo "Product Info: {$pInfo}<hr>";
@@ -55,6 +60,7 @@ try {
     $result = $fmdb->person_layout->getMetadataOld();
     $pInfo = var_export($result, true);
     echo "Layout Metadata (Old): {$pInfo}<hr>";
+    exit;
 
     // The FMDataAPI has the property as the same name of layout. This sample database has the 'person_layout' layout,
     // so '$fmdb->person_layout' refers FMLayout object fo the proxy of the layout. FMLayout class has the 'query' method

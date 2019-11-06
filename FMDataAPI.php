@@ -42,6 +42,12 @@ class FMDataAPI
      * @ignore
      */
     private $provider = null;
+    /**
+     * Keeping the OAuth provider info object
+     * @ignore
+     */
+    private $oAuthProvider = null;
+    private $oAuthRequestId = null;
 
     /**
      * FMDataAPI constructor. If you want to activate OAuth authentication, $user and $pasword are set as
@@ -118,9 +124,25 @@ class FMDataAPI
     /**
      * On the authentication session, username and password are handled as OAuth parameters.
      */
-    public function useOAuth()
+    public function useOAuth($provider)
     {
-        $this->provider->useOAuth = true;
+        try {
+            $this->provider->useOAuth = false;
+            $providerInfo = $this->provider->getSupportingProviders($provider);
+            foreach ($providerInfo as $key => $item) {
+                if ($item->Name == $provider) {
+                    $this->oAuthProvider = $item;
+                    $this->provider->useOAuth = true;
+                }
+            }
+            if (!$this->provider->useOAuth) {
+                return false;
+            }
+            $this->oAuthRequestId = $this->provider->getOAuthIdentifier($this->oAuthProvider->Name);
+            return true;
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
     /**
@@ -1635,6 +1657,9 @@ class CommunicationProvider
      */
     public $scriptResultPresort;
 
+    private $oAuthClientId = null;
+    private $oAuthRequestId = null;
+
     /**
      * CommunicationProvider constructor.
      * @param $solution
@@ -1910,8 +1935,8 @@ class CommunicationProvider
         if ($this->useOAuth) {
             $headers = [
                 "Content-Type" => "application/json",
-                "X-FM-Data-OAuth-Request-Id" => "{$this->user}",
-                "X-FM-Data-OAuth-Identifier" => "{$this->password}",
+                "X-FM-Data-OAuth-Request-Id" => "{$this->oAuthRequestId}",
+                "X-FM-Data-OAuth-Identifier" => "{$this->oAuthClientId}",
             ];
         } else {
             $value = "Basic " . base64_encode("{$this->user}:{$this->password}");
@@ -1953,38 +1978,44 @@ class CommunicationProvider
         }
     }
 
-    private function getSupportingProviders()
+    public function getSupportingProviders($provider)
     {
         try {
             $this->callRestAPI([], [], 'GET', [], [], false, "/fmws/oauthproviderinfo");
-            $result = [];
-            foreach ($this->responseBody as $key => $item) {
-
+            foreach ($this->responseBody->data->Provider as $item) {
+                if ($item->Name == $provider) {
+                    $this->oAuthClientId = $item->ClientID;
+                    $this->provider->useOAuth = true;
+                }
             }
-            return $result;
+            return $this->responseBody->data->Provider;
         } catch (\Exception $ex) {
             return null;
         }
     }
 
-    private function getOAuthIdentifier($provider)
+    public function getOAuthIdentifier($provider)
     {
         try {
-            $this->callRestAPI([], [
-                "trackingID" => rand(10000000,99999999),
+            $this->callRestAPI([], false, 'GET', [
+                "trackingID" => rand(10000000, 99999999),
                 "provider" => $provider,
-                "address" => "127.0.0.1",
+                "address" => $this->host,
                 "X-FMS-OAuth-AuthType" => 2
-            ], 'GET', [], [
+            ], [
                 "X-FMS-Application-Type" => 9,
                 "X-FMS-Application-Version" => 15,
-                "X-FMS-Return-URL" => "http://127.0.0.1/",
+                "X-FMS-Return-URL" => "{$this->protocol}://{$this->host}:{$this->port}/",
             ], false, "/oauth/getoauthurl");
-            $result = [];
-            foreach ($this->responseBody as $key => $item) {
-
+            $label = 'X-FMS-Request-ID: ';
+            $requestId = null;
+            foreach (explode("\r\n", $this->responseHeader) as $item) {
+                if (strpos($item, $label) === 0) {
+                    $requestId = substr($item, strlen($label));
+                    $this->oAuthRequestId = $requestId;
+                }
             }
-            return $result;
+            return $requestId;
         } catch (\Exception $ex) {
             return null;
         }
