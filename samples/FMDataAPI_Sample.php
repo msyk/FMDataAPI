@@ -16,7 +16,7 @@ try {
     // Instantiate the class FMDataAPI with database name, user name, password and host.
     // Although the port number and protocol can be set in parameters of constructor,
     // these parameters can be omitted with default values.
-    $fmdb = new FMDataAPI("TestDB", "web", "password", "localhost");
+    //$fmdb = new FMDataAPI("TestDB", "web", "password", "localhost");
     $fmdb = new FMDataAPI("TestDB", "msyk.nii83@gmail", "password", "homeserver.msyk.net");
 
     //==============================
@@ -27,7 +27,7 @@ try {
     // https://gist.github.com/matsuo/ef5cb7c98bb494d507731886883bcbc1
     //==============================
 
-    // If you want to try this program just right now, it's convinient to download the FileMaker database file:
+    // If you want to try this program just right now, it's convenient to download the FileMaker database file:
     // https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/TestDB.fmp12?raw=true
 
     // You can turn off to throw an exception in case of error. You have to handle errors with checking result error.
@@ -42,9 +42,8 @@ try {
     //$fmdb->setCertValidating(true);
 
     $fmdb->useOAuth("Google");
-
-
-
+exit;
+    /*
     // Metadata API is the new feature of FMS18.
     $pInfo = var_export($fmdb->getProductInfo(), true);
     echo "Product Info: {$pInfo}<hr>";
@@ -60,7 +59,7 @@ try {
     $result = $fmdb->person_layout->getMetadataOld();
     $pInfo = var_export($result, true);
     echo "Layout Metadata (Old): {$pInfo}<hr>";
-    exit;
+    */
 
     // The FMDataAPI has the property as the same name of layout. This sample database has the 'person_layout' layout,
     // so '$fmdb->person_layout' refers FMLayout object fo the proxy of the layout. FMLayout class has the 'query' method
@@ -122,7 +121,7 @@ try {
             }
             echo "<hr>";
         }
-
+exit;
         // Move to pointer to the first record.
         $result->rewind();
 

@@ -123,6 +123,7 @@ class FMDataAPI
 
     /**
      * On the authentication session, username and password are handled as OAuth parameters.
+     * @param string $provider set the the OAuth provider name, ex. "Google".
      */
     public function useOAuth($provider)
     {
@@ -139,6 +140,7 @@ class FMDataAPI
                 return false;
             }
             $this->oAuthRequestId = $this->provider->getOAuthIdentifier($this->oAuthProvider->Name);
+            $this->provider->getTokenFromOAuthServer();
             return true;
         } catch (\Exception $ex) {
             throw $ex;
@@ -1659,6 +1661,7 @@ class CommunicationProvider
 
     private $oAuthClientId = null;
     private $oAuthRequestId = null;
+    private $providerInfo = null;
 
     /**
      * CommunicationProvider constructor.
@@ -1693,82 +1696,6 @@ class CommunicationProvider
         }
         $this->fmDataSource = $fmDataSource;
         $this->errorCode = -1;
-    }
-
-    /**
-     * @param $action
-     * @param $layout
-     * @param null $recordId
-     * @return string
-     * @ignore
-     */
-    public function getURL($params, $request, $methodLower, $isSystem = false, $directPath = false)
-    {
-        $vStr = $this->vNum < 1 ? 'Latest' : strval($this->vNum);
-        $url = "{$this->protocol}://{$this->host}:{$this->port}";
-        if ($directPath) {
-            $url .= $directPath;
-        } else {
-            $url .= "/fmi/data/v{$vStr}" . ((!$isSystem) ? "/databases/{$this->solution}" : "");
-        }
-        foreach ($params as $key => $value) {
-            $url .= "/{$key}" . (is_null($value) ? "" : "/{$value}");
-        }
-        if (!is_string($request) &&
-            in_array($methodLower, array('get', 'delete')) &&
-            !is_null($request) &&
-            count($request) > 0
-        ) {
-            $url .= '?';
-            foreach ($request as $key => $value) {
-                if (key($request) !== $key) {
-                    $url .= '&';
-                }
-                if ($key === 'sort' && is_array($value)) {
-                    $sortParam = $this->_buildSortParameters($value);
-                    if ($sortParam !== '[]') {
-                        $url .= '_' . $key . '=' . $sortParam;
-                    }
-                } else if ($key === 'limit' || $key === 'offset') {
-                    $url .= '_' . $key . '=' . (is_array($value) ? json_encode($value) : $value);
-                } else {
-                    // handling portal object name etc.
-                    $url .= $key . '=' . (is_array($value) ? $this->_json_urlencode($value) : $value);
-                }
-            }
-        }
-        return $url;
-    }
-
-    /**
-     * @param $isAddToken
-     * @param $addHeader
-     * @return array
-     * @ignore
-     */
-    public function getHeaders($isAddToken, $addHeader)
-    {
-        $header = [];
-        if ($this->isLocalServer) {
-            $header[] = 'X-Forwarded-For: 127.0.0.1';
-            $host = filter_input(INPUT_SERVER, 'HTTP_HOST', FILTER_SANITIZE_URL);
-            if ($host === null || $host === false) {
-                $host = 'localhost';
-            }
-            $header[] = 'X-Forwarded-Host: ' . $host;
-        }
-        if ($this->useOAuth) {
-            $header[] = "X-FM-Data-Login-Type: oauth";
-        }
-        if ($isAddToken) {
-            $header[] = "Authorization: Bearer {$this->accessToken}";
-        }
-        if (!is_null($addHeader)) {
-            foreach ($addHeader as $key => $value) {
-                $header[] = "{$key}: {$value}";
-            }
-        }
-        return $header;
     }
 
     /**
@@ -1944,7 +1871,10 @@ class CommunicationProvider
         }
         $params = ["sessions" => null];
         $request = [];
-        $request["fmDataSource"] = (!is_null($this->fmDataSource)) ? $this->fmDataSource : [];
+        $request["fmDataSource"] = (!is_null($this->fmDataSource)) ? $this->fmDataSource :
+            ($this->useOAuth ? [[
+                "username" => "{$this->user}", "password" => "alfierui3838", "database" => "{$this->solution}",
+                "oAuthRequestId" => "{$this->oAuthRequestId}", "oAuthIdentifier" => "{$this->oAuthClientId}",]] : []);
         try {
             $this->callRestAPI($params, false, "POST", $request, $headers);
             $this->storeToProperties();
@@ -1982,10 +1912,13 @@ class CommunicationProvider
     {
         try {
             $this->callRestAPI([], [], 'GET', [], [], false, "/fmws/oauthproviderinfo");
+            $this->providerInfo = null;
+            $this->useOAuth = false;
             foreach ($this->responseBody->data->Provider as $item) {
                 if ($item->Name == $provider) {
                     $this->oAuthClientId = $item->ClientID;
-                    $this->provider->useOAuth = true;
+                    $this->providerInfo = $item;
+                    $this->useOAuth = true;
                 }
             }
             return $this->responseBody->data->Provider;
@@ -2021,6 +1954,24 @@ class CommunicationProvider
         }
     }
 
+    public function getTokenFromOAuthServer()
+    {
+        try {
+            $p = "Response Type";
+            $this->callRestAPI([], false, 'GET', [
+                "client_id" => $this->providerInfo->ClientID,
+                "redirect_uri" => "https://{$this->host}/oauth/redirect",
+                "scope" => urlencode($this->providerInfo->Scope),
+                "response_type" => $this->providerInfo->$p,
+//                "approval_prompt" => "force",
+//                "access_type" => "offline",
+            ], null, false, "", $this->providerInfo->AuthCodeEndpoint);
+            return [];
+        } catch (\Exception $ex) {
+            return null;
+        }
+    }
+
     /**
      * @param $params
      * @param $layout
@@ -2032,10 +1983,11 @@ class CommunicationProvider
      * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function callRestAPI($params, $isAddToken, $method = 'GET', $request = null, $addHeader = null, $isSystem = false, $directPath = false)
+    public function callRestAPI($params, $isAddToken, $method = 'GET', $request = null, $addHeader = null,
+                                $isSystem = false, $directPath = false, $accessHost = false)
     {
         $methodLower = strtolower($method);
-        $url = $this->getURL($params, $request, $methodLower, $isSystem, $directPath);
+        $url = $this->getURL($params, $request, $methodLower, $isSystem, $directPath, $accessHost);
         $header = $this->getHeaders($isAddToken, $addHeader);
         $jsonEncoding = true;
         if (is_string($request)) {
@@ -2125,6 +2077,82 @@ class CommunicationProvider
                 }
             }
         }
+    }
+
+    /**
+     * @param $action
+     * @param $layout
+     * @param null $recordId
+     * @return string
+     * @ignore
+     */
+    public function getURL($params, $request, $methodLower, $isSystem = false, $directPath = false, $accessHost = false)
+    {
+        $vStr = $this->vNum < 1 ? 'Latest' : strval($this->vNum);
+        $url = (!$accessHost) ? "{$this->protocol}://{$this->host}:{$this->port}" : $accessHost;
+        if (is_string($directPath)) {
+            $url .= $directPath;
+        } else {
+            $url .= "/fmi/data/v{$vStr}" . ((!$isSystem) ? "/databases/{$this->solution}" : "");
+        }
+        foreach ($params as $key => $value) {
+            $url .= "/{$key}" . (is_null($value) ? "" : "/{$value}");
+        }
+        if (!is_string($request) &&
+            in_array($methodLower, array('get', 'delete')) &&
+            !is_null($request) &&
+            count($request) > 0
+        ) {
+            $url .= '?';
+            foreach ($request as $key => $value) {
+                if (key($request) !== $key) {
+                    $url .= '&';
+                }
+                if ($key === 'sort' && is_array($value)) {
+                    $sortParam = $this->_buildSortParameters($value);
+                    if ($sortParam !== '[]') {
+                        $url .= '_' . $key . '=' . $sortParam;
+                    }
+                } else if ($key === 'limit' || $key === 'offset') {
+                    $url .= '_' . $key . '=' . (is_array($value) ? json_encode($value) : $value);
+                } else {
+                    // handling portal object name etc.
+                    $url .= $key . '=' . (is_array($value) ? $this->_json_urlencode($value) : $value);
+                }
+            }
+        }
+        return $url;
+    }
+
+    /**
+     * @param $isAddToken
+     * @param $addHeader
+     * @return array
+     * @ignore
+     */
+    public function getHeaders($isAddToken, $addHeader)
+    {
+        $header = [];
+        if ($this->isLocalServer) {
+            $header[] = 'X-Forwarded-For: 127.0.0.1';
+            $host = filter_input(INPUT_SERVER, 'HTTP_HOST', FILTER_SANITIZE_URL);
+            if ($host === null || $host === false) {
+                $host = 'localhost';
+            }
+            $header[] = 'X-Forwarded-Host: ' . $host;
+        }
+        if ($isAddToken) {
+            $header[] = "Authorization: Bearer {$this->accessToken}";
+        }
+        if ($isAddToken && $this->useOAuth) {
+            $header[] = "X-FM-Data-Login-Type: oauth";
+        }
+        if (!is_null($addHeader)) {
+            foreach ($addHeader as $key => $value) {
+                $header[] = "{$key}: {$value}";
+            }
+        }
+        return $header;
     }
 
     /**
