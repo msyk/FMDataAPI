@@ -1878,9 +1878,6 @@ class CommunicationProvider
         }
         $params = ["sessions" => null];
         $request = (!is_null($this->fmDataSource)) ? ["fmDataSource" => $this->fmDataSource] : [];
-//            ($this->useOAuth ? [[
-//                "username" => "{$this->user}", "password" => "alfierui3838", "database" => "{$this->solution}",
-//                "oAuthRequestId" => "{$this->oAuthRequestId}", "oAuthIdentifier" => "{$this->oAuthClientId}",]] : []);
         try {
             $this->callRestAPI($params, false, "POST", $request, $headers);
             $this->storeToProperties();
@@ -1984,15 +1981,6 @@ class CommunicationProvider
 //                "access_type" => "offline",
             ], "get", false, "", $endPoint);
             return $url;
-//            $this->callRestAPI([], false, 'GET', [
-//                "client_id" => $this->providerInfo->ClientID,
-//                "redirect_uri" => "https://{$this->host}/oauth/redirect",
-//                "scope" => urlencode($this->providerInfo->Scope),
-//                "response_type" => $this->providerInfo->$p,
-////                "approval_prompt" => "force",
-////                "access_type" => "offline",
-//            ], null, false, "", $this->providerInfo->AuthCodeEndpoint);
-//            return [];
         } catch (\Exception $ex) {
             return null;
         }
