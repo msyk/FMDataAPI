@@ -125,7 +125,7 @@ class FMDataAPI
      * On the authentication session, username and password are handled as OAuth parameters.
      * @param string $provider set the the OAuth provider name, ex. "Google".
      */
-    public function useOAuth($provider)
+    public function useOAuth($provider, $redirectTo)
     {
         try {
             $this->provider->useOAuth = false;
@@ -140,11 +140,18 @@ class FMDataAPI
                 return false;
             }
             $this->oAuthRequestId = $this->provider->getOAuthIdentifier($this->oAuthProvider->Name);
-            $this->provider->getTokenFromOAuthServer();
-            return true;
+            $_SESSION['privider'] = $provider;
+            return $this->provider->getTokenFromOAuthServer($redirectTo);
+//            return true;
         } catch (\Exception $ex) {
             throw $ex;
         }
+    }
+
+    public function retrieveOAuth($idProvider, $provider = false, $requestId = false)
+    {
+        $this->provider->useOAuth = false;
+        $this->provider->retrieveOAuth($idProvider, $provider, $requestId);
     }
 
     /**
@@ -1870,11 +1877,10 @@ class CommunicationProvider
             $headers = ["Content-Type" => "application/json", "Authorization" => $value];
         }
         $params = ["sessions" => null];
-        $request = [];
-        $request["fmDataSource"] = (!is_null($this->fmDataSource)) ? $this->fmDataSource :
-            ($this->useOAuth ? [[
-                "username" => "{$this->user}", "password" => "alfierui3838", "database" => "{$this->solution}",
-                "oAuthRequestId" => "{$this->oAuthRequestId}", "oAuthIdentifier" => "{$this->oAuthClientId}",]] : []);
+        $request = (!is_null($this->fmDataSource)) ? ["fmDataSource" => $this->fmDataSource] : [];
+//            ($this->useOAuth ? [[
+//                "username" => "{$this->user}", "password" => "alfierui3838", "database" => "{$this->solution}",
+//                "oAuthRequestId" => "{$this->oAuthRequestId}", "oAuthIdentifier" => "{$this->oAuthClientId}",]] : []);
         try {
             $this->callRestAPI($params, false, "POST", $request, $headers);
             $this->storeToProperties();
@@ -1946,6 +1952,7 @@ class CommunicationProvider
                 if (strpos($item, $label) === 0) {
                     $requestId = substr($item, strlen($label));
                     $this->oAuthRequestId = $requestId;
+                    $_SESSION['oAuthRequestId'] = $requestId;
                 }
             }
             return $requestId;
@@ -1954,19 +1961,38 @@ class CommunicationProvider
         }
     }
 
-    public function getTokenFromOAuthServer()
+    public function retrieveOAuth($idProvider, $provider = false, $requestId = false)
+    {
+        $this->useOAuth = true;
+        $this->oAuthClientId = $idProvider;
+        $this->oAuthRequestId = ($requestId === false && isset($_SESSION['oAuthRequestId'])) ?
+            $_SESSION['oAuthRequestId'] : '';
+    }
+
+    public function getTokenFromOAuthServer($redirectTo)
     {
         try {
             $p = "Response Type";
-            $this->callRestAPI([], false, 'GET', [
+            $endPoint = $this->providerInfo->AuthCodeEndpoint;
+            $endPoint = (strpos($endPoint, "http") !== 0) ? "https://{$endPoint}" : $endPoint;
+            $url = $this->getURL([], [
                 "client_id" => $this->providerInfo->ClientID,
-                "redirect_uri" => "https://{$this->host}/oauth/redirect",
+                "redirect_uri" => $redirectTo, //"https://{$this->host}/oauth/redirect",
                 "scope" => urlencode($this->providerInfo->Scope),
                 "response_type" => $this->providerInfo->$p,
 //                "approval_prompt" => "force",
 //                "access_type" => "offline",
-            ], null, false, "", $this->providerInfo->AuthCodeEndpoint);
-            return [];
+            ], "get", false, "", $endPoint);
+            return $url;
+//            $this->callRestAPI([], false, 'GET', [
+//                "client_id" => $this->providerInfo->ClientID,
+//                "redirect_uri" => "https://{$this->host}/oauth/redirect",
+//                "scope" => urlencode($this->providerInfo->Scope),
+//                "response_type" => $this->providerInfo->$p,
+////                "approval_prompt" => "force",
+////                "access_type" => "offline",
+//            ], null, false, "", $this->providerInfo->AuthCodeEndpoint);
+//            return [];
         } catch (\Exception $ex) {
             return null;
         }
@@ -2023,8 +2049,10 @@ class CommunicationProvider
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         if ($methodLower != 'get') {
             if ($jsonEncoding) {
-                if ($methodLower === 'post' && isset($request['fieldData']) && $request['fieldData'] === []
-                ) {
+                if ($methodLower === 'post' && count($request) === 0) {
+                    // create an empty record
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($request, JSON_FORCE_OBJECT));
+                } else if ($methodLower === 'post' && isset($request['fieldData']) && count($request['fieldData']) === 0) {
                     // create an empty record
                     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($request, JSON_FORCE_OBJECT));
                 } else {
