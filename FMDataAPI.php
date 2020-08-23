@@ -3,9 +3,9 @@
 /**
  * Object-oriented class for the REST API in FileMaker Server 18/Cloud.
  *
- * @version 20.0
+ * @version 21.0
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2019 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @copyright 2017-2020 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
 
 namespace INTERMediator\FileMakerServer\RESTAPI;
@@ -21,9 +21,9 @@ use Exception;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @property-read FileMakerLayout $<<layout_name>> Returns the FileMakerLayout object from the layout named with the property.
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
- * @version 20
+ * @version 21
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2019 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @copyright 2017-2020 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  * @source 1 100000 The source code.
  */
 class FMDataAPI
@@ -363,9 +363,9 @@ use Exception;
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 20
+ * @version 21
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2019 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @copyright 2017-2020 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
 class FileMakerLayout
 {
@@ -961,9 +961,9 @@ class FileMakerLayout
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
- * @version 02
+ * @version 21
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2019 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @copyright 2017-2020 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
 class FileMakerRelation implements \Iterator
 {
@@ -1272,6 +1272,8 @@ class FileMakerRelation implements \Iterator
                             $this->data->portalData->$name,
                             property_exists($this->data, 'portalDataInfo') ? $this->data->portalDataInfo : null,
                             "PORTAL", 0, $name, $this->restAPI);
+                    } else if (isset($this->data->fieldData->$fieldName)){
+                        $value = $this->data->fieldData->$fieldName;
                     }
                     break;
                 case "PORTALRECORD":
@@ -1441,9 +1443,9 @@ class FileMakerRelation implements \Iterator
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 20
+ * @version 21
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2019 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @copyright 2017-2020 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
  */
 class CommunicationProvider
 {

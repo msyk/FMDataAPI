@@ -93,7 +93,7 @@ class FMDataAPIUnitTest extends TestCase
                 }
                 $this->assertEquals($pcounter, 2, 'Cheking the record number in portal.');
 
-                $recId= $record->getRecordId();
+                $recId = $record->getRecordId();
                 $this->assertEquals($recId, 333, 'The record id of last record must be 333.');
             }
             $counter += 1;

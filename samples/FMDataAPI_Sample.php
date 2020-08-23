@@ -20,7 +20,7 @@ try {
 
     //==============================
     //$fmdb = new FMDataAPI("TestDB", "web", "password", "localserver");
-    // "localserver" is added on Ver.2 and it's a magic term for FMDataAPI. It happendes direct connect to
+    // "localserver" is added on Ver.2 and it's a magic term for FMDataAPI. It happens direct connect to
     // FileMaker Server in the same host. I've refered Atsushi Matsuo's script below and I got his way
     // to be able to connect port number 3000.
     // https://gist.github.com/matsuo/ef5cb7c98bb494d507731886883bcbc1
@@ -92,11 +92,13 @@ try {
             // If you named field name as not variable friendly, you can use field('field_name') method or
             // set the name to any variable such as $fname = 'field_name'; echo $record->$fname;.
 
+            // In case of a related field but outside of portal, the field method is available as below:
+            // echo $record->field("summary", "contact_to");
+
             // A portal name property returns records of portal as FileMakerRelation object.
             $contacts = $record->contact_to;
 
             // If the query is succeed, the following information can be detected.
-            var_dump($contacts);
             echo "Target Table: {$contacts->getTargetTable()}<hr>";
             echo "Total Count: {$contacts->getTotalCount()}<hr>";
             echo "Found Count: {$contacts->getFoundCount()}<hr>";

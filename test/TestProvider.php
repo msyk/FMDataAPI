@@ -25,7 +25,7 @@ class TestProvider extends CommunicationProvider
      * @param null $request
      * @param null $addHeader
      */
-    public function callRestAPI($params, $isAddToken, $method = 'GET', $request = NULL, $addHeader = null, $isSystem = false)
+    public function callRestAPI($params, $isAddToken, $method = 'GET', $request = NULL, $addHeader = null, $isSystem = false, $directPath = false)
     {
         $methodLower = strtolower($method);
         $url = $this->getURL($params, $request, $methodLower);
@@ -78,6 +78,12 @@ class TestProvider extends CommunicationProvider
                 'curlinfo' => ['http_code' => 200]
             ],
             'e6de3c79ed664d3f4fa49c9013bf566eba78da1a' => [     //LogOut
+                'response' => '{"response": {},"messages": [{"code": "0", "message": "OK"}]}',
+                'curlerror' => '0',
+                'curlerrormessage' => '',
+                'curlinfo' => ['http_code' => 200]
+            ],
+            '7e48895adbe2811ce7e51568542f2cf12779c710' => [     //LogOut
                 'response' => '{"response": {},"messages": [{"code": "0", "message": "OK"}]}',
                 'curlerror' => '0',
                 'curlerrormessage' => '',

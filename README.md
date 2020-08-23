@@ -146,6 +146,8 @@ MIT License
     Add the duplicate() method to the FileMakerLayout class. Thanks to schube.
 - 2019-09-16: [Ver.20]
     The default values  of limit and range parameters are changed to 0 and both just applied for over 0 values. Thanks to schube.
+- 2019-09-16: [Ver.21]
+    Bug fix about the field referencing of a related field without any portals. Thanks to frankeg.
 
 ## API Differences between ver.8 and 7.
 ### FMDataAPI class
