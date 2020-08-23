@@ -43,7 +43,7 @@ The FileMaker Data API is the new feature of FileMaker Server 16,
 and it's the API with REST-based database operations.
 Although the Custom Web Publishing is the way to access the database
 for a long while, FileMaker Inc. has introduced the modern feature to operate
-the database. The current version of FMDataAPI works on just FileMaker 18 platform.
+the database. The current version of FMDataAPI works on just FileMaker 18 and 19 platform.
 
 For now, I'm focusing to develop the web application framework "INTER-Mediator"
 (https://inter-mediator.com/ or https://github.com/INTER-Mediator/INTER-Mediator.git)
