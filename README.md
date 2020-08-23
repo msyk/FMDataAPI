@@ -18,11 +18,11 @@ They created pull requests. Thanks for cooperating.
 
 The FileMaker database named "TestDB.fmp12" is hosted on localhost, and
 it set the "fmrest" as access privilege. The account to connect with REST API is "web"
-and "password". This database has the layout named "person_layout" and you
+and "password". This database has the layout named "person_layout", and you
 can use the layout name as a property of the FMDataAPI instance. The return
 value of the "query" method is Iterator and can repeat in foreach statement
 with each record in the query result. This layout has the field named
-"FamilyName" and "GivenName," and also can use the field name as a property.
+"FamilyName" and "GivenName", and can use the field name as a property.
 
 ```
 $fmdb = new FMDataAPI("TestDB", "web", "password");
@@ -32,7 +32,7 @@ foreach ($result as $record) {
 }
 ```
 
-For more deitals, I'd like to read codes and comments in file samples/FMDataAPI_Sample.php.
+For more details, I'd like to read codes and comments in file samples/FMDataAPI_Sample.php.
 
 API Document is here:
 http://inter-mediator.info/FMDataAPI/namespaces/INTERMediator.FileMakerServer.RESTAPI.html
@@ -40,12 +40,12 @@ http://inter-mediator.info/FMDataAPI/namespaces/INTERMediator.FileMakerServer.RE
 ## What's This?
 
 The FileMaker Data API is the new feature of FileMaker Server 16,
-and it's a API with REST-based database operations.
+and it's the API with REST-based database operations.
 Although the Custom Web Publishing is the way to access the database
-for a long while, FileMaker Inc. has introduced modern feature to operate
-database. Current version of FMDataAPI works on just FileMaker 18 platform.
+for a long while, FileMaker Inc. has introduced the modern feature to operate
+the database. The current version of FMDataAPI works on just FileMaker 18 platform.
 
-For now I'm focusing to develop the web application framework "INTER-Mediator"
+For now, I'm focusing to develop the web application framework "INTER-Mediator"
 (https://inter-mediator.com/ or https://github.com/INTER-Mediator/INTER-Mediator.git)
 which can develop the core features of database-driven web application
 with declarative descriptions. INTER-Mediator has already supported the Custom
@@ -77,10 +77,10 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 - composer.json, composer.lock
     - Composer information files.
 - Sample_results.ipynb
-    - Sample program and resutls with Jupyter Notebook style.
-- samlpes/FMDataAPI_Sample.php and cat.jpg
+    - Sample program and results with Jupyter Notebook style.
+- samples/FMDataAPI_Sample.php and cat.jpg
     - This is the sample program of FMDataAPI class, and shows how to
-    use FMDataAPI class. Rich comments are described,
+    use FMDataAPI class. It includes rich comments,
     but Sample_results.ipynb is more informative.
 - README.md, .gitignore
     - These are for GitHub.
@@ -100,7 +100,7 @@ MIT License
 - Thanks to Frank Gonzalez. Your bug report is brilliant, and I could fix it quickly.
 - Thanks to base64bits for coding about container field.
 - Thanks to phpsa for bug fix.
-- Thankx to Flexboom for bug fix.
+- Thanks to Flexboom for bug fix.
 - Thanks to schube for bug fix.
 - Thanks to frankeg for bug fix.
 
@@ -161,8 +161,8 @@ As far as FMDataAPI Ver.8 goes, This isn't required.
 - [New]public function setAPIVersion($vNum)
 
 ### FileMakerRelation class
-The following methods are added script parameters. See the query method's document for specifying it.
-Twe methods are added portal parameter.
+The following methods added to script parameters. See the query method's document for specifying it.
+Twe methods added to portal parameter.
 
 - public function query($condition = NULL, $sort = NULL, $offset = -1, $range = -1, $portal = null, [New]$script = null)
 - public function getRecord($recordId, $portal = null, [New]$script = null)
