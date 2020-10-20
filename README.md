@@ -2,7 +2,7 @@
 
 by Masayuki Nii (nii@msyk.net)
 
-FMDataAPI is a class developed by PHP to access FileMaker database
+FMDataAPI is a class developed in PHP to access FileMaker database
 with FileMaker Data API.
 
 ## Contributers
