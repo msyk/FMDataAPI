@@ -23,7 +23,7 @@
       "test/TestProvider.php"
     ]
   },
-  "description": "FMDataAPI is a class developed by PHP to access FileMaker database with FileMaker Data API.",
+  "description": "FMDataAPI is a class developed in PHP to access FileMaker database with FileMaker Data API.",
   "type": "library",
   "keywords": [
     "INTER-Mediator",
