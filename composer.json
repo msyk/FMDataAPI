@@ -10,7 +10,9 @@
   ],
   "prefer-stable": true,
   "require": {
-    "php": ">=5.5.0"
+    "php": ">=5.5.0",
+    "ext-curl": "*",
+    "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "*",
