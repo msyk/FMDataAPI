@@ -116,6 +116,14 @@ class FMDataAPI
     }
 
     /**
+     * Set the cURL communication timeout in seconds
+     * @param int $timeout
+     */
+    public function setTimeout($timeout) {
+        $this->provider->timeout = $timeout;
+    }
+
+    /**
      * On the authentication session, username and password are handled as OAuth parameters.
      */
     public function useOAuth()
@@ -1636,6 +1644,11 @@ class CommunicationProvider
      * @ignore
      */
     public $scriptResultPresort;
+    /**
+     * @var
+     * @ignore
+     */
+    public $timeout;
 
     /**
      * CommunicationProvider constructor.
@@ -2053,6 +2066,9 @@ class CommunicationProvider
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
             }
         }
+        if (!is_null($this->timeout)) {
+            curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+        }
         $response = curl_exec($ch);
         $this->curlInfo = curl_getinfo($ch);
         $this->curlErrorNumber = curl_errno($ch);
@@ -2121,6 +2137,9 @@ class CommunicationProvider
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         }
+        if (!is_null($this->timeout)) {
+            curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+        }
         curl_exec($ch);
         if (curl_errno($ch) !== 0) {
             $errMsg = curl_error($ch);
@@ -2136,6 +2155,9 @@ class CommunicationProvider
         } else {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+        if (!is_null($this->timeout)) {
+            curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
         }
         $output = curl_exec($ch);
         if (curl_errno($ch) !== 0) {
