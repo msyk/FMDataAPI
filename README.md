@@ -1,4 +1,4 @@
-# FMDataAPI Ver.20 [![Build Status](https://travis-ci.org/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
+# FMDataAPI Ver.22 [![Build Status](https://travis-ci.org/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -13,6 +13,7 @@ They created pull requests. Thanks for cooperating.
 - darnel
 - Craig Smith
 - Bernhard Schulz
+- montaniasystemab
 
 ## At a Glance
 
@@ -152,6 +153,8 @@ MIT License
 - 2020-08-23: [Ver.21]
     Bug fix about the field referencing of a related field without any portals. Thanks to frankeg.
     Checked on the FileMaker Server 19.
+- 2021-02-10: [Ver.22]
+    Setting the timeout value about cURL. Thanks to @montaniasystemab. Also thanks to @AnnoyingTechnology for correcting.
 
 ## API Differences between ver.8 and 7.
 ### FMDataAPI class
