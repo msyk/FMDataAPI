@@ -10,13 +10,13 @@
   ],
   "prefer-stable": true,
   "require": {
-    "php": ">=5.5.0",
+    "php": ">=5.5",
     "ext-curl": "*",
     "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "*",
-    "phpdocumentor/phpdocumentor": "*"
+    "phpdocumentor/phpdocumentor": ">=3"
   },
   "autoload": {
     "classmap": [

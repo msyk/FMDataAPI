@@ -8,7 +8,7 @@
 
 namespace INTERMediator\FileMakerServer\RESTAPI;
 
-use PHPUnit\Framework\TestCase;
+use \PHPUnit\Framework\TestCase;
 
 class FMDataAPIUnitTest extends TestCase
 {
