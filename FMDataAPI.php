@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Object-oriented class for the REST API in FileMaker Server 18/Cloud.
+ * Object-oriented class for the REST API in Claris FileMaker Server and FileMaker Cloud for AWS.
  *
  * @version 22.0
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2020 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @copyright 2017-2021 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
 
 namespace INTERMediator\FileMakerServer\RESTAPI;
@@ -15,7 +15,7 @@ use INTERMediator\FileMakerServer\RESTAPI\Supporting\FileMakerRelation;
 use Exception;
 
 /**
- * Class FMDataAPI is the wrapper of The REST API in FileMaker Server 18/Cloud.
+ * Class FMDataAPI is the wrapper of The REST API in Claris FileMaker Server and FileMaker Cloud for AWS.
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
@@ -23,7 +23,7 @@ use Exception;
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
  * @version 22
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2020 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @copyright 2017-2021 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  * @source 1 100000 The source code.
  */
 class FMDataAPI
@@ -373,7 +373,7 @@ use Exception;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @version 22
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2020 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @copyright 2017-2021 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
 class FileMakerLayout
 {
@@ -858,7 +858,7 @@ class FileMakerLayout
 
     /**
      * Get metadata information of the layout.
-     * @return object The metadata information of the layout. It has 2 properties 'fieldMetaData' and  'fieldMetaData'.
+     * @return object The metadata information of the layout. It has 3 properties 'fieldMetaData', 'portalMetaData' and 'valueLists'.
      * The later one has properties having portal object name of TO name. The array of the field information is set under
      * 'fieldMetaData' and the portal named properties.
      * Ex.: {"fieldMetaData": [{"name": "id","type": "normal","displayType": "editText","result": "number","global": false,
@@ -971,7 +971,7 @@ class FileMakerLayout
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
  * @version 22
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2020 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @copyright 2017-2021 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
 class FileMakerRelation implements \Iterator
 {
@@ -1453,7 +1453,7 @@ class FileMakerRelation implements \Iterator
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @version 22
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2020 Masayuki Nii (FileMaker is registered trademarks of FileMaker, Inc. in the U.S. and other countries.)
+ * @copyright 2017-2021 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
 class CommunicationProvider
 {
