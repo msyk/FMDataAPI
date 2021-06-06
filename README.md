@@ -14,6 +14,8 @@ They created pull requests. Thanks for cooperating.
 - Craig Smith
 - Bernhard Schulz
 - montaniasystemab
+- Rickard Andersson
+- Julien @AnnoyingTechnology
 
 ## At a Glance
 
