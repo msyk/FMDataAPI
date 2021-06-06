@@ -1,4 +1,4 @@
-# FMDataAPI Ver.22 [![Build Status](https://travis-ci.org/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
+# FMDataAPI Ver.22 [![Build Status](https://travis-ci.com/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
 
 by Masayuki Nii (nii@msyk.net)
 
