@@ -1,9 +1,9 @@
-# FMDataAPI Ver.22 [![Build Status](https://travis-ci.com/msyk/FMDataAPI.svg?branch=master)](https://travis-ci.org/msyk/FMDataAPI)
+# FMDataAPI Ver.22 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
 
 by Masayuki Nii (nii@msyk.net)
 
 FMDataAPI is a class developed in PHP to access FileMaker database
-with FileMaker Data API.
+with Claris FileMaker Data API.
 
 ## Contributers
 
@@ -67,7 +67,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"20"
+  "inter-mediator/fmdataapi":"22"
 } ...
 ```
 
