@@ -6,7 +6,7 @@
  * Time: 17:41
  */
 // First of all, the FMDataAPI.php file has to be included. All classes are defined in it.
-include_once "../FMDataAPI.php";
+include_once "../vendor/autoload.php";
 
 // For your convenience, the main class name FMDataAPI is defined at the current namespace.
 use INTERMediator\FileMakerServer\RESTAPI\FMDataAPI as FMDataAPI;
