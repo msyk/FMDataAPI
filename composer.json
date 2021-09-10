@@ -19,8 +19,10 @@
     "phpdocumentor/phpdocumentor": ">=3"
   },
   "autoload": {
+    "psr-4": {
+      "INTERMediator\\FileMakerServer\\RESTAPI\\": "src/"
+    },
     "classmap": [
-      "FMDataAPI.php",
       "test/FMDataAPIUnitTest.php",
       "test/TestProvider.php"
     ]
