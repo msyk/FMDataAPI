@@ -16,6 +16,7 @@ They created pull requests. Thanks for cooperating.
 - montaniasystemab
 - Rickard Andersson
 - Julien @AnnoyingTechnology
+- Tom Kuijer
 
 ## At a Glance
 
