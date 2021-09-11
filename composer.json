@@ -1,6 +1,6 @@
 {
   "name": "inter-mediator/fmdataapi",
-  "version": "22",
+  "version": "23",
   "time": "2021-02-10",
   "repositories": [
     {
@@ -53,6 +53,18 @@
     },
     {
       "name": "Bernhard Schulz (Contributor)"
+    },
+    {
+      "name": "montaniasystemab (Contributor)"
+    },
+    {
+      "name": "Rickard Andersson (Contributor)"
+    },
+    {
+      "name": "Julien @AnnoyingTechnology (Contributor)"
+    },
+    {
+      "name": "Tom Kuijer (Contributor)"
     }
   ],
   "support": {
@@ -66,7 +78,7 @@
       "./vendor/bin/phpunit --bootstrap ./vendor/autoload.php --configuration ./test/phpunit.xml ./test/FMDataAPIUnitTest.php"
     ],
     "doc": [
-      "./vendor/bin/phpdoc -f ./FMDataAPI.php -t ../INTER-Mediator_Documents/FMDataAPI"
+      "./vendor/bin/phpdoc -f ./src/FMDataAPI.php -t ../INTER-Mediator_Documents/FMDataAPI"
     ]
   }
 }
