@@ -5,6 +5,9 @@
  * Date: 2017/04/24
  * Time: 17:41
  */
+/*******************************************
+ * Before you try to this sample program, you have to execute "composer update" on this root directory.
+ *******************************************/
 // First of all, the FMDataAPI.php file has to be included. All classes are defined in it.
 include_once "../vendor/autoload.php";
 
@@ -234,7 +237,7 @@ try {
 
     // The 'query()' method can have several parameters. The portal specification has to be an array
     // with the object name of the portal not the table occurrence name.
-    $portal = array("contact_to");
+    $portal = array("Contact");
     $result = $fmdb->person_layout->query(array(array("id" => "1")), null, 1, -1, $portal);
     if (!is_null($result)) {
         foreach ($result as $record) {
@@ -245,7 +248,7 @@ try {
         }
     }
     // The 'query()' method can have several parameters. The second parameter is for sorting.
-    $portal = array("contact_to");
+    $portal = array("Contact");
     $result = $fmdb->person_layout->query(array(array("id" => "1...")), array(array("id", "descend")), 1, -1, $portal);
     if (!is_null($result)) {
         foreach ($result as $record) {

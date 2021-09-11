@@ -1,4 +1,4 @@
-# FMDataAPI Ver.22 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
+# FMDataAPI Ver.23 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -59,29 +59,28 @@ Bug reports and contribution are welcome.
 
 ## Installing to Your Project
 
-The file "FMDataAPI.php" contains all you need to access FileMaker Data API.
-You can download it or clone this repository.
-
 FMDataAPI has "composer.json," so you can add your composer.json file in your project as below.
 
 ```
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"22"
+  "inter-mediator/fmdataapi":"23"
 } ...
 ```
 
 ## About Files and Directories
 
-- FMDataAPI.php
+- src/FMDataAPI.php
     - The core class, and you just use this for your application.
-     This class and inner private classes are object-oriented REST API
+     This class and supporting classes are object-oriented REST API
      wrappers.
+- src/Supporting/*.php
+    - The supporting classes for the FMDataAPI class. Perhaps you don't need to create these classes, but you have to handle methods on them.
 - composer.json, composer.lock
     - Composer information files.
 - Sample_results.ipynb
-    - Sample program and results with Jupyter Notebook style.
+    - Sample program and results with Jupyter Notebook style. Sorry for slight old version results.
 - samples/FMDataAPI_Sample.php and cat.jpg
     - This is the sample program of FMDataAPI class, and shows how to
     use FMDataAPI class. It includes rich comments,
@@ -90,8 +89,8 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
     - These are for GitHub.
 - test
     - Some files for unit testing.
-- .travis.yml
-    - Setting file for TravisCI.
+- .github, docker-compose.yml, Dockerfile
+    - For the GitHub action with testing.
 
 ## Licence
 
@@ -158,6 +157,8 @@ MIT License
     Checked on the FileMaker Server 19.
 - 2021-02-10: [Ver.22]
     Setting the timeout value about cURL. Thanks to @montaniasystemab. Also thanks to @AnnoyingTechnology for correcting.
+- 2021-02-10: [Ver.23]
+    File structure is updated for PSR-4. Thanks to tkuijer.
 
 ## API Differences between ver.8 and 7.
 ### FMDataAPI class
