@@ -64,9 +64,10 @@ class FileMakerLayout
      * @return array
      * @ignore
      */
-    private function buildPortalParameters($param, $shortKey = false)
+    private function buildPortalParameters($param, $shortKey = false, $method = "GET")
     {
         $key = $shortKey ? "portal" : "portalData";
+        $prefix = $method === "GET" ? "" : "_";
         $request = [];
         if (array_values($param) === $param) {
             $request[$key] = $param;
@@ -74,10 +75,10 @@ class FileMakerLayout
             $request[$key] = array_keys($param);
             foreach ($param as $portalName => $options) {
                 if (!is_null($options) && $options['limit']) {
-                    $request["_limit.{$portalName}"] = $options['limit'];
+                    $request["{$prefix}limit.{$portalName}"] = $options['limit'];
                 }
                 if (!is_null($options) && $options['offset']) {
-                    $request["_offset.{$portalName}"] = $options['offset'];
+                    $request["{$prefix}offset.{$portalName}"] = $options['offset'];
                 }
             }
         }
@@ -165,6 +166,7 @@ class FileMakerLayout
             if ($this->restAPI->login()) {
                 $headers = ["Content-Type" => "application/json"];
                 $request = [];
+                $method = is_null($condition) ? "GET" : "POST";
                 if (!is_null($sort)) {
                     $request["sort"] = $sort;
                 }
@@ -175,7 +177,7 @@ class FileMakerLayout
                     $request["limit"] = (string)$range;
                 }
                 if (!is_null($portal)) {
-                    $request = array_merge($request, $this->buildPortalParameters($portal, true));
+                    $request = array_merge($request, $this->buildPortalParameters($portal, true, $method));
                 }
                 if (!is_null($script)) {
                     $request = array_merge($request, $this->buildScriptParameters($script));
@@ -183,11 +185,10 @@ class FileMakerLayout
                 if (!is_null($condition)) {
                     $request["query"] = $condition;
                     $params = ["layouts" => $this->layout, "_find" => null];
-                    $this->restAPI->callRestAPI($params, true, "POST", $request, $headers);
                 } else {
                     $params = ["layouts" => $this->layout, "records" => null];
-                    $this->restAPI->callRestAPI($params, true, "GET", $request, $headers);
                 }
+                $this->restAPI->callRestAPI($params, true, $method, $request, $headers);
                 $this->restAPI->storeToProperties();
                 $result = $this->restAPI->responseBody;
                 $fmrel = null;
