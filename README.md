@@ -1,4 +1,4 @@
-# FMDataAPI Ver.23 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
+# FMDataAPI Ver.24 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -65,7 +65,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"23"
+  "inter-mediator/fmdataapi":"24"
 } ...
 ```
 
@@ -158,7 +158,9 @@ MIT License
 - 2021-02-10: [Ver.22]
     Setting the timeout value about cURL. Thanks to @montaniasystemab. Also thanks to @AnnoyingTechnology for correcting.
 - 2021-02-10: [Ver.23]
-    File structure is updated for PSR-4. Thanks to tkuijer.
+  File structure is updated for PSR-4. Thanks to tkuijer.
+- 2021-12-23: [Ver.24]
+  Bug fix for portal limit parameter. Thanks to tkuijer.
 
 ## API Differences between ver.8 and 7.
 ### FMDataAPI class
