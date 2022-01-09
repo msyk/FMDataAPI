@@ -80,5 +80,9 @@
     "doc": [
       "./vendor/bin/phpdoc -f ./src/FMDataAPI.php -t ../INTER-Mediator_Documents/FMDataAPI"
     ]
+  },
+  "config": {
+    "allow-plugins": {
+    }
   }
 }

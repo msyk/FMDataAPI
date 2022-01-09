@@ -6,6 +6,17 @@ on:
       - "*"
 
 jobs:
+  test-with-php81:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: docker-compose-run
+        shell: bash
+        run: |
+          docker-compose up -d
+          sleep 60
+          docker-compose exec -T web sh -c "cd / && composer test"
+
   test-with-php80:
     runs-on: ubuntu-latest
     steps:
@@ -13,6 +24,7 @@ jobs:
       - name: docker-compose-run
         shell: bash
         run: |
+          cp .github/workflows/Dockerfile-for-php-8.0 Dockerfile
           docker-compose up -d
           sleep 60
           docker-compose exec -T web sh -c "cd / && composer test"
