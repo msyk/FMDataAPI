@@ -21,7 +21,8 @@ use Exception;
 class FMDataAPI
 {
     /* Document generating:
-     * - Install PHP Documentor, and enter command 'php ../phpDocumentor.phar -f ./FMDataAPI.php -t ../INTER-Mediator_Documents/FMDataAPI'.
+     * - Install PHP Documentor, and enter command below.
+     * php ../phpDocumentor.phar -f ./src/FMDataAPI.php -f ./src/Supporting/CommunicationProvider.php -f ./src/Supporting/FileMakerLayout.php -f ./src/Supporting/FileMakerRelation.php  -t ../INTER-Mediator_Documents/FMDataAPI
      */
 
     /**
