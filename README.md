@@ -39,7 +39,7 @@ foreach ($result as $record) {
 For more details, I'd like to read codes and comments in file samples/FMDataAPI_Sample.php.
 
 API Document is here:
-https://inter-mediator.info/FMDataAPI/indices/files.html
+https://inter-mediator.info/FMDataAPI/packages/INTER-Mediator-FileMakerServer-RESTAPI.html
 ## What's This?
 
 The FileMaker Data API is the new feature of FileMaker Server 16,
