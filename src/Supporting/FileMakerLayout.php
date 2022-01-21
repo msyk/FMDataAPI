@@ -137,9 +137,9 @@ class FileMakerLayout
      * If you want to omit records match with condition set the "omit" element as like:
      * array("FamilyName"=>"Nii*", "omit"=>"true").
      * If you want to query all records in the layout, set the first parameter to null.
-     * @param array $sort The array of associated array which has "fieldName" and "sortOrder" keys as like:
-     * array(array("fieldName"=>"FamilyName", "sortOrder"=>"ascend"), array("fieldName"=>"GivenName", "sortOrder"=>"ascend")).
-     * The value of sortOrder key can be 'ascend', 'descend' or value list name.
+     * @param array $sort The array of array which has 2 elements as a field name and order key:
+     * array(array("FamilyName", "ascend"), array("GivenName", "descend")).
+     * The value of order key can be 'ascend', 'descend' or value list name. The default value is 'ascend'.
      * @param int $offset The start number of the record set, and the first record is 0.
      * @param int $range The number of records contains in the result record set.
      * @param array $portal The array of the portal's object names. The query result is going to contain portals
