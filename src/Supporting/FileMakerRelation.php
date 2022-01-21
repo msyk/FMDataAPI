@@ -16,7 +16,7 @@ use Iterator;
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
  * @version 24
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2021 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
+ * @copyright 2017-2022 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
 class FileMakerRelation implements Iterator
 {

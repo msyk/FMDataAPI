@@ -12,7 +12,7 @@ use Exception;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @version 24
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2021 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
+ * @copyright 2017-2022 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
 class FileMakerLayout
 {

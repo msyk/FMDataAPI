@@ -15,7 +15,7 @@ use Exception;
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
  * @version 24
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2021 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
+ * @copyright 2017-2022 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  * @source 1 100000 The source code.
  */
 class FMDataAPI
