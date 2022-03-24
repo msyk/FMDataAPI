@@ -10,7 +10,7 @@ use Exception;
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 24
+ * @version 25
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2022 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
@@ -140,8 +140,8 @@ class FileMakerLayout
      * @param array $sort The array of array which has 2 elements as a field name and order key:
      * array(array("FamilyName", "ascend"), array("GivenName", "descend")).
      * The value of order key can be 'ascend', 'descend' or value list name. The default value is 'ascend'.
-     * @param int $offset The start number of the record set, and the first record is 0.
-     * @param int $range The number of records contains in the result record set.
+     * @param int $offset The start number of the record set, and the first record is 0. The default value is 0.
+     * @param int $range The number of records contains in the result record set. The default value is 100.
      * @param array $portal The array of the portal's object names. The query result is going to contain portals
      * specified in this parameter. If you want to include all portals, set it null or omit it.
      * Simple case is array('portal1', portal2'), and just includes two portals named 'portal1' and 'portal2'

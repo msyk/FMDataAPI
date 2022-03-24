@@ -14,7 +14,7 @@ use Iterator;
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
- * @version 24
+ * @version 25
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2022 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
@@ -78,7 +78,7 @@ class FileMakerRelation implements Iterator
         if ($errorCode === 0 && $portalName && is_array($infoData)) {
             foreach ($infoData as $pdItem) {
                 if (property_exists($pdItem, 'portalObjectName') && $pdItem->portalObjectName == $portalName ||
-                    ! property_exists($pdItem, 'portalObjectName') && $pdItem->table == $portalName) {
+                    !property_exists($pdItem, 'portalObjectName') && $pdItem->table == $portalName) {
                     $this->dataInfo = $pdItem;
                 }
             }
@@ -240,6 +240,57 @@ class FileMakerRelation implements Iterator
         }
 
         return $list;
+    }
+
+    private function getNumberedRecord($num)
+    {
+        $value = null;
+        if (isset($this->data) && isset($this->data[$num])) {
+            $tmpInfo = $this->getDataInfo();
+            $dataInfo = null;
+            if ($tmpInfo !== null && is_object($tmpInfo)) {
+                $dataInfo = clone $tmpInfo;
+                $dataInfo->returnedCount = 1;
+            }
+            $value = new FileMakerRelation(
+                $this->data[$num], $dataInfo, ($this->result == "PORTAL") ? "PORTALRECORD" : "RECORD",
+                $this->errorCode, $this->portalName, $this->restAPI);
+        }
+        return $value;
+    }
+
+    /**
+     * Export to array
+     *
+     * @return FileMakerRelation|null The record set of the record.
+     */
+    public function getFirstRecord()
+    {
+        return $this->getNumberedRecord(0);
+    }
+
+    /**
+     * Export to array
+     *
+     * @return FileMakerRelation|null The record set of the record.
+     */
+    public function getLstRecord()
+    {
+        return $this->getNumberedRecord(count($this->data) - 1);
+    }
+
+    /**
+     * Export to array
+     *
+     * @return array|null The FileMakerRelation objects of the records.
+     */
+    public function getRecords()
+    {
+        $records = [];
+        foreach ($this as $record) {
+            $records[] = $record;
+        }
+        return $records;
     }
 
     /**
