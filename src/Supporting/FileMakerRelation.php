@@ -260,7 +260,7 @@ class FileMakerRelation implements Iterator
     }
 
     /**
-     * Export to array
+     * Returns the fiest record of the query result.
      *
      * @return FileMakerRelation|null The record set of the record.
      */
@@ -270,7 +270,7 @@ class FileMakerRelation implements Iterator
     }
 
     /**
-     * Export to array
+     * Returns the last record of the query result.
      *
      * @return FileMakerRelation|null The record set of the record.
      */
@@ -280,7 +280,7 @@ class FileMakerRelation implements Iterator
     }
 
     /**
-     * Export to array
+     * Returns the array of the query result. Usually iterating by using foreach is a better way.
      *
      * @return array|null The FileMakerRelation objects of the records.
      */
