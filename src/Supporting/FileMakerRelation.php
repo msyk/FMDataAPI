@@ -274,7 +274,7 @@ class FileMakerRelation implements Iterator
      *
      * @return FileMakerRelation|null The record set of the record.
      */
-    public function getLstRecord()
+    public function getLastRecord()
     {
         return $this->getNumberedRecord(count($this->data) - 1);
     }
