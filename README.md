@@ -1,4 +1,4 @@
-# FMDataAPI Ver.25 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
+# FMDataAPI Ver.26 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -64,7 +64,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"25"
+  "inter-mediator/fmdataapi":"26"
 } ...
 ```
 
@@ -162,6 +162,8 @@ MIT License
   Bug fix for portal limit parameter. Thanks to tkuijer.
 - 2022-03-24: [Ver.25]
   Add methods(getFirstRecord, getLastRecord, getRecords) to the FileMakerRelation class.
+- 2022-03-26: [Ver.26]
+  Add methods(setFieldHTMLEncoding, getFieldHTMLEncoding) to the FMDataAPI class. These is going to use for comatibility mode of FileMaker API for PHP.
 
 ## API Differences between ver.8 and 7.
 ### FMDataAPI class

@@ -13,7 +13,7 @@ use Exception;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @property-read FileMakerLayout $<<layout_name>> Returns the FileMakerLayout object from the layout named with the property.
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
- * @version 25
+ * @version 26
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2022 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  * @source 1 100000 The source code.
@@ -113,7 +113,8 @@ class FMDataAPI
      * Set the cURL communication timeout in seconds
      * @param int $timeout
      */
-    public function setTimeout($timeout) {
+    public function setTimeout($timeout)
+    {
         $this->provider->timeout = $timeout;
     }
 
@@ -142,6 +143,29 @@ class FMDataAPI
     public function setCertValidating($value)
     {
         $this->provider->isCertVaridating = $value;
+    }
+
+    /**
+     * Set to true if the return value of the field() method uses htmlspecialchars function.
+     * The default value is FALSE. The nostalgic FileMaker API for PHP was returning htmlspecialchars value of the field.
+     * If we want to get the row field data, we had to call getFieldUnencoded method. If this property set to true,
+     * FileMakerRelation class's field method (including describing field name directly) returns the value processed
+     * with htmlspecialchars. This means kind of compatible mode of FileMaker API for PHP.
+     * This feature works whole the FMDataAPI library.
+     * @param bool $value Turn on to verify the certificate if the value is true.
+     */
+    public function setFieldHTMLEncoding($value)
+    {
+        $this->provider->fieldHTMLEncoding = $value;
+    }
+
+    /**
+     * Detect the return value of the field() method uses htmlspecialchars function or not.
+     * @return bool The result.
+     */
+    public function getFieldHTMLEncoding($value)
+    {
+        return $this->provider->fieldHTMLEncoding;
     }
 
     /**

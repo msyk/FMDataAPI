@@ -7,7 +7,7 @@ namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 25
+ * @version 26
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2022 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
@@ -205,6 +205,11 @@ class CommunicationProvider
      * @ignore
      */
     public $timeout;
+    /**
+     * @var
+     * @ignore
+     */
+    public $fieldHTMLEncoding = false;
 
     /**
      * CommunicationProvider constructor.
@@ -542,7 +547,7 @@ class CommunicationProvider
     {
         try {
             $this->callRestAPI([], [
-                "trackingID" => rand(10000000,99999999),
+                "trackingID" => rand(10000000, 99999999),
                 "provider" => $provider,
                 "address" => "127.0.0.1",
                 "X-FMS-OAuth-AuthType" => 2

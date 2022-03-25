@@ -14,7 +14,7 @@ use Iterator;
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
- * @version 25
+ * @version 26
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2022 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
@@ -59,10 +59,12 @@ class FileMakerRelation implements Iterator
     /**
      * FileMakerRelation constructor.
      *
-     * @param $data
+     * @param array<object> $responseData
+     * @param object $infoData
      * @param string $result
      * @param int $errorCode
-     * @param null $portalName
+     * @param string $portalName
+     * @param CommunicationProvider $provider
      *
      * @ignore
      */
@@ -354,6 +356,8 @@ class FileMakerRelation implements Iterator
      *
      * @return string|FileMakerRelation The field value as string, or the FileMakerRelation object of the portal.
      * @throws Exception The field specified in parameters doesn't exist.
+     * @see FMDataAPI::setFieldHTMLEncoding() Compatible mode for FileMaker API for PHP.
+     *
      */
     public function field($name, $toName = null)
     {
@@ -411,7 +415,9 @@ class FileMakerRelation implements Iterator
         if (is_null($value)) {
             throw new \Exception("Field {$fieldName} doesn't exist.");
         }
-
+        if ($this->restAPI && $this->restAPI->fieldHTMLEncoding && !is_object($value)) {
+            $value = htmlspecialchars($value);
+        }
         return $value;
     }
 
