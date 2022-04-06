@@ -159,7 +159,7 @@ class FileMakerRelation implements Iterator
     /**
      * The record pointer goes forward to previous record. This does not care the range of pointer value.
      */
-    public function next()
+    public function next(): void
     {
         $this->pointer++;
     }
@@ -522,7 +522,7 @@ class FileMakerRelation implements Iterator
      *
      * @return FileMakerRelation|null The record set of the current pointing record.
      */
-    public function current()
+    public function current(): ?FileMakerRelation
     {
         $value = null;
         if (isset($this->data) &&
@@ -548,7 +548,7 @@ class FileMakerRelation implements Iterator
      *
      * @return integer The current number as the record pointer.
      */
-    public function key()
+    public function key(): int
     {
         return $this->pointer;
     }
@@ -558,7 +558,7 @@ class FileMakerRelation implements Iterator
      *
      * @return bool Returns true on existing the record or false on not existing.
      */
-    public function valid()
+    public function valid(): bool
     {
         if (isset($this->data) &&
             isset($this->data[$this->pointer])
@@ -572,7 +572,7 @@ class FileMakerRelation implements Iterator
     /**
      * Rewind the Iterator to the first element. This method is implemented for Iterator interface.
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->pointer = 0;
     }
