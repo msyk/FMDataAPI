@@ -44,7 +44,7 @@ class TestProvider extends CommunicationProvider
         $this->url = $url;
         $this->requestHeader = $header;
         $this->requestBody = ($methodLower != 'get') ? $request : null;
-        $this->responseBody = json_decode($response['response'], false, 512, JSON_BIGINT_AS_STRING);
+        $this->responseBody = json_decode($response['response'] ?? "", false, 512, JSON_BIGINT_AS_STRING);
     }
 
     /**
