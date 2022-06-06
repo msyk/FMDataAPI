@@ -522,8 +522,7 @@ class FileMakerRelation implements Iterator
      *
      * @return FileMakerRelation|null The record set of the current pointing record.
      */
-    #[\ReturnTypeWillChange]
-    public function current()
+    public function current(): ?FileMakerRelation
     {
         $value = null;
         if (isset($this->data) &&
@@ -549,8 +548,7 @@ class FileMakerRelation implements Iterator
      *
      * @return integer The current number as the record pointer.
      */
-    #[\ReturnTypeWillChange]
-    public function key()
+    public function key(): int
     {
         return $this->pointer;
     }
