@@ -90,7 +90,7 @@ class FileMakerRelation implements Iterator
     /**
      * @ignore
      */
-    public function getDataInfo(): mixed
+    public function getDataInfo()
     {
         return $this->dataInfo;
     }
@@ -100,7 +100,7 @@ class FileMakerRelation implements Iterator
      *
      * @return string  The table occurrence name.
      */
-    public function getTargetTable(): mixed
+    public function getTargetTable()
     {
         return ($this->dataInfo) ? $this->dataInfo->table : null;
     }
@@ -110,7 +110,7 @@ class FileMakerRelation implements Iterator
      *
      * @return integer  The total record count.
      */
-    public function getTotalCount(): mixed
+    public function getTotalCount()
     {
         return ($this->dataInfo && property_exists($this->dataInfo, 'totalRecordCount')) ?
             $this->dataInfo->totalRecordCount : null;
@@ -122,7 +122,7 @@ class FileMakerRelation implements Iterator
      *
      * @return integer  The founded record count.
      */
-    public function getFoundCount(): mixed
+    public function getFoundCount()
     {
         return ($this->dataInfo) ? $this->dataInfo->foundCount : null;
     }
@@ -133,7 +133,7 @@ class FileMakerRelation implements Iterator
      *
      * @return integer  The rreturned record count.
      */
-    public function getReturnedCount(): mixed
+    public function getReturnedCount()
     {
         return ($this->dataInfo) ? $this->dataInfo->returnedCount : null;
     }
@@ -199,7 +199,7 @@ class FileMakerRelation implements Iterator
      * @return FileMakerRelation|string|null
      * @ignore
      */
-    public function __get($key): mixed
+    public function __get($key)
     {
         return $this->field($key);
     }
@@ -244,7 +244,7 @@ class FileMakerRelation implements Iterator
         return $list;
     }
 
-    private function getNumberedRecord($num): mixed
+    private function getNumberedRecord($num)
     {
         $value = null;
         if (isset($this->data) && isset($this->data[$num])) {
@@ -266,7 +266,7 @@ class FileMakerRelation implements Iterator
      *
      * @return FileMakerRelation|null The record set of the record.
      */
-    public function getFirstRecord(): mixed
+    public function getFirstRecord()
     {
         return $this->getNumberedRecord(0);
     }
@@ -276,7 +276,7 @@ class FileMakerRelation implements Iterator
      *
      * @return FileMakerRelation|null The record set of the record.
      */
-    public function getLastRecord(): mixed
+    public function getLastRecord()
     {
         return $this->getNumberedRecord(count($this->data) - 1);
     }
@@ -286,7 +286,7 @@ class FileMakerRelation implements Iterator
      *
      * @return array|null The FileMakerRelation objects of the records.
      */
-    public function getRecords(): mixed
+    public function getRecords()
     {
         $records = [];
         foreach ($this as $record) {
@@ -331,7 +331,7 @@ class FileMakerRelation implements Iterator
      *
      * @return array List of portal names
      */
-    public function getPortalNames(): mixed
+    public function getPortalNames()
     {
         $list = [];
         if (isset($this->data)) {
@@ -359,7 +359,7 @@ class FileMakerRelation implements Iterator
      * @see FMDataAPI::setFieldHTMLEncoding() Compatible mode for FileMaker API for PHP.
      *
      */
-    public function field($name, $toName = null): mixed
+    public function field($name, $toName = null)
     {
         $toName = is_null($toName) ? "" : "{$toName}::";
         $fieldName = "{$toName}$name";
@@ -426,7 +426,7 @@ class FileMakerRelation implements Iterator
      *
      * @return int The value of special field recordId.
      */
-    public function getRecordId(): mixed
+    public function getRecordId()
     {
         $value = null;
         switch ($this->result) {
@@ -461,7 +461,7 @@ class FileMakerRelation implements Iterator
      *
      * @return int The value of special field modId.
      */
-    public function getModId(): mixed
+    public function getModId()
     {
         $value = null;
         switch ($this->result) {
@@ -502,7 +502,7 @@ class FileMakerRelation implements Iterator
      *
      * @return string The base64 encoded data in container field.
      */
-    public function getContainerData($name, $toName = null): mixed
+    public function getContainerData($name, $toName = null)
     {
         $fieldValue = $this->field($name, $toName);
         if (strpos($fieldValue, "https://") !== 0) {
@@ -522,7 +522,8 @@ class FileMakerRelation implements Iterator
      *
      * @return FileMakerRelation|null The record set of the current pointing record.
      */
-    public function current(): mixed
+    #[\ReturnTypeWillChange]
+    public function current()
     {
         $value = null;
         if (isset($this->data) &&
@@ -548,7 +549,8 @@ class FileMakerRelation implements Iterator
      *
      * @return integer The current number as the record pointer.
      */
-    public function key(): mixed
+    #[\ReturnTypeWillChange]
+    public function key()
     {
         return $this->pointer;
     }
