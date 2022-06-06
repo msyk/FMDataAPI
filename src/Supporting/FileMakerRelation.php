@@ -90,7 +90,7 @@ class FileMakerRelation implements Iterator
     /**
      * @ignore
      */
-    public function getDataInfo()
+    public function getDataInfo(): mixed
     {
         return $this->dataInfo;
     }
@@ -100,7 +100,7 @@ class FileMakerRelation implements Iterator
      *
      * @return string  The table occurrence name.
      */
-    public function getTargetTable()
+    public function getTargetTable(): mixed
     {
         return ($this->dataInfo) ? $this->dataInfo->table : null;
     }
@@ -110,7 +110,7 @@ class FileMakerRelation implements Iterator
      *
      * @return integer  The total record count.
      */
-    public function getTotalCount()
+    public function getTotalCount(): mixed
     {
         return ($this->dataInfo && property_exists($this->dataInfo, 'totalRecordCount')) ?
             $this->dataInfo->totalRecordCount : null;
@@ -122,7 +122,7 @@ class FileMakerRelation implements Iterator
      *
      * @return integer  The founded record count.
      */
-    public function getFoundCount()
+    public function getFoundCount(): mixed
     {
         return ($this->dataInfo) ? $this->dataInfo->foundCount : null;
     }
@@ -133,7 +133,7 @@ class FileMakerRelation implements Iterator
      *
      * @return integer  The rreturned record count.
      */
-    public function getReturnedCount()
+    public function getReturnedCount(): mixed
     {
         return ($this->dataInfo) ? $this->dataInfo->returnedCount : null;
     }
@@ -143,7 +143,7 @@ class FileMakerRelation implements Iterator
      *
      * @param string $name The portal name.
      */
-    public function setPortalName($name)
+    public function setPortalName($name): void
     {
         $this->portalName = $name;
     }
@@ -151,7 +151,7 @@ class FileMakerRelation implements Iterator
     /**
      * The record pointer goes back to previous record. This does not care the range of pointer value.
      */
-    public function previous()
+    public function previous(): void
     {
         $this->pointer--;
     }
@@ -159,7 +159,7 @@ class FileMakerRelation implements Iterator
     /**
      * The record pointer goes forward to previous record. This does not care the range of pointer value.
      */
-    public function next()
+    public function next(): void
     {
         $this->pointer++;
     }
@@ -167,7 +167,7 @@ class FileMakerRelation implements Iterator
     /**
      * The record pointer goes to first record.
      */
-    public function last()
+    public function last(): void
     {
         $this->pointer = count($this->data) - 1;
     }
@@ -177,7 +177,7 @@ class FileMakerRelation implements Iterator
      *
      * @param int $position The position of the record. The first record is 0.
      */
-    public function moveTo($position)
+    public function moveTo($position): void
     {
         $this->pointer = $position - 1;
     }
@@ -188,7 +188,7 @@ class FileMakerRelation implements Iterator
      *
      * @return int The number of records.
      */
-    public function count()
+    public function count(): int
     {
         return count($this->data);
     }
@@ -199,7 +199,7 @@ class FileMakerRelation implements Iterator
      * @return FileMakerRelation|string|null
      * @ignore
      */
-    public function __get($key)
+    public function __get($key): mixed
     {
         return $this->field($key);
     }
@@ -209,7 +209,7 @@ class FileMakerRelation implements Iterator
      *
      * @return array List of field names
      */
-    public function getFieldNames()
+    public function getFieldNames(): array
     {
         $list = [];
         if (isset($this->data)) {
@@ -244,7 +244,7 @@ class FileMakerRelation implements Iterator
         return $list;
     }
 
-    private function getNumberedRecord($num)
+    private function getNumberedRecord($num): mixed
     {
         $value = null;
         if (isset($this->data) && isset($this->data[$num])) {
@@ -266,7 +266,7 @@ class FileMakerRelation implements Iterator
      *
      * @return FileMakerRelation|null The record set of the record.
      */
-    public function getFirstRecord()
+    public function getFirstRecord(): mixed
     {
         return $this->getNumberedRecord(0);
     }
@@ -276,7 +276,7 @@ class FileMakerRelation implements Iterator
      *
      * @return FileMakerRelation|null The record set of the record.
      */
-    public function getLastRecord()
+    public function getLastRecord(): mixed
     {
         return $this->getNumberedRecord(count($this->data) - 1);
     }
@@ -286,7 +286,7 @@ class FileMakerRelation implements Iterator
      *
      * @return array|null The FileMakerRelation objects of the records.
      */
-    public function getRecords()
+    public function getRecords(): mixed
     {
         $records = [];
         foreach ($this as $record) {
@@ -300,7 +300,7 @@ class FileMakerRelation implements Iterator
      *
      * @return void
      */
-    public function toArray()
+    public function toArray(): array
     {
         if (isset($this->data)) {
             switch ($this->result) {
@@ -331,7 +331,7 @@ class FileMakerRelation implements Iterator
      *
      * @return array List of portal names
      */
-    public function getPortalNames()
+    public function getPortalNames(): mixed
     {
         $list = [];
         if (isset($this->data)) {
@@ -359,7 +359,7 @@ class FileMakerRelation implements Iterator
      * @see FMDataAPI::setFieldHTMLEncoding() Compatible mode for FileMaker API for PHP.
      *
      */
-    public function field($name, $toName = null)
+    public function field($name, $toName = null): mixed
     {
         $toName = is_null($toName) ? "" : "{$toName}::";
         $fieldName = "{$toName}$name";
@@ -426,7 +426,7 @@ class FileMakerRelation implements Iterator
      *
      * @return int The value of special field recordId.
      */
-    public function getRecordId()
+    public function getRecordId(): mixed
     {
         $value = null;
         switch ($this->result) {
@@ -461,7 +461,7 @@ class FileMakerRelation implements Iterator
      *
      * @return int The value of special field modId.
      */
-    public function getModId()
+    public function getModId(): mixed
     {
         $value = null;
         switch ($this->result) {
@@ -502,7 +502,7 @@ class FileMakerRelation implements Iterator
      *
      * @return string The base64 encoded data in container field.
      */
-    public function getContainerData($name, $toName = null)
+    public function getContainerData($name, $toName = null): mixed
     {
         $fieldValue = $this->field($name, $toName);
         if (strpos($fieldValue, "https://") !== 0) {
@@ -522,7 +522,7 @@ class FileMakerRelation implements Iterator
      *
      * @return FileMakerRelation|null The record set of the current pointing record.
      */
-    public function current()
+    public function current(): mixed
     {
         $value = null;
         if (isset($this->data) &&
@@ -548,7 +548,7 @@ class FileMakerRelation implements Iterator
      *
      * @return integer The current number as the record pointer.
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->pointer;
     }
@@ -558,7 +558,7 @@ class FileMakerRelation implements Iterator
      *
      * @return bool Returns true on existing the record or false on not existing.
      */
-    public function valid()
+    public function valid(): bool
     {
         if (isset($this->data) &&
             isset($this->data[$this->pointer])
@@ -572,7 +572,7 @@ class FileMakerRelation implements Iterator
     /**
      * Rewind the Iterator to the first element. This method is implemented for Iterator interface.
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->pointer = 0;
     }

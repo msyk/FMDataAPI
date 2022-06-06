@@ -156,14 +156,14 @@ MIT License
     Checked on the FileMaker Server 19.
 - 2021-02-10: [Ver.22]
     Setting the timeout value about cURL. Thanks to @montaniasystemab. Also thanks to @AnnoyingTechnology for correcting.
-- 2021-02-10: [Ver.23]
+- 2021-11-11: [Ver.23]
   File structure is updated for PSR-4. Thanks to tkuijer.
 - 2021-12-23: [Ver.24]
   Bug fix for portal limit parameter. Thanks to tkuijer.
 - 2022-03-24: [Ver.25]
   Add methods(getFirstRecord, getLastRecord, getRecords) to the FileMakerRelation class.
 - 2022-03-26: [Ver.26]
-  Add methods(setFieldHTMLEncoding, getFieldHTMLEncoding) to the FMDataAPI class. These is going to use for comatibility mode of FileMaker API for PHP.
+  Add methods(setFieldHTMLEncoding, getFieldHTMLEncoding) to the FMDataAPI class. These is going to use for compatibility mode of FileMaker API for PHP.
 
 ## API Differences between ver.8 and 7.
 ### FMDataAPI class
