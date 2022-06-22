@@ -166,6 +166,8 @@ MIT License
   Add methods(setFieldHTMLEncoding, getFieldHTMLEncoding) to the FMDataAPI class. These is going to use for compatibility mode of FileMaker API for PHP.
 - 2022-06-06: [Ver.27]
   Dropped the support of PHP5, minimal version is PHP 7.1, but 7.2 or later is recommended.
+- 2022-XX-XX: [Ver.28]
+  [BUG FIX] The FileMakerRelation class's toArray method didn't return array (Thanks to Talwinder Singh).
 
 ## API Differences between ver.8 and 7.
 ### FMDataAPI class

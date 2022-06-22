@@ -307,17 +307,17 @@ class FileMakerRelation implements Iterator
                 case 'OK':
                     if (isset($this->data[$this->pointer])
                         && isset($this->data[$this->pointer]->fieldData)) {
-                        return json_decode(json_encode($this->data[$this->pointer]->fieldData));
+                        return json_decode(json_encode($this->data[$this->pointer]->fieldData), true);
                     }
                     break;
                 case 'PORTAL':
                     if (isset($this->data[$this->pointer])) {
-                        return json_decode(json_encode($this->data[$this->pointer]));
+                        return json_decode(json_encode($this->data[$this->pointer]), true);
                     }
                     break;
                 case 'RECORD':
                     if (isset($this->data->fieldData)) {
-                        return json_decode(json_encode($this->data->fieldData));
+                        return json_decode(json_encode($this->data->fieldData), true);
                     }
                     break;
             }
