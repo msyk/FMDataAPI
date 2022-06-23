@@ -835,7 +835,7 @@ class CommunicationProvider
         //$str .= var_export($this->curlInfo, true);
         $str .= "</pre><hr>CURL ErrorNumber: {$this->curlErrorNumber}";
         $str .= "</pre><hr>CURL Error: ";
-        $str .= htmlspecialchars($this->curlError);
+        $str .= $this->curlError ? htmlspecialchars($this->curlError) : '';
         $str .= "<hr>";
         if ($isReturnValue) {
             return $str;
