@@ -140,7 +140,8 @@ class FileMakerLayout
      * @param array $sort The array of array which has 2 elements as a field name and order key:
      * array(array("FamilyName", "ascend"), array("GivenName", "descend")).
      * The value of order key can be 'ascend', 'descend' or value list name. The default value is 'ascend'.
-     * @param int $offset The start number of the record set, and the first record is 0. The default value is 0.
+     * @param int $offset The start number of the record set, and the first record is 1, but the number 0
+     * queries from the first record. The default value is 0.
      * @param int $range The number of records contains in the result record set. The default value is 100.
      * @param array $portal The array of the portal's object names. The query result is going to contain portals
      * specified in this parameter. If you want to include all portals, set it null or omit it.
