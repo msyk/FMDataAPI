@@ -376,4 +376,22 @@ class FMDataAPI
     {
         return $this->provider->returnedCount;
     }
+
+    /**
+     * Return the base64 encoded data in container field with with streaming url.
+     *
+     * @param string $url The container data URL.
+     *
+     * @return string The base64 encoded data in container field.
+     * @throws Exception The exception from the accessToContainer method.
+     */
+    public function getContainerData($url)
+    {
+       try {
+            return $this->provider->accessToContainer($url);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
 }
