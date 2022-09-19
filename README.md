@@ -17,6 +17,7 @@ They created pull requests. Thanks for cooperating.
 - Rickard Andersson
 - Julien @AnnoyingTechnology
 - Tom Kuijer
+- Thijs Meijer
 
 ## At a Glance
 
@@ -169,7 +170,8 @@ MIT License
 - 2022-08-04: [Ver.28]
   Added the getContainerData(URL) method to the FMDataAPI class for accessing container data from the url containing /Streaming/MainDB.
   [BUG FIX] The FileMakerRelation class's toArray method didn't return array (Thanks to Talwinder Singh).
-
+- 2022-xx-xx: [Ver.29]
+  Fixed the 'HTTP/2 stream 0 was not closed cleanly' problem with the new FileMaker (Thanks to @thijsmeijer)
 
 ## API Differences between ver.8 and 7.
 ### FMDataAPI class
