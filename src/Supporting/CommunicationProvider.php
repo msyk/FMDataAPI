@@ -593,6 +593,7 @@ class CommunicationProvider
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_DEFAULT);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         if ($methodLower == 'post') {
             curl_setopt($ch, CURLOPT_POST, 1);
         } else
