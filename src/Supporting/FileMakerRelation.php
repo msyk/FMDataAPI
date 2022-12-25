@@ -335,15 +335,24 @@ class FileMakerRelation implements Iterator
     {
         $list = [];
         if (isset($this->data)) {
-            foreach ($this->data as $key) {
-                if (property_exists($key, 'portalData')) {
-                    foreach ($key->portalData as $name => $val) {
-                        array_push($list, $name);
+            switch ($this->result) {
+                case 'OK':
+                    foreach ($this->data as $key) {
+                        if (property_exists($key, 'portalData')) {
+                            foreach ($key->portalData as $name => $val) {
+                                array_push($list, $name);
+                            }
+                        }
                     }
-                }
+                    break;
+                case 'RECORD':
+                    if (property_exists($this->data, 'portalData')) {
+                        foreach ($this->data->portalData as $name => $val) {
+                            array_push($list, $name);
+                        }
+                    }
             }
         }
-
         return $list;
     }
 
