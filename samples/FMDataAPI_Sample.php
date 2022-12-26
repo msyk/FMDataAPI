@@ -19,7 +19,7 @@ try {
     // Instantiate the class FMDataAPI with database name, user name, password and host.
     // Although the port number and protocol can be set in parameters of constructor,
     // these parameters can be omitted with default values.
-    $fmdb = new FMDataAPI("TestDB", "web", "password", "192.168.17.130" /*"localhost"*/);
+    $fmdb = new FMDataAPI("TestDB", "web", "password", "192.168.56.4" /*"localhost"*/);
 
     //==============================
     //$fmdb = new FMDataAPI("TestDB", "web", "password", "localserver");
@@ -59,7 +59,6 @@ try {
     $pInfo = var_export($result, true);
     echo htmlspecialchars("Layout Metadata (Old): {$pInfo}", ENT_QUOTES, "UTF-8") . "<hr>";
 
-    exit;
     // The FMDataAPI has the property as the same name of layout. This sample database has the 'person_layout' layout,
     // so '$fmdb->person_layout' refers FMLayout object fo the proxy of the layout. FMLayout class has the 'query' method
     // and returns FileMakerRelation class's object. The condition spefied in parameter is same as FileMaker's Find Record API.
@@ -274,9 +273,15 @@ try {
     //
     $result = $fmdb->person_layout->query();
     $first = $result->getFirstRecord();
-    echo "id field of the first record: {$first->field('id')}";
+    echo "id field of the first record: {$first->field('id')} and {$first->id}<br>";
+    $portalNames = $first->getPortalNames();
+    echo "getPortalNames(): " . var_export($portalNames, true)."<br>";
     $contacts = $first->Contact;
-    echo "[PORTAL(contact_to)] id: {$contacts->field("id", "contact_to")}";
+    echo "[PORTAL(contact_to)] id: {$contacts->field("id", "contact_to")}<br>";
+    $recCount = $first->count();
+    echo "count(): {$recCount}<br>";
+    $recCount = $first->current();
+    echo "current(): {$recCount}<br>";
 
 } catch (Exception $e) {
     echo '<div><h3>例外発生</h3>', htmlspecialchars($e->getMessage(), ENT_QUOTES, "UTF-8"), "<div>";
