@@ -1,4 +1,4 @@
-# FMDataAPI Ver.28 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
+# FMDataAPI Ver.29 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -65,7 +65,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"28"
+  "inter-mediator/fmdataapi":"29"
 } ...
 ```
 
@@ -170,8 +170,9 @@ MIT License
 - 2022-08-04: [Ver.28]
   Added the getContainerData(URL) method to the FMDataAPI class for accessing container data from the url containing /Streaming/MainDB.
   [BUG FIX] The FileMakerRelation class's toArray method didn't return array (Thanks to Talwinder Singh).
-- 2022-xx-xx: [Ver.29]
+- 2022-12-28: [Ver.29]
   Fixed the 'HTTP/2 stream 0 was not closed cleanly' problem with the new FileMaker (Thanks to @thijsmeijer)
+  Also fixed the getPortalNames issue for single record relation (Thanks to @PGMMattias).
 
 ## API Differences between ver.8 and 7.
 ### FMDataAPI class

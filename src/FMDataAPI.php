@@ -13,9 +13,9 @@ use Exception;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @property-read FileMakerLayout $<<layout_name>> Returns the FileMakerLayout object from the layout named with the property.
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
- * @version 28
+ * @version 29
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2022 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
+ * @copyright 2017-2023 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  * @source 1 100000 The source code.
  */
 class FMDataAPI
@@ -37,8 +37,8 @@ class FMDataAPI
     private $provider = null;
 
     /**
-     * FMDataAPI constructor. If you want to activate OAuth authentication, $user and $pasword are set as
-     * oAuthRequestId and oAuthIdentifier. Moreover call useOAuth method before accessing layouts.
+     * FMDataAPI constructor. If you want to activate OAuth authentication, $user and $password are set as
+     * oAuthRequestId and oAuthIdentifier. Moreover, call useOAuth method before accessing layouts.
      * @param String $solution The database file name which is just hosting.
      * Every database must have the access privillege 'fmrest' including external data sources.
      * @param String $user The fmrest privilege accessible user to the database.

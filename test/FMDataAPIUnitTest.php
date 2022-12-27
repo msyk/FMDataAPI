@@ -36,6 +36,7 @@ class FMDataAPIUnitTest extends TestCase
         $this->assertEquals($result->getTotalCount(), 3, 'Checking the total record number.');
         $this->assertEquals($result->getFoundCount(), 3, 'Checking the found record number.');
         $this->assertEquals($result->getReturnedCount(), 3, 'Checking the returned record number.');
+        $this->assertEquals($result->getPortalNames(), ['Contact', 'History'], 'The query result returns portal names.');
 
         $counter = 0;
         foreach ($result as $record) {
@@ -44,6 +45,9 @@ class FMDataAPIUnitTest extends TestCase
                 $this->assertEquals($record->id, 1, 'Field value has to match with defined value.');
                 $this->assertEquals($record->name, 'Masayuki Nii', 'Field value has to match with defined value.');
                 $this->assertEquals($record->mail, 'msyk@msyk.net', 'Field value has to match with defined value.');
+
+                $this->assertEquals($record->getModId(), 6, 'It has ModID.');
+                $this->assertEquals($record->getRecordId(), 1, 'It has RecordID.');
                 $pcounter = 0;
                 $this->assertEquals($contacts->count(), 3, 'Checking the record number.');
                 $this->assertEquals($contacts->getTargetTable(), 'contact_to', 'Checking the table occurrence name.');
@@ -52,12 +56,13 @@ class FMDataAPIUnitTest extends TestCase
                 $this->assertEquals($contacts->getReturnedCount(), 3, 'Checking the returned record number.');
 
                 foreach ($contacts as $item) {
+                    $item->setPortalName("contact_to");
                     if ($pcounter === 0) {
-                        $this->assertEquals($item->field("datetime", "contact_to"), '12/01/2009 15:23:00', 'Portal field value has to match with defined value.');
+                        $this->assertEquals($item->field("datetime"), '12/01/2009 15:23:00', 'Portal field value has to match with defined value.');
                     } else if ($pcounter === 1) {
-                        $this->assertEquals($item->field("datetime", "contact_to"), '12/02/2009 15:23:00', 'Portal field value has to match with defined value.');
+                        $this->assertEquals($item->field("datetime"), '12/02/2009 15:23:00', 'Portal field value has to match with defined value.');
                     } else if ($pcounter === 2) {
-                        $this->assertEquals($item->field("datetime", "contact_to"), '12/03/2009 15:23:00', 'Portal field value has to match with defined value.');
+                        $this->assertEquals($item->field("datetime"), '12/03/2009 15:23:00', 'Portal field value has to match with defined value.');
                     }
                     $pcounter += 1;
                 }
@@ -108,6 +113,53 @@ class FMDataAPIUnitTest extends TestCase
         $this->assertEquals($fm->httpStatus(), 0, 'Returns 0 for http status.');
         $this->assertEquals($fm->errorCode(), -1, 'The error code has to be -1.');
         $this->assertEquals($fm->curlErrorCode(), 6, 'The error code has to be 6.');
+    }
+
+    public function test_SingleRecord()
+    {
+        $result = $this->fmdataapi->person_layout->query();
+        $record = $result->getFirstRecord();
+        $this->assertEquals($record->id, 1, 'Field value has to match with defined value.');
+        $this->assertEquals($record->name, 'Masayuki Nii', 'Field value has to match with defined value.');
+        $this->assertEquals($record->mail, 'msyk@msyk.net', 'Field value has to match with defined value.');
+        $pcounter = 0;
+        $contacts = $record->Contact;
+        $this->assertEquals($contacts->count(), 3, 'Checking the record number.');
+        $this->assertEquals($contacts->getTargetTable(), 'contact_to', 'Checking the table occurrence name.');
+        $this->assertNull($contacts->getTotalCount(), 'Checking NULL as the total record number.');
+        $this->assertEquals($contacts->getFoundCount(), 3, 'Checking the found record number.');
+        $this->assertEquals($contacts->getReturnedCount(), 3, 'Checking the returned record number.');
+
+        foreach ($contacts as $item) {
+            if ($pcounter === 0) {
+                $this->assertEquals($item->field("datetime", "contact_to"), '12/01/2009 15:23:00', 'Portal field value has to match with defined value.');
+            } else if ($pcounter === 1) {
+                $this->assertEquals($item->field("datetime", "contact_to"), '12/02/2009 15:23:00', 'Portal field value has to match with defined value.');
+            } else if ($pcounter === 2) {
+                $this->assertEquals($item->field("datetime", "contact_to"), '12/03/2009 15:23:00', 'Portal field value has to match with defined value.');
+            }
+            $pcounter += 1;
+        }
+        $this->assertEquals($pcounter, 3, 'Cheking the record number in portal.');
+
+        $this->assertEquals($record->count(), 1, 'The single record is just one record.');
+        $currentRecord = $record->current();
+        $this->assertEquals($currentRecord->id, 1, 'The single record can call current and return a Relation.');
+        $this->assertEquals($record->getPortalNames(), ['Contact', 'History'], 'The single record returns portal names.');
+        $this->assertEquals($record->getModId(), 6, 'The single record returns ModID.');
+        $this->assertEquals($record->getRecordId(), 1, 'The single record returns RecordID.');
+        $this->assertEquals($record->getTargetTable(),  'person_to', 'The single record returns the target table.');
+
+        $pcount = 0;
+        foreach ($record as $item) {
+            $this->assertEquals($item->id, 1, 'The single record can iterate.');
+            $pcount++;
+        }
+        $this->assertEquals($pcount, 1, 'The single record has to repeat just once.');
+        $this->assertEquals($record->getTotalCount(), 3,'Checking the total record number for queried data.');
+        $this->assertEquals($record->getFoundCount(), 3, 'Checking the found record number for queried data.');
+        $this->assertEquals($record->getReturnedCount(), 1, 'Checking the returned record number.');
+
     }
 
 //    public function test_OldVersionFMS()

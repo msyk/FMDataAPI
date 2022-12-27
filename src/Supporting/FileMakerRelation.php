@@ -14,9 +14,9 @@ use Iterator;
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
- * @version 28
+ * @version 29
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2022 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
+ * @copyright 2017-2023 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
 class FileMakerRelation implements Iterator
 {
@@ -46,7 +46,7 @@ class FileMakerRelation implements Iterator
      */
     private $pointer = 0;
     /**
-     * @var null
+     * @var string|null
      * @ignore
      */
     private $portalName = null;
@@ -190,7 +190,17 @@ class FileMakerRelation implements Iterator
      */
     public function count(): int
     {
-        return count($this->data);
+        switch ($this->result) {
+            case "OK":
+            case "PORTAL":
+                return count($this->data);
+                break;
+            case "RECORD":
+            case "PORTALRECORD":
+                return 1;
+                break;
+        }
+        return 0;
     }
 
     /**
@@ -342,6 +352,7 @@ class FileMakerRelation implements Iterator
                             foreach ($key->portalData as $name => $val) {
                                 array_push($list, $name);
                             }
+                            break 2;
                         }
                     }
                     break;
@@ -384,10 +395,10 @@ class FileMakerRelation implements Iterator
                         } else if (isset($this->data[$this->pointer]->portalData) &&
                             isset($this->data[$this->pointer]->portalData->$name)
                         ) {
-                            $value = new FileMakerRelation(
-                                $this->data[$this->pointer]->portalData->$name,
-                                property_exists($this->data[$this->pointer], 'portalDataInfo') ? $this->data[$this->pointer]->portalDataInfo : null,
-                                "PORTAL", 0, null, $this->restAPI);
+                            $infoData = property_exists($this->data[$this->pointer], 'portalDataInfo') ?
+                                $this->data[$this->pointer]->portalDataInfo : null;
+                            $value = new FileMakerRelation($this->data[$this->pointer]->portalData->$name,
+                                $infoData, "PORTAL", 0, $name, $this->restAPI);
                         }
                     }
                     break;
@@ -402,9 +413,8 @@ class FileMakerRelation implements Iterator
                     if (isset($this->data->fieldData) && isset($this->data->fieldData->$name)) {
                         $value = $this->data->fieldData->$name;
                     } else if (isset($this->data->portalData) && isset($this->data->portalData->$name)) {
-                        $value = new FileMakerRelation(
-                            $this->data->portalData->$name,
-                            property_exists($this->data, 'portalDataInfo') ? $this->data->portalDataInfo : null,
+                        $infoData = property_exists($this->data, 'portalDataInfo') ? $this->data->portalDataInfo : null;
+                        $value = new FileMakerRelation($this->data->portalData->$name, $infoData,
                             "PORTAL", 0, $name, $this->restAPI);
                     } else if (isset($this->data->fieldData->$fieldName)) {
                         $value = $this->data->fieldData->$fieldName;
@@ -534,21 +544,29 @@ class FileMakerRelation implements Iterator
     public function current(): ?FileMakerRelation
     {
         $value = null;
-        if (isset($this->data) &&
-            isset($this->data[$this->pointer])
-        ) {
-            $tmpInfo = $this->getDataInfo();
-            $dataInfo = null;
-            if ($tmpInfo !== null && is_object($tmpInfo)) {
-                $dataInfo = clone $tmpInfo;
-                $dataInfo->returnedCount = 1;
-            }
-            $value = new FileMakerRelation(
-                $this->data[$this->pointer], $dataInfo,
-                ($this->result == "PORTAL") ? "PORTALRECORD" : "RECORD",
-                $this->errorCode, $this->portalName, $this->restAPI);
+        switch ($this->result) {
+            case "OK":
+            case "PORTAL":
+                if (isset($this->data) &&
+                    isset($this->data[$this->pointer])
+                ) {
+                    $tmpInfo = $this->getDataInfo();
+                    $dataInfo = null;
+                    if ($tmpInfo !== null && is_object($tmpInfo)) {
+                        $dataInfo = clone $tmpInfo;
+                        $dataInfo->returnedCount = 1;
+                    }
+                    $result = ($this->result == "PORTAL") ? "PORTALRECORD" : "RECORD";
+                    $portalName = $this->portalName;
+                    $value = new FileMakerRelation($this->data[$this->pointer], $dataInfo, $result,
+                        $this->errorCode, $portalName, $this->restAPI);
+                }
+                break;
+            case "RECORD":
+            case "PORTALRECORD":
+                $value = $this;
+                break;
         }
-
         return $value;
     }
 
@@ -569,12 +587,19 @@ class FileMakerRelation implements Iterator
      */
     public function valid(): bool
     {
-        if (isset($this->data) &&
-            isset($this->data[$this->pointer])
-        ) {
-            return true;
+        switch ($this->result) {
+            case "OK":
+            case "PORTAL":
+                if (isset($this->data) && isset($this->data[$this->pointer])
+                ) {
+                    return true;
+                }
+                break;
+            case "RECORD":
+            case "PORTALRECORD":
+                return $this->pointer == 0;
+                break;
         }
-
         return false;
     }
 
