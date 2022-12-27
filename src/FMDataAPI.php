@@ -52,7 +52,7 @@ class FMDataAPI
      * @param array $fmDataSource Authentication information for external data sources.
      * Ex.  [{"database"=>"<databaseName>", "username"=>"<username>", "password"=>"<password>"].
      * If you use OAuth, "oAuthRequestId" and "oAuthIdentifier" keys have to be spedified.
-     * @param boolean $isUnitTest It it's set to true, the communication provider just works locally.
+     * @param boolean $isUnitTest If it's set to true, the communication provider just works locally.
      */
     public function __construct(
         $solution, $user, $password, $host = null, $port = null, $protocol = null, $fmDataSource = null, $isUnitTest = false)
