@@ -65,7 +65,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"29"
+  "inter-mediator/fmdataapi":"30"
 } ...
 ```
 
@@ -173,6 +173,8 @@ MIT License
 - 2022-12-28: [Ver.29]
   Fixed the 'HTTP/2 stream 0 was not closed cleanly' problem with the new FileMaker (Thanks to @thijsmeijer)
   Also fixed the getPortalNames issue for single record relation (Thanks to @PGMMattias).
+- 2023-06-20: [Ver.30]
+  The toArray() method bug fixed. In same cases, it returned []. (Thanks to @PGMMattias).
 
 ## API Differences between ver.8 and 7.
 ### FMDataAPI class

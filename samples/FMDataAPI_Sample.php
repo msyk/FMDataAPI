@@ -19,7 +19,7 @@ try {
     // Instantiate the class FMDataAPI with database name, user name, password and host.
     // Although the port number and protocol can be set in parameters of constructor,
     // these parameters can be omitted with default values.
-    $fmdb = new FMDataAPI("TestDB", "web", "password", "localhost");
+    $fmdb = new FMDataAPI("TestDB", "web", "password", "10.211.56.2");
 
     //==============================
     //$fmdb = new FMDataAPI("TestDB", "web", "password", "localserver");
@@ -72,7 +72,7 @@ try {
     echo htmlspecialchars("Error Code: {$fmdb->errorCode()}", ENT_QUOTES, "UTF-8") . "<hr>";
     echo htmlspecialchars("Error Message: {$fmdb->errorMessage()}", ENT_QUOTES, "UTF-8") . "<hr>";
 
-    // If the query is succeed, the following information can be detected.
+    // If the query is succeeded, the following information can be detected.
     echo htmlspecialchars("Target Table: {$fmdb->getTargetTable()}", ENT_QUOTES, "UTF-8") . "<hr>";
     echo htmlspecialchars("Total Count: {$fmdb->getTotalCount()}", ENT_QUOTES, "UTF-8") . "<hr>";
     echo htmlspecialchars("Found Count: {$fmdb->getFoundCount()}", ENT_QUOTES, "UTF-8") . "<hr>";
@@ -80,10 +80,10 @@ try {
 
     // The FileMakerRelation class implements the Iterator interface and it can repeat with 'foreach.'
     // The $record also refers a FileMakerRelation object but it is for single record.
-    // This layout has fields as like 'id', 'name', 'mail' and so on, and the field name can be handle
-    // as a property name of the the record referring with $record.
+    // This layout has fields as like 'id', 'name', 'mail' and so on, and the field name can be handled
+    // as a property name of the record referring with $record.
     if (!is_null($result)) {
-        // If the query is succeed, the following information can be detected.
+        // If the query is succeeded, the following information can be detected.
         echo htmlspecialchars("Target Table: {$result->getTargetTable()}", ENT_QUOTES, "UTF-8") . "<hr>";
         echo htmlspecialchars("Total Count: {$result->getTotalCount()}", ENT_QUOTES, "UTF-8") . "<hr>";
         echo htmlspecialchars("Found Count: {$result->getFoundCount()}", ENT_QUOTES, "UTF-8") . "<hr>";
@@ -101,7 +101,7 @@ try {
             // A portal name property returns records of portal as FileMakerRelation object.
             $contacts = $record->Contact;
 
-            // If the query is succeed, the following information can be detected.
+            // If the query is succeeded, the following information can be detected.
             echo htmlspecialchars("Target Table: {$contacts->getTargetTable()}", ENT_QUOTES, "UTF-8") . "<hr>";
             echo htmlspecialchars("Total Count: {$contacts->getTotalCount()}", ENT_QUOTES, "UTF-8") . "<hr>";
             echo htmlspecialchars("Found Count: {$contacts->getFoundCount()}", ENT_QUOTES, "UTF-8") . "<hr>";
@@ -120,6 +120,25 @@ try {
                 // call 'field()' method to get the value.
             }
             echo "<hr>";
+        }
+
+
+        echo "<h3>toArray() results</h3>";
+        echo "<h4>[query_result]->toArray()</h4>";
+        var_export($result->toArray());
+
+        foreach ($result as $record) {
+            echo "<hr>";
+            echo "<h4>[each_record]->toArray()</h4>";
+            var_export($record->toArray());
+            foreach ($result->getPortalNames() as $portalName) {
+                echo "<h4>[portal]->toArray()</h4>";
+                var_export($record->$portalName->toArray());
+                foreach ($record->$portalName as $portalRecord) {
+                    echo "<h4>[each_portal_record]->toArray()</h4>";
+                    var_export($portalRecord->toArray());
+                }
+            }
         }
 
         // Move to pointer to the first record.

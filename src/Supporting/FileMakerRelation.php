@@ -14,7 +14,7 @@ use Iterator;
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
- * @version 29
+Ver * @version 30
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2023 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
@@ -312,27 +312,26 @@ class FileMakerRelation implements Iterator
      */
     public function toArray(): array
     {
-        if (isset($this->data)) {
-            switch ($this->result) {
-                case 'OK':
-                    if (isset($this->data[$this->pointer])
-                        && isset($this->data[$this->pointer]->fieldData)) {
-                        return json_decode(json_encode($this->data[$this->pointer]->fieldData), true);
-                    }
-                    break;
-                case 'PORTAL':
-                    if (isset($this->data[$this->pointer])) {
-                        return json_decode(json_encode($this->data[$this->pointer]), true);
-                    }
-                    break;
-                case 'RECORD':
-                    if (isset($this->data->fieldData)) {
-                        return json_decode(json_encode($this->data->fieldData), true);
-                    }
-                    break;
-            }
+        switch ($this->result) {
+            case 'OK':
+            case 'PORTAL':
+                $resultArray = [];
+                foreach ($this as $record) {
+                    $resultArray[] = $record->toArray();
+                }
+                return json_decode(json_encode($resultArray), true);
+                break;
+            case 'PORTALRECORD':
+                if (isset($this->data)) {
+                    return json_decode(json_encode($this->data), true);
+                }
+                break;
+            case 'RECORD':
+                if (isset($this->data) && isset($this->data->fieldData)) {
+                    return json_decode(json_encode($this->data->fieldData), true);
+                }
+                break;
         }
-
         return [];
     }
 
