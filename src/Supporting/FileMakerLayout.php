@@ -147,7 +147,7 @@ class FileMakerLayout
      * specified in this parameter. If you want to include all portals, set it null or omit it.
      * Simple case is array('portal1', portal2'), and just includes two portals named 'portal1' and 'portal2'
      * in the query result. If you set the range of records to a portal, you have to build associated array as like:
-     * array('portal1' => array('offset'=>1,'range'=>5), 'portal2' => null). The record 1 to 5 of portal1 include
+     * array('portal1' => array('offset'=>1,'limit'=>5), 'portal2' => null). The record 1 to 5 of portal1 include
      * the query result, and also all records in portal2 do.
      * @param array $script scripts that should execute right timings.
      * The most understandable description is an associated array with API's keywords "script", "script.param",
