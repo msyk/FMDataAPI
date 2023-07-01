@@ -6,10 +6,23 @@ on:
       - "*"
 
 jobs:
+  test-with-php83:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v3
+      - name: docker-compose-run
+        shell: bash
+        run: |
+          cp .github/workflows/Dockerfile-for-php-8.3 Dockerfile
+          docker-compose up -d
+          sleep 60
+          docker-compose exec -T web sh -c "cd / && composer test"
+
   test-with-php82:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: docker-compose-run
         shell: bash
         run: |
@@ -21,7 +34,7 @@ jobs:
   test-with-php81:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: docker-compose-run
         shell: bash
         run: |
@@ -33,7 +46,7 @@ jobs:
   test-with-php80:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: docker-compose-run
         shell: bash
         run: |
@@ -45,7 +58,7 @@ jobs:
   test-with-php74:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: docker-compose-run
         shell: bash
         run: |
@@ -57,7 +70,7 @@ jobs:
   test-with-php73:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: docker-compose-run
         shell: bash
         run: |
@@ -69,7 +82,7 @@ jobs:
   test-with-php72:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: docker-compose-run
         shell: bash
         run: |
