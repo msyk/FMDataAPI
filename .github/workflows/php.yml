@@ -4,89 +4,27 @@ on:
   push:
     branches:
       - "*"
+  schedule:
+    - cron:  '* * 15 * *'
 
 jobs:
-  test-with-php83:
+  test:
+    name: Test
     runs-on: ubuntu-latest
-    continue-on-error: true
+    strategy:
+      matrix:
+        php: [ '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3' ]
     steps:
-      - uses: actions/checkout@v3
-      - name: docker-compose-run
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      - name: Run docker-compose
         shell: bash
         run: |
-          cp .github/workflows/Dockerfile-for-php-8.3 Dockerfile
+          cp .github/workflows/php-${{ matrix.php }}.dockerfile Dockerfile
           docker-compose up -d
-          sleep 60
-          docker-compose exec -T web sh -c "cd / && composer test"
+          sleep 30
 
-  test-with-php82:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: docker-compose-run
+      - name: Run testing
         shell: bash
         run: |
-          cp .github/workflows/Dockerfile-for-php-8.2 Dockerfile
-          docker-compose up -d
-          sleep 60
-          docker-compose exec -T web sh -c "cd / && composer test"
-
-  test-with-php81:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: docker-compose-run
-        shell: bash
-        run: |
-          cp .github/workflows/Dockerfile-for-php-8.1 Dockerfile
-          docker-compose up -d
-          sleep 60
-          docker-compose exec -T web sh -c "cd / && composer test"
-
-  test-with-php80:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: docker-compose-run
-        shell: bash
-        run: |
-          cp .github/workflows/Dockerfile-for-php-8.0 Dockerfile
-          docker-compose up -d
-          sleep 60
-          docker-compose exec -T web sh -c "cd / && composer test"
-
-  test-with-php74:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: docker-compose-run
-        shell: bash
-        run: |
-          cp .github/workflows/Dockerfile-for-php-7.4 Dockerfile
-          docker-compose up -d
-          sleep 60
-          docker-compose exec -T web sh -c "cd / && composer test"
-
-  test-with-php73:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: docker-compose-run
-        shell: bash
-        run: |
-          cp .github/workflows/Dockerfile-for-php-7.3 Dockerfile
-          docker-compose up -d
-          sleep 60
-          docker-compose exec -T web sh -c "cd / && composer test"
-
-  test-with-php72:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: docker-compose-run
-        shell: bash
-        run: |
-          cp .github/workflows/Dockerfile-for-php-7.2 Dockerfile
-          docker-compose up -d
-          sleep 60
+          sleep 30
           docker-compose exec -T web sh -c "cd / && composer test"

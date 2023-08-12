@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 php:8.3.0alpha2-apache
+FROM --platform=linux/amd64 php:8.3.0beta1-apache
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     iputils-ping \
