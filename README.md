@@ -18,6 +18,7 @@ They created pull requests. Thanks for cooperating.
 - Julien @AnnoyingTechnology
 - Tom Kuijer
 - Thijs Meijer
+- Patrick Janser
 
 ## At a Glance
 
