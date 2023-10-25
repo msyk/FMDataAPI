@@ -39,16 +39,16 @@ class FMDataAPI
     /**
      * FMDataAPI constructor. If you want to activate OAuth authentication, $user and $password are set as
      * oAuthRequestId and oAuthIdentifier. Moreover, call useOAuth method before accessing layouts.
-     * @param String $solution The database file name which is just hosting.
+     * @param string $solution The database file name which is just hosting.
      * Every database must have the access privillege 'fmrest' including external data sources.
-     * @param String $user The fmrest privilege accessible user to the database.
+     * @param string $user The fmrest privilege accessible user to the database.
      * If you are going to call useOAuth method, you have to specify the data for X-FM-Data-OAuth-Request-Id.
-     * @param String $password The password of above user.
+     * @param string $password The password of above user.
      * If you are going to call useOAuth method, you have to specify the data for X-FM-Data-OAuth-Identifier.
-     * @param String $host FileMaker Server's host name or IP address. If omitted, 'localhost' is chosen.
+     * @param string $host FileMaker Server's host name or IP address. If omitted, 'localhost' is chosen.
      * The value "localserver" tries to connect directory 127.0.0.1, and you don't have to set $port and $protocol.
      * @param int $port FileMaker Server's port number. If omitted, 443 is chosen.
-     * @param String $protocol FileMaker Server's protocol name. If omitted, 'https' is chosen.
+     * @param string $protocol FileMaker Server's protocol name. If omitted, 'https' is chosen.
      * @param array $fmDataSource Authentication information for external data sources.
      * Ex.  [{"database"=>"<databaseName>", "username"=>"<username>", "password"=>"<password>"].
      * If you use OAuth, "oAuthRequestId" and "oAuthIdentifier" keys have to be spedified.
@@ -66,7 +66,7 @@ class FMDataAPI
 
     /**
      * Can't set the value to the undefined name.
-     * @param String $key The property name
+     * @param string $key The property name
      * @return FileMakerLayout FileMakerLayout object
      * @ignore
      */
@@ -77,7 +77,7 @@ class FMDataAPI
 
     /**
      * Handle the undefined name as the layout name.
-     * @param String $key The property name
+     * @param string $key The property name
      * @return FileMakerLayout FileMakerLayout object
      * @ignore
      */
@@ -89,7 +89,7 @@ class FMDataAPI
     /**
      * Refers the FileMakerLayout object as the proxy of the layout.
      * If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
-     * @param String $layout_name Layout name.
+     * @param string $layout_name Layout name.
      * @return FileMakerLayout object which is proxy of FileMaker's layout.
      */
     public function layout($layout_name)
