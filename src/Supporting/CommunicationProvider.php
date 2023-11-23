@@ -83,7 +83,7 @@ class CommunicationProvider
      * @var
      * @ignore
      */
-    protected $curlError;
+    public $curlError;
     /**
      * @var
      * @ignore
@@ -747,7 +747,7 @@ class CommunicationProvider
         $this->totalCount = null;
         $this->foundCount = null;
         $this->returnedCount = null;
-
+        $this->errorMessage = null;
 
         if (property_exists($this, 'responseBody')) {
             $rbody = $this->responseBody;
@@ -756,6 +756,7 @@ class CommunicationProvider
                     $result = $rbody->messages[0];
                     $this->httpStatus = $this->getCurlInfo("http_code");
                     $this->errorCode = property_exists($result, 'code') ? $result->code : -1;
+                    $this->errorMessage = property_exists($result, 'message') && $result->code != 0 ? $result->message : null;
                 }
                 if (property_exists($rbody, 'response')) {
                     $result = $rbody->response;
