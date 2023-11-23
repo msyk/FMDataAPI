@@ -194,6 +194,14 @@ class FMDataAPI
     {
         return $this->provider->curlErrorNumber;
     }
+    /**
+     * The error message of curl, text representation of code.
+     * @return int The error number of curl.
+     */
+    public function curlErrorMessage()
+    {
+        return $this->provider->curlError;
+    }
 
     /**
      * The HTTP status code of the latest response from the REST API.
