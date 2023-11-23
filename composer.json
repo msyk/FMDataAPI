@@ -1,6 +1,6 @@
 {
   "name": "inter-mediator/fmdataapi",
-  "version": "30",
+  "version": "31",
   "time": "2023-06-20",
   "repositories": [
     {
@@ -72,6 +72,9 @@
     },
     {
       "name": "Patrick Janser"
+    },
+    {
+      "name": "Roger Engström (Contributor)"
     }
   ],
   "support": {

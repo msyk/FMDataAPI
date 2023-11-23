@@ -13,7 +13,7 @@ use Exception;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @property-read FileMakerLayout $<<layout_name>> Returns the FileMakerLayout object from the layout named with the property.
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
- * @version 30
+ * @version 31
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2023 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  * @source 1 100000 The source code.
@@ -196,7 +196,7 @@ class FMDataAPI
     }
     /**
      * The error message of curl, text representation of code.
-     * @return int The error number of curl.
+     * @return string The error message of curl.
      */
     public function curlErrorMessage()
     {

@@ -7,7 +7,7 @@ namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 30
+ * @version 31
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2023 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
@@ -55,87 +55,87 @@ class CommunicationProvider
      */
     public $accessToken = null;
     /**
-     * @var
+     * @var string
      * @ignore
      */
     protected $method;
     /**
-     * @var
+     * @var string
      * @ignore
      */
     public $url;
     /**
-     * @var
+     * @var array
      * @ignore
      */
     protected $requestHeader;
     /**
-     * @var
+     * @var string
      * @ignore
      */
     public $requestBody;
     /**
-     * @var
+     * @var int
      * @ignore
      */
     public $curlErrorNumber;
     /**
-     * @var
+     * @var string
      * @ignore
      */
     public $curlError;
     /**
-     * @var
+     * @var array
      * @ignore
      */
     protected $curlInfo;
     /**
-     * @var
+     * @var string
      * @ignore
      */
     private $responseHeader;
     /**
-     * @var
+     * @var bool
      * @ignore
      */
     private $isLocalServer = false;
     /**
-     * @var
+     * @var string
      * @ignore
      */
     public $targetTable = '';
     /**
-     * @var
+     * @var int
      * @ignore
      */
     public $totalCount = 0;
     /**
-     * @var
+     * @var int
      * @ignore
      */
     public $foundCount = 0;
     /**
-     * @var
+     * @varint
      * @ignore
      */
     public $returnedCount = 0;
     /**
-     * @var
+     * @var string
      * @ignore
      */
     public $responseBody;
     /**
-     * @var
+     * @var int
      * @ignore
      */
     public $httpStatus;
     /**
-     * @var
+     * @var int
      * @ignore
      */
     public $errorCode;
     /**
-     * @var
+     * @var string
      * @ignore
      */
     public $errorMessage;
@@ -146,67 +146,67 @@ class CommunicationProvider
     public $keepAuth = false;
 
     /**
-     * @var
+     * @var bool
      * @ignore
      */
     public $isDebug;
     /**
-     * @var
+     * @var bool
      * @ignore
      */
     public $isCertVaridating;
     /**
-     * @var
+     * @var bool
      * @ignore
      */
     public $throwExceptionInError = true;
     /**
-     * @var
+     * @var bool
      * @ignore
      */
     public $useOAuth = false;
     /**
-     * @var
+     * @var bool
      * @ignore
      */
     private $fmDataSource;
     /**
-     * @var
+     * @var string
      * @ignore
      */
     public $scriptError;
     /**
-     * @var
+     * @var string
      * @ignore
      */
     public $scriptResult;
     /**
-     * @var
+     * @var string
      * @ignore
      */
     public $scriptErrorPrerequest;
     /**
-     * @var
+     * @var string
      * @ignore
      */
     public $scriptResultPrerequest;
     /**
-     * @var
+     * @var string
      * @ignore
      */
     public $scriptErrorPresort;
     /**
-     * @var
+     * @var string
      * @ignore
      */
     public $scriptResultPresort;
     /**
-     * @var
+     * @var int
      * @ignore
      */
     public $timeout;
     /**
-     * @var
+     * @var bool
      * @ignore
      */
     public $fieldHTMLEncoding = false;

@@ -1,4 +1,4 @@
-# FMDataAPI Ver.30 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
+# FMDataAPI Ver.31 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -19,6 +19,7 @@ They created pull requests. Thanks for cooperating.
 - Tom Kuijer
 - Thijs Meijer
 - Patrick Janser
+- Roger Engström
 
 ## At a Glance
 
@@ -66,7 +67,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"30"
+  "inter-mediator/fmdataapi":"31"
 } ...
 ```
 
@@ -172,10 +173,13 @@ MIT License
   Added the getContainerData(URL) method to the FMDataAPI class for accessing container data from the url containing /Streaming/MainDB.
   [BUG FIX] The FileMakerRelation class's toArray method didn't return array (Thanks to Talwinder Singh).
 - 2022-12-28: [Ver.29]
-  Fixed the 'HTTP/2 stream 0 was not closed cleanly' problem with the new FileMaker (Thanks to @thijsmeijer)
+  Fixed the 'HTTP/2 stream 0 was not closed cleanly' problem with the new FileMaker (Thanks to @thijsmeijer).
   Also fixed the getPortalNames issue for single record relation (Thanks to @PGMMattias).
 - 2023-06-20: [Ver.30]
   The toArray() method bug fixed. In same cases, it returned []. (Thanks to @PGMMattias).
+- 2023-11-24: [Ver.31]
+  The curlErrorMessage() method returns the error message from curl (Thanks to @P1-Roger).
+  Corrected phpdoc issue (Thanks to @patacra).
 
 ## API Differences between ver.8 and 7.
 ### FMDataAPI class
