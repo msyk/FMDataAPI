@@ -166,7 +166,7 @@ class CommunicationProvider
      */
     public $useOAuth = false;
     /**
-     * @var bool
+     * @var array
      * @ignore
      */
     private $fmDataSource;

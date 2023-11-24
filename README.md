@@ -166,7 +166,8 @@ MIT License
 - 2022-03-24: [Ver.25]
   Add methods(getFirstRecord, getLastRecord, getRecords) to the FileMakerRelation class.
 - 2022-03-26: [Ver.26]
-  Add methods(setFieldHTMLEncoding, getFieldHTMLEncoding) to the FMDataAPI class. These is going to use for compatibility mode of FileMaker API for PHP.
+  Add methods(setFieldHTMLEncoding, getFieldHTMLEncoding) to the FMDataAPI class.
+  These are going to use for compatibility mode of FileMaker API for PHP.
 - 2022-06-06: [Ver.27]
   Dropped the support of PHP5, minimal version is PHP 7.1, but 7.2 or later is recommended.
 - 2022-08-04: [Ver.28]
