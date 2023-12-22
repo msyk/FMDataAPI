@@ -120,7 +120,7 @@ class CommunicationProvider
      */
     public $returnedCount = 0;
     /**
-     * @var string
+     * @var object
      * @ignore
      */
     public $responseBody;
