@@ -1,0 +1,29 @@
+name: Test with php-src
+
+on:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 9 7,14,21,28 * *'
+
+jobs:
+  test:
+    name: Test with php-src
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '8.1', '8.2', '8.3' ]
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Run docker compose
+        shell: bash
+        run: |
+          cp .github/workflows/php-src-${{ matrix.php }}.dockerfile Dockerfile
+          docker compose up -d
+          sleep 30
+
+      - name: Run testing
+        shell: bash
+        run: |
+          sleep 30
+          docker compose run web sh -c "cd / && composer test"
