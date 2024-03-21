@@ -209,7 +209,7 @@ class FileMakerRelation implements Iterator
      * @return FileMakerRelation|string|null
      * @ignore
      */
-    public function __get($key): FileMakerRelation
+    public function __get($key)
     {
         return $this->field($key);
     }
