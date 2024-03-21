@@ -110,7 +110,7 @@ class FileMakerRelation implements Iterator
      *
      * @return int The total record count.
      */
-    public function getTotalCount(): int
+    public function getTotalCount(): ?int
     {
         return ($this->dataInfo && property_exists($this->dataInfo, 'totalRecordCount')) ?
             $this->dataInfo->totalRecordCount : null;
@@ -122,7 +122,7 @@ class FileMakerRelation implements Iterator
      *
      * @return int The founded record count.
      */
-    public function getFoundCount(): int
+    public function getFoundCount(): ?int
     {
         return ($this->dataInfo) ? $this->dataInfo->foundCount : null;
     }
@@ -133,7 +133,7 @@ class FileMakerRelation implements Iterator
      *
      * @return int The returned record count.
      */
-    public function getReturnedCount(): int
+    public function getReturnedCount(): ?int
     {
         return ($this->dataInfo) ? $this->dataInfo->returnedCount : null;
     }
