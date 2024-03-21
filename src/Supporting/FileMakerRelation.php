@@ -209,7 +209,7 @@ class FileMakerRelation implements Iterator
      * @return FileMakerRelation|string|null
      * @ignore
      */
-    public function __get($key): FileMakerRelation|string|null
+    public function __get($key): FileMakerRelation
     {
         return $this->field($key);
     }
@@ -367,7 +367,7 @@ class FileMakerRelation implements Iterator
     }
 
     /**
-     * The field value of the first parameter. Or the FileMakerRelation object associated with the the first paramenter.
+     * The field value of the first parameter. Or the FileMakerRelation object associated with the the first parameter.
      *
      * @param string $name The field or portal name.
      * The table occurrence name of the portal can be the portal name, and also the object name of the portal.
@@ -378,7 +378,7 @@ class FileMakerRelation implements Iterator
      * @see FMDataAPI::setFieldHTMLEncoding() Compatible mode for FileMaker API for PHP.
      *
      */
-    public function field($name, $toName = null): string|FileMakerRelation
+    public function field($name, $toName = null)
     {
         $toName = is_null($toName) ? "" : "{$toName}::";
         $fieldName = "{$toName}$name";
