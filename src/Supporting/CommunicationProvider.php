@@ -361,7 +361,7 @@ class CommunicationProvider
     }
 
     /**
-     * @throws Exception In case of any error, an exception arises.
+     * @throws \Exception In case of any error, an exception arises.
      * @ignore
      */
     public function getProductInfo()
@@ -386,7 +386,7 @@ class CommunicationProvider
     }
 
     /**
-     * @throws Exception In case of any error, an exception arises.
+     * @throws \Exception In case of any error, an exception arises.
      * @ignore
      */
     public function getDatabaseNames()
@@ -419,7 +419,7 @@ class CommunicationProvider
     }
 
     /**
-     * @throws Exception In case of any error, an exception arises.
+     * @throws \Exception In case of any error, an exception arises.
      * @ignore
      */
     public function getLayoutNames()
@@ -445,7 +445,7 @@ class CommunicationProvider
     }
 
     /**
-     * @throws Exception In case of any error, an exception arises.
+     * @throws \Exception In case of any error, an exception arises.
      * @ignore
      */
     public function getScriptNames()
@@ -471,7 +471,7 @@ class CommunicationProvider
     }
 
     /**
-     * @throws Exception In case of any error, an exception arises.
+     * @throws \Exception In case of any error, an exception arises.
      * @ignore
      */
     public function login()
@@ -512,7 +512,7 @@ class CommunicationProvider
 
     /**
      *
-     * @throws Exception In case of any error, an exception arises.
+     * @throws \Exception In case of any error, an exception arises.
      * @ignore
      */
     public function logout()
@@ -574,7 +574,7 @@ class CommunicationProvider
      * @param array $request
      * @param array $addHeader
      * @param boolean $isSystem for Metadata
-     * @throws Exception In case of any error, an exception arises.
+     * @throws \Exception In case of any error, an exception arises.
      * @ignore
      */
     public function callRestAPI($params, $isAddToken, $method = 'GET', $request = null, $addHeader = null, $isSystem = false, $directPath = false)
