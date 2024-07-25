@@ -17,12 +17,12 @@ jobs:
         include:
           - current-level: 0
     steps:
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      - uses: actions/checkout@v4
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@72ae4ccbe57f82bbe08411e84e2130bd4ba1c10f # v2.25.5
+        uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2.31.1
         with:
-          php-version: '8.1'
+          php-version: '8.3'
 
       - name: Install PHPStan
         run: composer require --dev phpstan/phpstan
