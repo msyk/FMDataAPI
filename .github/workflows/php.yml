@@ -27,4 +27,4 @@ jobs:
         shell: bash
         run: |
           sleep 30
-          docker-compose exec -T web sh -c "cd / && composer test"
+          docker-compose exec -T web sh -c "cd / && php -v && composer test"
