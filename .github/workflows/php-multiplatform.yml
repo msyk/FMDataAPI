@@ -1,0 +1,39 @@
+name: Test on multiple platforms
+
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+    branches: [ 'master', 'main' ]
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 9 15 * *'
+
+jobs:
+  test:
+    name: Test on multiple platforms
+    runs-on: ${{ matrix.os }}
+    env:
+      PHP_EXTENSIONS: mbstring, json, bcmath, zip, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, exif, gd, ldap, fileinfo
+    strategy:
+      matrix:
+        # https://github.com/shivammathur/setup-php?tab=readme-ov-file#cloud-osplatform-support
+        os: [ 'ubuntu-24.04', 'windows-2022', 'macos-13' ]
+        php: [ '8.3' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install PHP with extensions
+        uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2.31.1
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: pcov
+          extensions: ${{ env.PHP_EXTENSIONS }}
+
+      - name: Prepare environment
+        run: composer install
+
+      - name: Run testing
+        run: composer test
