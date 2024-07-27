@@ -2,6 +2,7 @@ name: Test with php-src
 
 on:
   pull_request:
+    branches: [ 'master', 'main' ]
   workflow_dispatch:
   schedule:
     - cron:  '0 9 7,14,21,28 * *'
@@ -14,7 +15,7 @@ jobs:
       matrix:
         php: [ '8.1', '8.2', '8.3', '8.4' ]
     steps:
-      - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+      - uses: actions/checkout@v4
       - name: Run docker compose
         shell: bash
         run: |

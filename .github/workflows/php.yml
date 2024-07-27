@@ -2,7 +2,10 @@ name: Test
 
 on:
   push:
+    branches:
+      - "*"
   pull_request:
+    branches: [ 'master', 'main' ]
   workflow_dispatch:
   schedule:
     - cron:  '0 9 15 * *'
@@ -10,21 +13,28 @@ on:
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    env:
+      PHP_EXTENSIONS: mbstring, json, bcmath, zip, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, exif, gd, ldap, fileinfo
     strategy:
       matrix:
+        os: [ ubuntu-latest, windows-latest ]
         php: [ '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3' ]
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - name: Run docker-compose
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install PHP with extensions
+        uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2.31.1
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: pcov
+          extensions: ${{ env.PHP_EXTENSIONS }}
+
+      - name: Prepare environment
         shell: bash
-        run: |
-          cp .github/workflows/php-${{ matrix.php }}.dockerfile Dockerfile
-          docker-compose up -d
-          sleep 30
+        run: composer install
 
       - name: Run testing
         shell: bash
-        run: |
-          sleep 30
-          docker-compose exec -T web sh -c "cd / && composer test"
+        run: composer test
