@@ -1,4 +1,4 @@
-name: run-phpstan
+name: PHPStan
 
 on:
   push:
