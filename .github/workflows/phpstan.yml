@@ -16,6 +16,7 @@ jobs:
         level: [ 0, 1, 2 ]
         include:
           - current-level: 0
+          - max-level: 2
     steps:
       - uses: actions/checkout@v4
 
@@ -27,16 +28,39 @@ jobs:
       - name: Install PHPStan
         run: composer require --dev phpstan/phpstan
 
+      - name: Restore cached baseline for PHPStan
+        id: cache-baseline-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            test/phpstan-baseline.neon
+          key: phpstan-baseline-${{ hashFiles('test/phpstan-baseline.neon') }}
+          restore-keys: |
+            phpstan-baseline-
+
       - name: Run PHPStan
-        if:  matrix.level == matrix.current-level
+        if: matrix.level == matrix.current-level
         continue-on-error: true
         run: |
-             ./vendor/bin/phpstan analyse -l "${{ matrix.level }}" --memory-limit 128M src test
+             ./vendor/bin/phpstan analyse --memory-limit 1G -c test/phpstan.neon src test -l "${{ matrix.level }}"
              exit 0
 
       - name: Run PHPStan
-        if:  matrix.level > matrix.current-level
+        if: matrix.level > matrix.current-level
         continue-on-error: true
         run: |
-             ./vendor/bin/phpstan analyse -l "${{ matrix.level }}" --memory-limit 128M src test
+             ./vendor/bin/phpstan analyse --memory-limit 1G -c test/phpstan.neon src test -l "${{ matrix.level }}"
              exit 0
+
+      - name: Generate the baseline for PHPStan
+        if: matrix.level == matrix.max-level && github.event.pull_request.merged == true
+        run: |
+             ./vendor/bin/phpstan analyse --memory-limit 1G -c test/phpstan.neon --generate-baseline test/phpstan-baseline.neon src test -l "${{ matrix.level }}"
+
+      - name: Save the baseline for PHPStan
+        id: cache-baseline-save
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            test/phpstan-baseline.neon
+          key: phpstan-baseline-${{ hashFiles('test/phpstan-baseline.neon') }}
