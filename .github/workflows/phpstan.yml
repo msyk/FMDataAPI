@@ -6,6 +6,9 @@ on:
       - "*"
   pull_request:
     branches: [ 'master', 'main' ]
+  pull_request_target:
+    types:
+      - closed
 
 jobs:
   run:

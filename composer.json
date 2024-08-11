@@ -17,7 +17,7 @@
   "require-dev": {
     "phpunit/phpunit": "*",
     "phpdocumentor/phpdocumentor": ">=3",
-    "phpstan/phpstan": "^1.10"
+    "phpstan/phpstan": "^1.11"
   },
   "autoload": {
     "psr-4": {
