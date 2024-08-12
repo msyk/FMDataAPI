@@ -59,7 +59,7 @@ jobs:
         if: matrix.level == matrix.max-level && github.event.pull_request.merged == true
         continue-on-error: true
         run: |
-             ./vendor/bin/phpstan analyse --memory-limit 1G -c test/phpstan.neon --generate-baseline test/phpstan-baseline.neon src test -vvv -l "${{ matrix.level }}"
+             ./vendor/bin/phpstan analyse --memory-limit 1G -c test/phpstan.neon --generate-baseline test/phpstan-baseline.neon src test -vvv --debug -l "${{ matrix.level }}"
              exit 0
 
       - name: Save the baseline for PHPStan
