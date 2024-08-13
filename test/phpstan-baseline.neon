@@ -1,0 +1,63 @@
+parameters:
+	ignoreErrors:
+		-
+			message: """
+				#^PHPDoc tag @property\\-read has invalid value \\(FileMakerLayout \\$\\<\\<layout_name\\>\\> Returns the FileMakerLayout object from the layout named with the property\\.
+				   If the layout doesn't exist, no error arises here\\. Any errors might arise on methods of FileMakerLayout class\\.\\)\\: Unexpected token "\\$\\<\\<layout_name\\>\\>", expected variable at offset 259$#
+			"""
+			count: 1
+			path: ../src/FMDataAPI.php
+
+		-
+			message: "#^Method INTERMediator\\\\FileMakerServer\\\\RESTAPI\\\\Supporting\\\\CommunicationProvider\\:\\:debugOutput\\(\\) should return string but return statement is missing\\.$#"
+			count: 1
+			path: ../src/Supporting/CommunicationProvider.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$name$#"
+			count: 1
+			path: ../src/Supporting/CommunicationProvider.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$recordId$#"
+			count: 1
+			path: ../src/Supporting/CommunicationProvider.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$toName$#"
+			count: 1
+			path: ../src/Supporting/CommunicationProvider.php
+
+		-
+			message: "#^PHPDoc tag @var has invalid value \\(\\)\\: Unexpected token \"\\\\n     \\* \", expected type at offset 15$#"
+			count: 1
+			path: ../src/Supporting/CommunicationProvider.php
+
+		-
+			message: """
+				#^PHPDoc tag @property has invalid value \\(FileMakerRelation \\$\\<\\<portal_name\\>\\> FileMakerRelation object associated with the property name\\.
+				   The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal\\.
+				Ver \\* @version 31\\)\\: Unexpected token "\\$\\<\\<portal_name\\>\\>", expected variable at offset 474$#
+			"""
+			count: 1
+			path: ../src/Supporting/FileMakerRelation.php
+
+		-
+			message: "#^PHPDoc tag @property has invalid value \\(string \\$\\<\\<field_name\\>\\> The field value named as the property name\\.\\)\\: Unexpected token \"\\$\\<\\<field_name\\>\\>\", expected variable at offset 383$#"
+			count: 1
+			path: ../src/Supporting/FileMakerRelation.php
+
+		-
+			message: "#^PHPDoc tag @return with type void is incompatible with native type array\\.$#"
+			count: 1
+			path: ../src/Supporting/FileMakerRelation.php
+
+		-
+			message: "#^Access to an undefined property INTERMediator\\\\FileMakerServer\\\\RESTAPI\\\\FMDataAPI\\:\\:\\$person_layout\\.$#"
+			count: 1
+			path: FMDataAPIUnitTest.php
+
+		-
+			message: "#^Method INTERMediator\\\\FileMakerServer\\\\RESTAPI\\\\Supporting\\\\TestProvider\\:\\:accessToContainer\\(\\) should return string but return statement is missing\\.$#"
+			count: 1
+			path: TestProvider.php
