@@ -37,7 +37,7 @@ jobs:
         with:
           path: |
             test/phpstan-baseline.neon
-          key: phpstan-baseline-${{ hashFiles('test/phpstan-baseline.neon') }}
+          key: phpstan-baseline-${{ github.run_id }}"
           restore-keys: |
             phpstan-baseline-
 
@@ -64,8 +64,9 @@ jobs:
 
       - name: Save the baseline for PHPStan
         id: cache-baseline-save
+        if: matrix.level == matrix.max-level && github.event.pull_request.merged == true
         uses: actions/cache/save@v4
         with:
           path: |
             test/phpstan-baseline.neon
-          key: phpstan-baseline-${{ hashFiles('test/phpstan-baseline.neon') }}
+          key: phpstan-baseline-${{ github.run_id }}"
