@@ -596,19 +596,21 @@ class CommunicationProvider
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         if ($methodLower == 'post') {
             curl_setopt($ch, CURLOPT_POST, 1);
-        } else
-            if ($methodLower == 'put') {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-            } else if ($methodLower == 'patch') {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
-            } else if ($methodLower == 'delete') {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-            } else {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-            }
+        } elseif (in_array($methodLower, ['put', 'patch', 'delete', 'get'], true)) {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($methodLower));
+        }
         if ($this->isCertVaridating) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+            // Use the OS native certificate authorities, if possible.
+            // This fixes SSL validation errors if `php.ini` doesn't have
+            // [curl] `curl.cainfo` set properly of if this PEM file isn't
+            // up to date. Better rely on the OS certificate authorities, which
+            // is maintained automatically.
+            if (defined('CURLSSLOPT_NATIVE_CA')
+                && version_compare(curl_version()['version'], '7.71', '>=')) {
+                curl_setopt($ch, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);
+            }
         } else {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
