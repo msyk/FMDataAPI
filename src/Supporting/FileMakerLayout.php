@@ -475,7 +475,7 @@ class FileMakerLayout
      * information is set under the 'metaData' property. There is no information about portals. Ex.:
      * {"metaData": [{"name": "id","type": "normal","result": "number","global": "false","repetitions": 1,"id": "1"},
      *{"name": "name","type": "normal","result": "text","global": "false","repetitions": 1,"id": "2"},,....,]}
-     * @throws Exception In case of any error, an exception arises.
+     * @throws \Exception In case of any error, an exception arises.
      */
     public function getMetadataOld()
     {

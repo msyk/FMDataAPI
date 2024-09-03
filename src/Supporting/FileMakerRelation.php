@@ -374,7 +374,7 @@ class FileMakerRelation implements Iterator
      * @param string $toName The table occurrence name of the portal as the prefix of the field name.
      *
      * @return string|FileMakerRelation The field value as string, or the FileMakerRelation object of the portal.
-     * @throws Exception The field specified in parameters doesn't exist.
+     * @throws \Exception The field specified in parameters doesn't exist.
      * @see FMDataAPI::setFieldHTMLEncoding() Compatible mode for FileMaker API for PHP.
      *
      */
