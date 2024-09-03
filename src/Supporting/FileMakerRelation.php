@@ -21,7 +21,7 @@ Ver * @version 31
 class FileMakerRelation implements Iterator
 {
     /**
-     * @var null
+     * @var null|array
      * @ignore
      */
     private $data = null;
