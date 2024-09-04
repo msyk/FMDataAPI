@@ -16,7 +16,8 @@ class FMDataAPIUnitTest extends TestCase
 
     public function setUp(): void
     {
-        $this->fmdataapi = new FMDataAPI("TestDB", "web", "password", "localhost", "443", "https", true, true);
+        $this->fmdataapi = new FMDataAPI("TestDB", "web", "password",
+            "localhost", "443", "https", null, true);
     }
 
     public function test_initializeObjects()
