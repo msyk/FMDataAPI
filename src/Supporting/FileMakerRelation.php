@@ -21,7 +21,7 @@ Ver * @version 31
 class FileMakerRelation implements Iterator
 {
     /**
-     * @var null
+     * @var null|array
      * @ignore
      */
     private $data = null;
@@ -98,9 +98,9 @@ class FileMakerRelation implements Iterator
     /**
      * Get the table occurrence name of query to get this relation.
      *
-     * @return string  The table occurrence name.
+     * @return string The table occurrence name.
      */
-    public function getTargetTable()
+    public function getTargetTable(): string
     {
         return ($this->dataInfo) ? $this->dataInfo->table : null;
     }
@@ -108,9 +108,9 @@ class FileMakerRelation implements Iterator
     /**
      * Get the total record count of query to get this relation. Portal relation doesn't have this information and returns NULL.
      *
-     * @return integer  The total record count.
+     * @return int The total record count.
      */
-    public function getTotalCount()
+    public function getTotalCount(): ?int
     {
         return ($this->dataInfo && property_exists($this->dataInfo, 'totalRecordCount')) ?
             $this->dataInfo->totalRecordCount : null;
@@ -120,9 +120,9 @@ class FileMakerRelation implements Iterator
      * Get the founded record count of query to get this relation. If the relation comes from getRecord() method,
      * this method returns 1.
      *
-     * @return integer  The founded record count.
+     * @return int The founded record count.
      */
-    public function getFoundCount()
+    public function getFoundCount(): ?int
     {
         return ($this->dataInfo) ? $this->dataInfo->foundCount : null;
     }
@@ -131,9 +131,9 @@ class FileMakerRelation implements Iterator
      * Get the returned record count of query to get this relation. If the relation comes from getRecord() method,
      * this method returns 1.
      *
-     * @return integer  The rreturned record count.
+     * @return int The returned record count.
      */
-    public function getReturnedCount()
+    public function getReturnedCount(): ?int
     {
         return ($this->dataInfo) ? $this->dataInfo->returnedCount : null;
     }
@@ -143,7 +143,7 @@ class FileMakerRelation implements Iterator
      *
      * @param string $name The portal name.
      */
-    public function setPortalName($name): void
+    public function setPortalName(string $name): void
     {
         $this->portalName = $name;
     }
@@ -254,7 +254,7 @@ class FileMakerRelation implements Iterator
         return $list;
     }
 
-    private function getNumberedRecord($num)
+    private function getNumberedRecord($num): ?FileMakerRelation
     {
         $value = null;
         if (isset($this->data) && isset($this->data[$num])) {
@@ -276,7 +276,7 @@ class FileMakerRelation implements Iterator
      *
      * @return FileMakerRelation|null The record set of the record.
      */
-    public function getFirstRecord()
+    public function getFirstRecord(): ?FileMakerRelation
     {
         return $this->getNumberedRecord(0);
     }
@@ -286,7 +286,7 @@ class FileMakerRelation implements Iterator
      *
      * @return FileMakerRelation|null The record set of the record.
      */
-    public function getLastRecord()
+    public function getLastRecord(): ?FileMakerRelation
     {
         return $this->getNumberedRecord(count($this->data) - 1);
     }
@@ -294,9 +294,9 @@ class FileMakerRelation implements Iterator
     /**
      * Returns the array of the query result. Usually iterating by using foreach is a better way.
      *
-     * @return array|null The FileMakerRelation objects of the records.
+     * @return array The FileMakerRelation objects of the records.
      */
-    public function getRecords()
+    public function getRecords(): array
     {
         $records = [];
         foreach ($this as $record) {
@@ -308,7 +308,7 @@ class FileMakerRelation implements Iterator
     /**
      * Export to array
      *
-     * @return void
+     * @return array
      */
     public function toArray(): array
     {
@@ -340,7 +340,7 @@ class FileMakerRelation implements Iterator
      *
      * @return array List of portal names
      */
-    public function getPortalNames()
+    public function getPortalNames(): array
     {
         $list = [];
         if (isset($this->data)) {
@@ -367,7 +367,7 @@ class FileMakerRelation implements Iterator
     }
 
     /**
-     * The field value of the first parameter. Or the FileMakerRelation object associated with the the first paramenter.
+     * The field value of the first parameter. Or the FileMakerRelation object associated with the the first parameter.
      *
      * @param string $name The field or portal name.
      * The table occurrence name of the portal can be the portal name, and also the object name of the portal.
@@ -444,7 +444,7 @@ class FileMakerRelation implements Iterator
      *
      * @return int The value of special field recordId.
      */
-    public function getRecordId()
+    public function getRecordId(): int
     {
         $value = null;
         switch ($this->result) {
@@ -479,7 +479,7 @@ class FileMakerRelation implements Iterator
      *
      * @return int The value of special field modId.
      */
-    public function getModId()
+    public function getModId(): int
     {
         $value = null;
         switch ($this->result) {
@@ -518,9 +518,9 @@ class FileMakerRelation implements Iterator
      * The table occurrence name of the portal can be the portal name, and also the object name of the portal.
      * @param string $toName The table occurrence name of the portal as the prefix of the field name.
      *
-     * @return string The base64 encoded data in container field.
+     * @return string|null The base64 encoded data in container field.
      */
-    public function getContainerData($name, $toName = null)
+    public function getContainerData($name, $toName = null): ?string
     {
         $fieldValue = $this->field($name, $toName);
         if (strpos($fieldValue, "https://") !== 0) {
