@@ -21,7 +21,7 @@ Ver * @version 31
 class FileMakerRelation implements Iterator
 {
     /**
-     * @var null|array
+     * @var null|object
      * @ignore
      */
     private $data = null;
@@ -194,13 +194,12 @@ class FileMakerRelation implements Iterator
             case "OK":
             case "PORTAL":
                 return count($this->data);
-                break;
             case "RECORD":
             case "PORTALRECORD":
                 return 1;
-                break;
+            default:
+                return 0;
         }
-        return 0;
     }
 
     /**

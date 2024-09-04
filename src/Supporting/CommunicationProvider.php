@@ -34,7 +34,7 @@ class CommunicationProvider
      */
     private $password = "1234";
     /**
-     * @var
+     * @var string
      * @ignore
      */
     private $solution;
@@ -115,7 +115,7 @@ class CommunicationProvider
      */
     public $foundCount = 0;
     /**
-     * @varint
+     * @var int
      * @ignore
      */
     public $returnedCount = 0;
@@ -213,12 +213,12 @@ class CommunicationProvider
 
     /**
      * CommunicationProvider constructor.
-     * @param $solution
-     * @param $user
-     * @param $password
-     * @param null $host
-     * @param null $port
-     * @param null $protocol
+     * @param string $solution
+     * @param string $user
+     * @param string $password
+     * @param null|string $host
+     * @param null|int $port
+     * @param null|string $protocol
      * @ignore
      */
     public function __construct($solution, $user, $password, $host = null, $port = null, $protocol = null, $fmDataSource = null)
@@ -247,9 +247,11 @@ class CommunicationProvider
     }
 
     /**
-     * @param $action
-     * @param $layout
-     * @param null $recordId
+     * @param array $params Array to build the API path. Ex: `["layouts" => null]` or `["sessions" => $this->accessToken]`.
+     * @param null|array $request The query parameters as `"key" => "value"`.
+     * @param string $methodLower The method in lowercase. Ex: `"get"`, `"delete"`, etc.
+     * @param bool $isSystem If the query is for the system (sessions, databases, etc) or for a database.
+     * @param false|string $directPath If we don't want to build the path with the other parameters, you can provide the direct path.
      * @return string
      * @ignore
      */
