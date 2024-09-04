@@ -80,7 +80,7 @@ class CommunicationProvider
      * @var int
      * @ignore
      */
-    public int $curlErrorNumber;
+    public int $curlErrorNumber = 0;
     /**
      * @var string
      * @ignore
@@ -130,7 +130,7 @@ class CommunicationProvider
      * @var int
      * @ignore
      */
-    public int $httpStatus;
+    public int $httpStatus = 0;
     /**
      * @var int
      * @ignore
