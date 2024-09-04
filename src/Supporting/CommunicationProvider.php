@@ -87,10 +87,10 @@ class CommunicationProvider
      */
     public string $curlError;
     /**
-     * @var array
+     * @var null|array
      * @ignore
      */
-    protected array $curlInfo;
+    protected null|array $curlInfo;
     /**
      * @var string
      * @ignore
@@ -140,7 +140,7 @@ class CommunicationProvider
      * @var string
      * @ignore
      */
-    public string $errorMessage;
+    public string $errorMessage = "";
     /**
      * @var bool
      * @ignore

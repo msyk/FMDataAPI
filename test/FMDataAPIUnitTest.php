@@ -108,7 +108,8 @@ class FMDataAPIUnitTest extends TestCase
 
     public function test_ErrorQuery()
     {
-        $fm = new FMDataAPI("TestDB", "web", "password", "localserver123", "443", "https", false, true);
+        $fm = new FMDataAPI("TestDB", "web", "password", "localserver123",
+            "443", "https", null, true);
         $result = $fm->person_layout->query();    // Host name is DNS unaware.
         $this->assertNull($result, 'No results returns.');
         $this->assertEquals($fm->httpStatus(), 0, 'Returns 0 for http status.');
