@@ -37,8 +37,8 @@ class TestProvider extends CommunicationProvider
         $response = $this->validResponse($inputs);
 
         $this->curlInfo = $response['curlinfo'];
-        $this->curlErrorNumber = $response['curlerror'];
-        $this->curlError = $response['curlerrormessage'];
+        $this->curlErrorNumber = $response['curlerror'] ?? 0;
+        $this->curlError = $response['curlerrormessage'] ?? "";
 
         $this->method = $method;
         $this->url = $url;

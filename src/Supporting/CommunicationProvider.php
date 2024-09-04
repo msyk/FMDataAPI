@@ -85,7 +85,7 @@ class CommunicationProvider
      * @var string
      * @ignore
      */
-    public string $curlError;
+    public string $curlError = "";
     /**
      * @var null|array
      * @ignore
