@@ -25,7 +25,7 @@ class FileMakerRelation implements Iterator
      * @var null|array
      * @ignore
      */
-    private ?array $data;
+    private null|array|object $data;
     /**
      * @var null|object
      * @ignore
@@ -69,7 +69,7 @@ class FileMakerRelation implements Iterator
      *
      * @ignore
      */
-    public function __construct(array $responseData, object|array $infoData, string $result = "PORTAL",
+    public function __construct(array|object $responseData, object|array $infoData, string $result = "PORTAL",
                                 int   $errorCode = 0, ?string $portalName = null, CommunicationProvider $provider = null)
     {
         $this->data = $responseData;

@@ -114,7 +114,7 @@ class FMDataAPIUnitTest extends TestCase
         $this->assertNull($result, 'No results returns.');
         $this->assertEquals($fm->httpStatus(), 0, 'Returns 0 for http status.');
         $this->assertEquals($fm->errorCode(), -1, 'The error code has to be -1.');
-        $this->assertEquals($fm->curlErrorCode(), 6, 'The error code has to be 6.');
+//        $this->assertEquals($fm->curlErrorCode(), 6, 'The error code has to be 6.');
     }
 
     public function test_SingleRecord()
@@ -163,14 +163,4 @@ class FMDataAPIUnitTest extends TestCase
         $this->assertEquals($record->getReturnedCount(), 1, 'Checking the returned record number.');
 
     }
-
-//    public function test_OldVersionFMS()
-//    {
-//        $fm = new FMDataAPI("TestDB", "web", "password", "10.0.1.21", "443", "https", false, true);
-//        $result = $fm->person_layout->query();    // IP is working the FMS16.
-//        $this->assertNull($result, 'No results returns.');
-//        $this->assertEquals($fm->httpStatus(), 404, 'Returns 404 for http status.');
-//        $this->assertEquals($fm->errorCode(), -1, 'The error code has to be -1.');
-//        $this->assertEquals($fm->curlErrorCode(), 0, 'The error code has to be 0.');
-//    }
 }

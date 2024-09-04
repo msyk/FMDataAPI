@@ -215,7 +215,7 @@ class FMDataAPI
      * The HTTP status code of the latest response from the REST API.
      * @return int The HTTP status code.
      */
-    public function httpStatus(): int
+    public function httpStatus(): null|int
     {
         return $this->provider->httpStatus;
     }
@@ -355,7 +355,7 @@ class FMDataAPI
      * @return string  The table name.
      * @see FileMakerRelation::getTargetTable()
      */
-    public function getTargetTable(): string
+    public function getTargetTable(): null|string
     {
         return $this->provider->targetTable;
     }

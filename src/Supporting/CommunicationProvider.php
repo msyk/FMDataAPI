@@ -75,7 +75,7 @@ class CommunicationProvider
      * @var string
      * @ignore
      */
-    public string $requestBody;
+    public null|array|string $requestBody = "";
     /**
      * @var int
      * @ignore
@@ -105,42 +105,42 @@ class CommunicationProvider
      * @var string
      * @ignore
      */
-    public string $targetTable = '';
+    public null|string $targetTable = '';
+    /**
+     * @var null|int
+     * @ignore
+     */
+    public null|int $totalCount = null;
     /**
      * @var int
      * @ignore
      */
-    public int $totalCount = 0;
-    /**
-     * @var int
-     * @ignore
-     */
-    public int $foundCount = 0;
+    public null|int $foundCount = null;
     /**
      * @varint
      * @ignore
      */
-    public int $returnedCount = 0;
+    public null|int $returnedCount = null;
     /**
      * @var object
      * @ignore
      */
-    public object $responseBody;
+    public null|object $responseBody = null;
     /**
      * @var int
      * @ignore
      */
-    public int $httpStatus = 0;
+    public null|int $httpStatus = null;
     /**
      * @var int
      * @ignore
      */
     public int $errorCode;
     /**
-     * @var string
+     * @var null|string
      * @ignore
      */
-    public string $errorMessage = "";
+    public null|string $errorMessage = "";
     /**
      * @var bool
      * @ignore
@@ -173,35 +173,35 @@ class CommunicationProvider
      */
     private null|array $fmDataSource;
     /**
-     * @var string
+     * @var null|string
      * @ignore
      */
-    public string $scriptError;
+    public null|string $scriptError = "";
     /**
      * @var string
      * @ignore
      */
-    public string $scriptResult;
+    public null|string $scriptResult = "";
     /**
      * @var string
      * @ignore
      */
-    public string $scriptErrorPrerequest;
+    public null|string $scriptErrorPrerequest = "";
     /**
      * @var string
      * @ignore
      */
-    public string $scriptResultPrerequest;
+    public null|string $scriptResultPrerequest = "";
     /**
      * @var string
      * @ignore
      */
-    public string $scriptErrorPresort;
+    public null|string $scriptErrorPresort = "";
     /**
      * @var string
      * @ignore
      */
-    public string $scriptResultPresort;
+    public null|string $scriptResultPresort = "";
     /**
      * @var int
      * @ignore

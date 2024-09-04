@@ -44,7 +44,9 @@ class TestProvider extends CommunicationProvider
         $this->url = $url;
         $this->requestHeader = $header;
         $this->requestBody = ($methodLower != 'get') ? $request : null;
-        $this->responseBody = json_decode($response['response'] ?? "", false, 512, JSON_BIGINT_AS_STRING);
+        if($response['response']) {
+            $this->responseBody = json_decode($response['response'], false, 512, JSON_BIGINT_AS_STRING);
+        }
     }
 
     /**
@@ -71,13 +73,13 @@ class TestProvider extends CommunicationProvider
     private function buildResponses()
     {
         $this->responses = [
-            '1f07ed437a339095a5634da38074a2d1173442e6' => [    //Login
+            'baebc873017a6d313d20a113ef506307b0c9f575' => [    //Login
                 'response' => '{"response":{"token":"1f3c9bd128ef29e97b2d7fd941df4a88198bd8b5eb9aa69c4"},"messages":[{"code":"0","message":"OK"}]}',
                 'curlerror' => '0',
                 'curlerrormessage' => '',
                 'curlinfo' => ['http_code' => 200]
             ],
-            'e6de3c79ed664d3f4fa49c9013bf566eba78da1a' => [     //LogOut
+            '5a836a66dee3facd0875bfee60a1a46f52edd0c3' => [     //LogOut
                 'response' => '{"response": {},"messages": [{"code": "0", "message": "OK"}]}',
                 'curlerror' => '0',
                 'curlerrormessage' => '',
