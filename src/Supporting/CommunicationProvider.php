@@ -171,7 +171,7 @@ class CommunicationProvider
      * @var array
      * @ignore
      */
-    private array $fmDataSource;
+    private null|array $fmDataSource;
     /**
      * @var string
      * @ignore
