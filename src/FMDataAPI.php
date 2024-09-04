@@ -2,9 +2,9 @@
 
 namespace INTERMediator\FileMakerServer\RESTAPI;
 
-use INTERMediator\FileMakerServer\RESTAPI\Supporting\CommunicationProvider;
 use INTERMediator\FileMakerServer\RESTAPI\Supporting\FileMakerLayout;
 use INTERMediator\FileMakerServer\RESTAPI\Supporting\FileMakerRelation;
+use INTERMediator\FileMakerServer\RESTAPI\Supporting\CommunicationProvider;
 use Exception;
 
 /**
@@ -27,12 +27,13 @@ class FMDataAPI
      */
 
     /**
-     * Keeping the FileMakerLayout object for each layout
+     * @var FileMakerLayout[] Keeping the FileMakerLayout object for each layout.
      * @ignore
      */
-    private array $layoutTable = [];
+    private $layoutTable = [];
+
     /**
-     * Keeping the CommunicationProvider object
+     * @var null|CommunicationProvider Keeping the CommunicationProvider object.
      * @ignore
      */
     private CommunicationProvider|null $provider;
@@ -48,12 +49,12 @@ class FMDataAPI
      * If you’re going to call useOAuth method, you have to specify the data for X-FM-Data-OAuth-Identifier.
      * @param ?string $host FileMaker Server's host name or IP address. If omitted, 'localhost' is chosen.
      * The value "localserver" tries to connect directory 127.0.0.1, and you don't have to set $port and $protocol.
-     * @param ?int $port FileMaker Server's port number. If omitted, 443 is chosen.
-     * @param ?string $protocol FileMaker Server's protocol name. If omitted, 'https' is chosen.
-     * @param ?array $fmDataSource Authentication information for external data sources.
-     * Ex.  [{"database"=>"<databaseName>", "username"=>"<username>", "password"=>"<password>"}].
-     * If you use OAuth, "oAuthRequestId" and "oAuthIdentifier" keys have to be specified.
-     * @param bool $isUnitTest If it's set to true, the communication provider just works locally.
+     * @param int $port FileMaker Server's port number. If omitted, 443 is chosen.
+     * @param string $protocol FileMaker Server's protocol name. If omitted, 'https' is chosen.
+     * @param array $fmDataSource Authentication information for external data sources.
+     * Ex.  [{"database"=>"<databaseName>", "username"=>"<username>", "password"=>"<password>"].
+     * If you use OAuth, "oAuthRequestId" and "oAuthIdentifier" keys have to be spedified.
+     * @param boolean $isUnitTest If it's set to true, the communication provider just works locally.
      */
     public function __construct(
         string  $solution, string $user, string $password,

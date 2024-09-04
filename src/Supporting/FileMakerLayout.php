@@ -22,15 +22,15 @@ class FileMakerLayout
      */
     private $restAPI = null;
     /**
-     * @var null
+     * @var null|string
      * @ignore
      */
     private $layout = null;
 
     /**
      * FileMakerLayout constructor.
-     * @param $restAPI
-     * @param $layout
+     * @param CommunicationProvider $restAPI
+     * @param string $layout
      * @ignore
      */
     public function __construct($restAPI, $layout)
@@ -86,7 +86,7 @@ class FileMakerLayout
     }
 
     /**
-     * @param $param
+     * @param array $param
      * @return array
      * @ignore
      */
