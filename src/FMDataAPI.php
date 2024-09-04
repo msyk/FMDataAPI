@@ -4,6 +4,7 @@ namespace INTERMediator\FileMakerServer\RESTAPI;
 
 use INTERMediator\FileMakerServer\RESTAPI\Supporting\FileMakerLayout;
 use INTERMediator\FileMakerServer\RESTAPI\Supporting\FileMakerRelation;
+use INTERMediator\FileMakerServer\RESTAPI\Supporting\CommunicationProvider;
 use Exception;
 
 /**
@@ -26,12 +27,13 @@ class FMDataAPI
      */
 
     /**
-     * Keeping the FileMakerLayout object for each layout
+     * @var FileMakerLayout[] Keeping the FileMakerLayout object for each layout.
      * @ignore
      */
     private $layoutTable = [];
+    
     /**
-     * Keeping the CommunicationProvider object
+     * @var null|CommunicationProvider Keeping the CommunicationProvider object.
      * @ignore
      */
     private $provider = null;
@@ -40,7 +42,7 @@ class FMDataAPI
      * FMDataAPI constructor. If you want to activate OAuth authentication, $user and $password are set as
      * oAuthRequestId and oAuthIdentifier. Moreover, call useOAuth method before accessing layouts.
      * @param string $solution The database file name which is just hosting.
-     * Every database must have the access privillege 'fmrest' including external data sources.
+     * Every database must have the access privilege 'fmrest' including external data sources.
      * @param string $user The fmrest privilege accessible user to the database.
      * If you are going to call useOAuth method, you have to specify the data for X-FM-Data-OAuth-Request-Id.
      * @param string $password The password of above user.
@@ -51,7 +53,7 @@ class FMDataAPI
      * @param string $protocol FileMaker Server's protocol name. If omitted, 'https' is chosen.
      * @param array $fmDataSource Authentication information for external data sources.
      * Ex.  [{"database"=>"<databaseName>", "username"=>"<username>", "password"=>"<password>"].
-     * If you use OAuth, "oAuthRequestId" and "oAuthIdentifier" keys have to be spedified.
+     * If you use OAuth, "oAuthRequestId" and "oAuthIdentifier" keys have to be specified.
      * @param boolean $isUnitTest If it's set to true, the communication provider just works locally.
      */
     public function __construct(
@@ -163,7 +165,7 @@ class FMDataAPI
      * Detect the return value of the field() method uses htmlspecialchars function or not.
      * @return bool The result.
      */
-    public function getFieldHTMLEncoding($value)
+    public function getFieldHTMLEncoding()
     {
         return $this->provider->fieldHTMLEncoding;
     }
@@ -226,7 +228,7 @@ class FMDataAPI
     /**
      * The error message of the latest response from the REST API.
      * This error message is associated with FileMaker's error code.
-     * @return string The error messege.
+     * @return string The error message.
      */
     public function errorMessage()
     {
