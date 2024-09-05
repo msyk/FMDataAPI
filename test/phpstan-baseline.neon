@@ -19,17 +19,7 @@ parameters:
 			path: ../src/Supporting/CommunicationProvider.php
 
 		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$recordId$#"
-			count: 1
-			path: ../src/Supporting/CommunicationProvider.php
-
-		-
 			message: "#^PHPDoc tag @param references unknown parameter\\: \\$toName$#"
-			count: 1
-			path: ../src/Supporting/CommunicationProvider.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\)\\: Unexpected token \"\\\\n     \\* \", expected type at offset 15$#"
 			count: 1
 			path: ../src/Supporting/CommunicationProvider.php
 
@@ -44,11 +34,6 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @property has invalid value \\(string \\$\\<\\<field_name\\>\\> The field value named as the property name\\.\\)\\: Unexpected token \"\\$\\<\\<field_name\\>\\>\", expected variable at offset 383$#"
-			count: 1
-			path: ../src/Supporting/FileMakerRelation.php
-
-		-
-			message: "#^PHPDoc tag @return with type void is incompatible with native type array\\.$#"
 			count: 1
 			path: ../src/Supporting/FileMakerRelation.php
 
