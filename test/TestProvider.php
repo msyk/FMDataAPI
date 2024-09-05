@@ -52,10 +52,11 @@ class TestProvider extends CommunicationProvider
     /**
      * Override communication method.
      * @param $url
+     * @return string
      */
-    public function accessToContainer($url)
+    public function accessToContainer($url): string
     {
-
+        return '';
     }
 
     private function validResponse($input)

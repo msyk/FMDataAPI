@@ -3,6 +3,7 @@
 namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
 
 use Iterator;
+use Exception;
 
 /**
  * Class FileMakerRelation is the record set of queried data. This class implements Iterator interface.
