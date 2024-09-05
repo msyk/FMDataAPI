@@ -2,6 +2,8 @@
 
 namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
 
+use Exception;
+
 /**
  * Class CommunicationProvider is for internal use to communicate with FileMaker Server.
  *
@@ -9,210 +11,217 @@ namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @version 31
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2023 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
+ * @copyright 2017-2024 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
 class CommunicationProvider
 {
     /**
-     * @var integer
+     * @var int
      * @ignore
      */
-    public $vNum = -1;
+    public int $vNum = -1;
     /**
      * @var null|string
      * @ignore
      */
-    private $host = "127.0.0.1";
+    private ?string $host = "127.0.0.1";
     /**
      * @var string
      * @ignore
      */
-    private $user = "admin";
+    private string $user;
     /**
      * @var string
      * @ignore
      */
-    private $password = "1234";
+    private string $password;
     /**
-     * @var string
+     * @var string|null
      * @ignore
      */
-    private $solution;
+    private ?string $solution;
     /**
      * @var null|string
      * @ignore
      */
-    private $protocol = 'https';
+    private ?string $protocol = 'https';
     /**
      * @var int|null
      * @ignore
      */
-    private $port = 443;
+    private ?int $port = 443;
 
     /**
-     * @var string
+     * @var string|null
      * @ignore
      */
-    public $accessToken = null;
+    public ?string $accessToken = null;
     /**
      * @var string
      * @ignore
      */
-    protected $method;
+    protected string $method;
     /**
      * @var string
      * @ignore
      */
-    public $url;
+    public string $url;
     /**
      * @var array
      * @ignore
      */
-    protected $requestHeader;
+    protected array $requestHeader;
     /**
      * @var string
      * @ignore
      */
-    public $requestBody;
+    public null|array|string $requestBody = "";
     /**
      * @var int
      * @ignore
      */
-    public $curlErrorNumber;
+    public int $curlErrorNumber = 0;
     /**
      * @var string
      * @ignore
      */
-    public $curlError;
+    public string $curlError = "";
     /**
-     * @var array
+     * @var null|array
      * @ignore
      */
-    protected $curlInfo;
+    protected null|array $curlInfo;
     /**
      * @var string
      * @ignore
      */
-    private $responseHeader;
+    private string $responseHeader;
     /**
      * @var bool
      * @ignore
      */
-    private $isLocalServer = false;
+    private bool $isLocalServer = false;
     /**
      * @var string
      * @ignore
      */
-    public $targetTable = '';
+    public null|string $targetTable = '';
+    /**
+     * @var null|int
+     * @ignore
+     */
+    public null|int $totalCount = null;
     /**
      * @var int
      * @ignore
      */
-    public $totalCount = 0;
+    public null|int $foundCount = null;
     /**
      * @var int
      * @ignore
      */
-    public $foundCount = 0;
-    /**
-     * @var int
-     * @ignore
-     */
-    public $returnedCount = 0;
+    public null|int $returnedCount = null;
     /**
      * @var object
      * @ignore
      */
-    public $responseBody;
+    public null|object $responseBody = null;
     /**
      * @var int
      * @ignore
      */
-    public $httpStatus;
+    public null|int $httpStatus = null;
     /**
      * @var int
      * @ignore
      */
-    public $errorCode;
+    public int $errorCode;
     /**
-     * @var string
+     * @var null|string
      * @ignore
      */
-    public $errorMessage;
+    public null|string $errorMessage = "";
     /**
      * @var bool
      * @ignore
      */
-    public $keepAuth = false;
+    public bool $keepAuth = false;
 
     /**
      * @var bool
      * @ignore
      */
-    public $isDebug;
+    public bool $isDebug;
     /**
      * @var bool
      * @ignore
      */
-    public $isCertVaridating;
+    public bool $isCertValidating = false;
     /**
      * @var bool
      * @ignore
      */
-    public $throwExceptionInError = true;
+    public bool $throwExceptionInError = true;
     /**
      * @var bool
      * @ignore
      */
-    public $useOAuth = false;
+    public bool $useOAuth = false;
     /**
      * @var array
      * @ignore
      */
-    private $fmDataSource;
+    private null|array $fmDataSource;
+    /**
+     * @var null|string
+     * @ignore
+     */
+    public null|string $scriptError = "";
     /**
      * @var string
      * @ignore
      */
-    public $scriptError;
+    public null|string $scriptResult = "";
     /**
      * @var string
      * @ignore
      */
-    public $scriptResult;
+    public null|string $scriptErrorPrerequest = "";
     /**
      * @var string
      * @ignore
      */
-    public $scriptErrorPrerequest;
+    public null|string $scriptResultPrerequest = "";
     /**
      * @var string
      * @ignore
      */
-    public $scriptResultPrerequest;
+    public null|string $scriptErrorPresort = "";
     /**
      * @var string
      * @ignore
      */
-    public $scriptErrorPresort;
-    /**
-     * @var string
-     * @ignore
-     */
-    public $scriptResultPresort;
+    public null|string $scriptResultPresort = "";
     /**
      * @var int
      * @ignore
      */
-    public $timeout;
+    public null|int $timeout = null;
     /**
      * @var bool
      * @ignore
      */
-    public $fieldHTMLEncoding = false;
+    public bool $fieldHTMLEncoding = false;
 
     /**
      * CommunicationProvider constructor.
+     * @param string $solution
+     * @param string $user
+     * @param string $password
+     * @param string|null $host
+     * @param string|null $port
+     * @param string|null $protocol
+     * @param array|null $fmDataSource
      * @param string $solution
      * @param string $user
      * @param string $password
@@ -221,7 +230,8 @@ class CommunicationProvider
      * @param null|string $protocol
      * @ignore
      */
-    public function __construct($solution, $user, $password, $host = null, $port = null, $protocol = null, $fmDataSource = null)
+    public function __construct(string  $solution, string $user, string $password, ?string $host = null,
+                                ?string $port = null, ?string $protocol = null, ?array $fmDataSource = null)
     {
         $this->solution = rawurlencode($solution);
         $this->user = $user;
@@ -255,22 +265,23 @@ class CommunicationProvider
      * @return string
      * @ignore
      */
-    public function getURL($params, $request, $methodLower, $isSystem = false, $directPath = false)
+    public function getURL(array $params, string|array|null $request, string $methodLower,
+                           bool  $isSystem = false, bool $directPath = false): string
     {
         $vStr = $this->vNum < 1 ? 'Latest' : strval($this->vNum);
-        $url = "{$this->protocol}://{$this->host}:{$this->port}";
+        $url = "$this->protocol://$this->host:$this->port";
         if ($directPath) {
             $url .= $directPath;
         } else {
-            $url .= "/fmi/data/v{$vStr}" . ((!$isSystem) ? "/databases/{$this->solution}" : "");
+            $url .= "/fmi/data/v$vStr" . ((!$isSystem) ? "/databases/$this->solution" : "");
         }
         foreach ($params as $key => $value) {
-            $url .= "/{$key}" . (is_null($value) ? "" : "/{$value}");
+            $url .= "/$key" . (is_null($value) ? "" : "/$value");
         }
         if (!is_string($request) &&
             in_array($methodLower, array('get', 'delete')) &&
             !is_null($request) &&
-            count($request) > 0
+            (count($request) > 0)
         ) {
             $url .= '?';
             foreach ($request as $key => $value) {
@@ -294,12 +305,12 @@ class CommunicationProvider
     }
 
     /**
-     * @param $isAddToken
-     * @param $addHeader
+     * @param bool $isAddToken
+     * @param array|null $addHeader
      * @return array
      * @ignore
      */
-    public function getHeaders($isAddToken, $addHeader)
+    public function getHeaders(bool $isAddToken, ?array $addHeader): array
     {
         $header = [];
         if ($this->isLocalServer) {
@@ -314,20 +325,22 @@ class CommunicationProvider
             $header[] = "X-FM-Data-Login-Type: oauth";
         }
         if ($isAddToken) {
-            $header[] = "Authorization: Bearer {$this->accessToken}";
+            $header[] = "Authorization: Bearer $this->accessToken";
         }
         if (!is_null($addHeader)) {
             foreach ($addHeader as $key => $value) {
-                $header[] = "{$key}: {$value}";
+                $header[] = "$key: $value";
             }
         }
         return $header;
     }
 
     /**
+     * @param array|null $request
+     * @return array
      * @ignore
      */
-    public function justifyRequest($request)
+    public function justifyRequest(?array $request): array
     {
         $result = $request;
         // cast a number
@@ -363,12 +376,13 @@ class CommunicationProvider
     }
 
     /**
-     * @throws \Exception In case of any error, an exception arises.
+     * @return object|null
+     * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function getProductInfo()
+    public function getProductInfo(): object|null
     {
-        $returnValue = false;
+        $returnValue = null;
         $params = ["productInfo" => null];
         $request = [];
         try {
@@ -377,7 +391,7 @@ class CommunicationProvider
             if ($this->httpStatus == 200 && $this->errorCode == 0) {
                 $returnValue = $this->responseBody->response->productInfo;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($this->httpStatus == 200 && $this->errorCode == 0) {
                 $returnValue = array("version" => 17);
             } else {
@@ -388,12 +402,13 @@ class CommunicationProvider
     }
 
     /**
-     * @throws \Exception In case of any error, an exception arises.
+     * @return array|null
+     * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function getDatabaseNames()
+    public function getDatabaseNames(): array|null
     {
-        $returnValue = false;
+        $returnValue = null;
         if ($this->useOAuth) {
             $headers = [
                 "Content-Type" => "application/json",
@@ -412,7 +427,7 @@ class CommunicationProvider
             if ($this->httpStatus == 200 && $this->errorCode == 0) {
                 $returnValue = $this->responseBody->response->databases;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         } finally {
             $this->logout();
@@ -421,12 +436,13 @@ class CommunicationProvider
     }
 
     /**
-     * @throws \Exception In case of any error, an exception arises.
+     * @return null|array
+     * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function getLayoutNames()
+    public function getLayoutNames(): null|array
     {
-        $returnValue = false;
+        $returnValue = null;
         if ($this->login()) {
             $params = ["layouts" => null];
             $request = [];
@@ -437,7 +453,7 @@ class CommunicationProvider
                 if ($this->httpStatus == 200 && $this->errorCode == 0) {
                     $returnValue = $this->responseBody->response->layouts;
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 throw $e;
             } finally {
                 $this->logout();
@@ -447,12 +463,12 @@ class CommunicationProvider
     }
 
     /**
-     * @throws \Exception In case of any error, an exception arises.
+     * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function getScriptNames()
+    public function getScriptNames(): null|array
     {
-        $returnValue = false;
+        $returnValue = null;
         if ($this->login()) {
             $params = ["scripts" => null];
             $request = [];
@@ -463,7 +479,7 @@ class CommunicationProvider
                 if ($this->httpStatus == 200 && $this->errorCode == 0) {
                     $returnValue = $this->responseBody->response->scripts;
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 throw $e;
             } finally {
                 $this->logout();
@@ -473,7 +489,7 @@ class CommunicationProvider
     }
 
     /**
-     * @throws \Exception In case of any error, an exception arises.
+     * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
     public function login()
@@ -505,7 +521,7 @@ class CommunicationProvider
                 $this->accessToken = $this->responseBody->response->token;
                 return true;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->accessToken = null;
             throw $e;
         }
@@ -514,7 +530,7 @@ class CommunicationProvider
 
     /**
      *
-     * @throws \Exception In case of any error, an exception arises.
+     * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
     public function logout()
@@ -526,7 +542,7 @@ class CommunicationProvider
         try {
             $this->callRestAPI($params, true, "DELETE");
             $this->accessToken = null;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
     }
@@ -534,13 +550,13 @@ class CommunicationProvider
     private function getSupportingProviders()
     {
         try {
-            $this->callRestAPI([], [], 'GET', [], [], false, "/fmws/oauthproviderinfo");
+            $this->callRestAPI([], true, 'GET', [], [], false, "/fmws/oauthproviderinfo");
             $result = [];
             foreach ($this->responseBody as $key => $item) {
 
             }
             return $result;
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return null;
         }
     }
@@ -563,7 +579,7 @@ class CommunicationProvider
 
             }
             return $result;
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             return null;
         }
     }
@@ -576,7 +592,7 @@ class CommunicationProvider
      * @param array $request
      * @param array $addHeader
      * @param boolean $isSystem for Metadata
-     * @throws \Exception In case of any error, an exception arises.
+     * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
     public function callRestAPI($params, $isAddToken, $method = 'GET', $request = null, $addHeader = null, $isSystem = false, $directPath = false)
@@ -601,7 +617,7 @@ class CommunicationProvider
         } elseif (in_array($methodLower, ['put', 'patch', 'delete', 'get'], true)) {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($methodLower));
         }
-        if ($this->isCertVaridating) {
+        if ($this->isCertValidating) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
             // Use the OS native certificate authorities, if possible.
@@ -674,7 +690,7 @@ class CommunicationProvider
                 $description = date('Y-m-d H:i:s ') . "{$description}";
                 $description .= "[URL({$this->method}): {$this->url}]";
                 if ($errorCode !== 401) {
-                    throw new \Exception($description, $errorCode);
+                    throw new Exception($description, $errorCode);
                 }
             }
         }
@@ -696,7 +712,7 @@ class CommunicationProvider
         $ch = curl_init($url); //visit the container URL to set the cookie
         curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        if ($this->isCertVaridating) {
+        if ($this->isCertValidating) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
         } else {
@@ -709,13 +725,13 @@ class CommunicationProvider
         curl_exec($ch);
         if (curl_errno($ch) !== 0) {
             $errMsg = curl_error($ch);
-            throw new \Exception("Error in creating cookie file. {$errMsg}");
+            throw new Exception("Error in creating cookie file. {$errMsg}");
         }
 
         $ch = curl_init($url); //visit container URL again
         curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        if ($this->isCertVaridating) {
+        if ($this->isCertValidating) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
         } else {
@@ -728,7 +744,7 @@ class CommunicationProvider
         $output = curl_exec($ch);
         if (curl_errno($ch) !== 0) {
             $errMsg = curl_error($ch);
-            throw new \Exception("Error in downloading content of file. {$errMsg}");
+            throw new Exception("Error in downloading content of file. {$errMsg}");
         }
 
         return base64_encode($output); //process the image data as need it
@@ -848,6 +864,7 @@ class CommunicationProvider
         } else {
             echo $str;
         }
+        return "";
     }
 
     /**

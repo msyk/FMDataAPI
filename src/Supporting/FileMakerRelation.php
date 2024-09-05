@@ -14,7 +14,7 @@ use Iterator;
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
-Ver * @version 31
+ * Ver * @version 31
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2023 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
@@ -24,52 +24,52 @@ class FileMakerRelation implements Iterator
      * @var null|object
      * @ignore
      */
-    private $data = null;
+    private null|array|object $data;
     /**
-     * @var null
+     * @var null|object
      * @ignore
      */
-    private $dataInfo = null;
+    private mixed $dataInfo;
     /**
      * @var null|string
      * @ignore
      */
-    private $result = null; // OK for output from API, RECORD, PORTAL, PORTALRECORD
+    private ?string $result; // OK for output from API, RECORD, PORTAL, PORTALRECORD
     /**
      * @var int|null
      * @ignore
      */
-    private $errorCode = null;
+    private ?int $errorCode;
     /**
      * @var int
      * @ignore
      */
-    private $pointer = 0;
+    private int $pointer = 0;
     /**
      * @var string|null
      * @ignore
      */
-    private $portalName = null;
+    private ?string $portalName;
     /**
-     * @var CommunicationProvider The instance of the communication class.
+     * @var null|CommunicationProvider The instance of the communication class.
      * @ignore
      */
-    private $restAPI = null;
+    private ?CommunicationProvider $restAPI;
 
     /**
      * FileMakerRelation constructor.
      *
      * @param array<object> $responseData
-     * @param object $infoData
+     * @param object|array $infoData
      * @param string $result
      * @param int $errorCode
-     * @param string $portalName
-     * @param CommunicationProvider $provider
+     * @param string|null $portalName
+     * @param CommunicationProvider|null $provider
      *
      * @ignore
      */
-    public function __construct($responseData, $infoData,
-                                $result = "PORTAL", $errorCode = 0, $portalName = null, $provider = null)
+    public function __construct(array|object $responseData, object|array $infoData, string $result = "PORTAL",
+                                int   $errorCode = 0, ?string $portalName = null, CommunicationProvider $provider = null)
     {
         $this->data = $responseData;
         $this->dataInfo = $infoData;
@@ -96,44 +96,47 @@ class FileMakerRelation implements Iterator
     }
 
     /**
-     * Get the table occurrence name of query to get this relation.
+     * Get the table occurrence name of a query to get this relation.
      *
-     * @return string The table occurrence name.
+     * @return null|string The table occurrence name.
      */
-    public function getTargetTable(): string
+    public function getTargetTable(): null|string
     {
         return ($this->dataInfo) ? $this->dataInfo->table : null;
     }
 
     /**
-     * Get the total record count of query to get this relation. Portal relation doesn't have this information and returns NULL.
+     * Get the total record count of a query to get this relation.
+     * Portal relation doesn't have this information and returns NULL.
      *
-     * @return int The total record count.
+     * @return null|int The total record count.
      */
-    public function getTotalCount(): ?int
+    public function getTotalCount(): null|int
     {
         return ($this->dataInfo && property_exists($this->dataInfo, 'totalRecordCount')) ?
             $this->dataInfo->totalRecordCount : null;
     }
 
     /**
-     * Get the founded record count of query to get this relation. If the relation comes from getRecord() method,
+     * Get the founded record count of a query to get this relation.
+     * If the relation comes from getRecord() method,
      * this method returns 1.
      *
-     * @return int The founded record count.
+     * @return null|int The founded record count.
      */
-    public function getFoundCount(): ?int
+    public function getFoundCount(): null|int
     {
         return ($this->dataInfo) ? $this->dataInfo->foundCount : null;
     }
 
     /**
-     * Get the returned record count of query to get this relation. If the relation comes from getRecord() method,
+     * Get the returned record count of a query to get this relation.
+     * If the relation comes from getRecord() method,
      * this method returns 1.
      *
-     * @return int The returned record count.
+     * @return null|int The returned record count.
      */
-    public function getReturnedCount(): ?int
+    public function getReturnedCount(): null|int
     {
         return ($this->dataInfo) ? $this->dataInfo->returnedCount : null;
     }
@@ -149,7 +152,7 @@ class FileMakerRelation implements Iterator
     }
 
     /**
-     * The record pointer goes back to previous record. This does not care the range of pointer value.
+     * The record pointer goes back to the previous record. This does not care the range of pointer value.
      */
     public function previous(): void
     {
@@ -157,7 +160,7 @@ class FileMakerRelation implements Iterator
     }
 
     /**
-     * The record pointer goes forward to previous record. This does not care the range of pointer value.
+     * The record pointer goes forward to the previous record. This does not care the range of pointer value.
      */
     public function next(): void
     {
@@ -165,7 +168,7 @@ class FileMakerRelation implements Iterator
     }
 
     /**
-     * The record pointer goes to first record.
+     * The record pointer goes to the first record.
      */
     public function last(): void
     {
@@ -177,7 +180,7 @@ class FileMakerRelation implements Iterator
      *
      * @param int $position The position of the record. The first record is 0.
      */
-    public function moveTo($position): void
+    public function moveTo(int $position): void
     {
         $this->pointer = $position - 1;
     }
@@ -190,22 +193,18 @@ class FileMakerRelation implements Iterator
      */
     public function count(): int
     {
-        switch ($this->result) {
-            case "OK":
-            case "PORTAL":
-                return count($this->data);
-            case "RECORD":
-            case "PORTALRECORD":
-                return 1;
-            default:
-                return 0;
-        }
+        return match ($this->result) {
+            "OK", "PORTAL" => count($this->data),
+            "RECORD", "PORTALRECORD" => 1,
+            default => 0,
+        };
     }
 
     /**
      * @param $key
      *
      * @return FileMakerRelation|string|null
+     * @throws Exception
      * @ignore
      */
     public function __get($key)
@@ -224,25 +223,23 @@ class FileMakerRelation implements Iterator
         if (isset($this->data)) {
             switch ($this->result) {
                 case 'OK':
-                    if (isset($this->data[$this->pointer])
-                        && isset($this->data[$this->pointer]->fieldData)
-                    ) {
+                    if (isset($this->data[$this->pointer]->fieldData)) {
                         foreach ($this->data[$this->pointer]->fieldData as $key => $val) {
-                            array_push($list, $key);
+                            $list[] = $key;
                         }
                     }
                     break;
                 case 'PORTAL':
                     if (isset($this->data[$this->pointer])) {
                         foreach ($this->data[$this->pointer] as $key => $val) {
-                            array_push($list, $key);
+                            $list[] = $key;
                         }
                     }
                     break;
                 case 'RECORD':
                     if (isset($this->data->fieldData)) {
                         foreach ($this->data->fieldData as $key => $val) {
-                            array_push($list, $key);
+                            $list[] = $key;
                         }
                     }
                     break;
@@ -256,7 +253,7 @@ class FileMakerRelation implements Iterator
     private function getNumberedRecord($num): ?FileMakerRelation
     {
         $value = null;
-        if (isset($this->data) && isset($this->data[$num])) {
+        if (isset($this->data[$num])) {
             $tmpInfo = $this->getDataInfo();
             $dataInfo = null;
             if ($tmpInfo !== null && is_object($tmpInfo)) {
@@ -326,7 +323,7 @@ class FileMakerRelation implements Iterator
                 }
                 break;
             case 'RECORD':
-                if (isset($this->data) && isset($this->data->fieldData)) {
+                if (isset($this->data->fieldData)) {
                     return json_decode(json_encode($this->data->fieldData), true);
                 }
                 break;
@@ -348,7 +345,7 @@ class FileMakerRelation implements Iterator
                     foreach ($this->data as $key) {
                         if (property_exists($key, 'portalData')) {
                             foreach ($key->portalData as $name => $val) {
-                                array_push($list, $name);
+                                $list[] = $name;
                             }
                             break 2;
                         }
@@ -357,7 +354,7 @@ class FileMakerRelation implements Iterator
                 case 'RECORD':
                     if (property_exists($this->data, 'portalData')) {
                         foreach ($this->data->portalData as $name => $val) {
-                            array_push($list, $name);
+                            $list[] = $name;
                         }
                     }
             }
@@ -366,18 +363,19 @@ class FileMakerRelation implements Iterator
     }
 
     /**
-     * The field value of the first parameter. Or the FileMakerRelation object associated with the the first parameter.
+     * The field value of the first parameter.
+     * Or the FileMakerRelation object associated with the first parameter.
      *
      * @param string $name The field or portal name.
      * The table occurrence name of the portal can be the portal name, and also the object name of the portal.
-     * @param string $toName The table occurrence name of the portal as the prefix of the field name.
+     * @param string|null $toName The table occurrence name of the portal as the prefix of the field name.
      *
      * @return string|FileMakerRelation The field value as string, or the FileMakerRelation object of the portal.
-     * @throws \Exception The field specified in parameters doesn't exist.
+     * @throws Exception The field specified in parameters doesn't exist.
      * @see FMDataAPI::setFieldHTMLEncoding() Compatible mode for FileMaker API for PHP.
      *
      */
-    public function field($name, $toName = null)
+    public function field(string $name, string $toName = null): string|FileMakerRelation
     {
         $toName = is_null($toName) ? "" : "{$toName}::";
         $fieldName = "{$toName}$name";
@@ -386,12 +384,10 @@ class FileMakerRelation implements Iterator
             switch ($this->result) {
                 case "OK":
                     if (isset($this->data[$this->pointer])) {
-                        if (isset($this->data[$this->pointer]->fieldData) &&
-                            isset($this->data[$this->pointer]->fieldData->$name)
+                        if (isset($this->data[$this->pointer]->fieldData->$name)
                         ) {
                             $value = $this->data[$this->pointer]->fieldData->$name;
-                        } else if (isset($this->data[$this->pointer]->portalData) &&
-                            isset($this->data[$this->pointer]->portalData->$name)
+                        } else if (isset($this->data[$this->pointer]->portalData->$name)
                         ) {
                             $infoData = property_exists($this->data[$this->pointer], 'portalDataInfo') ?
                                 $this->data[$this->pointer]->portalDataInfo : null;
@@ -401,16 +397,15 @@ class FileMakerRelation implements Iterator
                     }
                     break;
                 case "PORTAL":
-                    if (isset($this->data[$this->pointer]) &&
-                        isset($this->data[$this->pointer]->$fieldName)
+                    if (isset($this->data[$this->pointer]->$fieldName)
                     ) {
                         $value = $this->data[$this->pointer]->$fieldName;
                     }
                     break;
                 case "RECORD":
-                    if (isset($this->data->fieldData) && isset($this->data->fieldData->$name)) {
+                    if (isset($this->data->fieldData->$name)) {
                         $value = $this->data->fieldData->$name;
-                    } else if (isset($this->data->portalData) && isset($this->data->portalData->$name)) {
+                    } else if (isset($this->data->portalData->$name)) {
                         $infoData = property_exists($this->data, 'portalDataInfo') ? $this->data->portalDataInfo : null;
                         $value = new FileMakerRelation($this->data->portalData->$name, $infoData,
                             "PORTAL", 0, $name, $this->restAPI);
@@ -430,7 +425,7 @@ class FileMakerRelation implements Iterator
             }
         }
         if (is_null($value)) {
-            throw new \Exception("Field {$fieldName} doesn't exist.");
+            throw new Exception("Field {$fieldName} doesn't exist.");
         }
         if ($this->restAPI && $this->restAPI->fieldHTMLEncoding && !is_object($value)) {
             $value = htmlspecialchars($value);
@@ -456,15 +451,14 @@ class FileMakerRelation implements Iterator
                 }
                 break;
             case "PORTAL":
-                if (isset($this->data[$this->pointer]) &&
-                    isset($this->data[$this->pointer]->recordId)
+                if (isset($this->data[$this->pointer]->recordId)
                 ) {
                     $value = $this->data[$this->pointer]->recordId;
                 }
                 break;
             case "RECORD":
             case "PORTALRECORD":
-                if (isset($this->data) && isset($this->data->recordId)) {
+                if (isset($this->data->recordId)) {
                     $value = $this->data->recordId;
                 }
                 break;
@@ -491,15 +485,14 @@ class FileMakerRelation implements Iterator
                 }
                 break;
             case "PORTAL":
-                if (isset($this->data[$this->pointer]) &&
-                    isset($this->data[$this->pointer]->modId)
+                if (isset($this->data[$this->pointer]->modId)
                 ) {
                     $value = $this->data[$this->pointer]->modId;
                 }
                 break;
             case "RECORD":
             case "PORTALRECORD":
-                if (isset($this->data) && isset($this->data->modId)) {
+                if (isset($this->data->modId)) {
                     $value = $this->data->modId;
                 }
                 break;
@@ -515,23 +508,18 @@ class FileMakerRelation implements Iterator
      *
      * @param string $name The container field name.
      * The table occurrence name of the portal can be the portal name, and also the object name of the portal.
-     * @param string $toName The table occurrence name of the portal as the prefix of the field name.
+     * @param string|null $toName The table occurrence name of the portal as the prefix of the field name.
      *
      * @return string|null The base64 encoded data in container field.
+     * @throws Exception
      */
-    public function getContainerData($name, $toName = null): ?string
+    public function getContainerData(string $name, ?string $toName = null): ?string
     {
         $fieldValue = $this->field($name, $toName);
-        if (strpos($fieldValue, "https://") !== 0) {
-            throw new \Exception("The field '{$name}' is not field name or container field.");
+        if (!str_starts_with($fieldValue, "https://")) {
+            throw new Exception("The field '{$name}' is not field name or container field.");
         }
-        try {
-            return $this->restAPI->accessToContainer($fieldValue);
-        } catch (\Exception $e) {
-            throw $e;
-        }
-
-        return null;
+        return $this->restAPI->accessToContainer($fieldValue);
     }
 
     /**
@@ -545,12 +533,10 @@ class FileMakerRelation implements Iterator
         switch ($this->result) {
             case "OK":
             case "PORTAL":
-                if (isset($this->data) &&
-                    isset($this->data[$this->pointer])
-                ) {
+                if (isset($this->data[$this->pointer])) {
                     $tmpInfo = $this->getDataInfo();
                     $dataInfo = null;
-                    if ($tmpInfo !== null && is_object($tmpInfo)) {
+                    if (is_object($tmpInfo)) {
                         $dataInfo = clone $tmpInfo;
                         $dataInfo->returnedCount = 1;
                     }
@@ -588,8 +574,7 @@ class FileMakerRelation implements Iterator
         switch ($this->result) {
             case "OK":
             case "PORTAL":
-                if (isset($this->data) && isset($this->data[$this->pointer])
-                ) {
+                if (isset($this->data[$this->pointer])) {
                     return true;
                 }
                 break;
