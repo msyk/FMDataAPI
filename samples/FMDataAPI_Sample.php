@@ -19,7 +19,7 @@ try {
     // Instantiate the class FMDataAPI with database name, user name, password and host.
     // Although the port number and protocol can be set in parameters of constructor,
     // these parameters can be omitted with default values.
-    $fmdb = new FMDataAPI("TestDB", "web", "password", "localhost");
+    $fmdb = new FMDataAPI("TestDB", "web", "password", "10.211.57.4");
 
     //==============================
     //$fmdb = new FMDataAPI("TestDB", "web", "password", "localserver");
@@ -40,7 +40,7 @@ try {
     $fmdb->setDebug(true);
 
     // If you call with true, the certificate from the server is going to verify.
-    // In case of self-signed one (usually default situation), you don't have to call this method.
+    // In the case of self-signed one (usually default situation), you don't have to call this method.
     //$fmdb->setCertValidating(true);
 
     // Metadata API is the new feature of FMS18.

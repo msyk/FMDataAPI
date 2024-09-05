@@ -147,7 +147,7 @@ class FMDataAPI
      */
     public function setCertValidating(bool $value): void
     {
-        $this->provider->isCertVaridating = $value;
+        $this->provider->isCertValidating = $value;
     }
 
     /**
@@ -207,7 +207,7 @@ class FMDataAPI
      * The error message of curl, text representation of code.
      * @return string The error message of curl.
      */
-    public function curlErrorMessage(): string
+    public function curlErrorMessage(): null|string
     {
         return $this->provider->curlError;
     }
@@ -237,7 +237,7 @@ class FMDataAPI
      * This error message is associated with FileMaker's error code.
      * @return string The error message.
      */
-    public function errorMessage(): string
+    public function errorMessage(): null|string
     {
         return $this->provider->errorMessage;
     }
@@ -302,12 +302,12 @@ class FMDataAPI
 
     /**
      * Get the product information, such as the version, etc. This isn't required to authenticate.
-     * @return object The information of this FileMaker product. Ex.:
+     * @return null|object The information of this FileMaker product. Ex.:
      * {'name' => 'FileMaker Data API Engine', 'buildDate' => '03/27/2019', 'version' => '18.0.1.109',
      * 'dateFormat' => 'MM/dd/yyyy', 'timeFormat' => 'HH:mm:ss', 'timeStampFormat' => 'MM/dd/yyyy HH:mm:ss'}.
      * @throws Exception In case of any error, an exception arises.
      */
-    public function getProductInfo(): object
+    public function getProductInfo(): null|object
     {
         return $this->provider->getProductInfo();
     }
@@ -315,37 +315,37 @@ class FMDataAPI
     /**
      * Get the information about hosting database. It includes the target database and others in FileMaker Server.
      * This is required to authenticate.
-     * @return array The information of hosting databases. Every element is an object and just having 'name'
+     * @return null|array The information of hosting databases. Every element is an object and just having 'name'
      * property.Ex.: [{"name": "TestDB"},{"name": "sample_db"}]
      * @throws Exception In case of any error, an exception arises.
      */
-    public function getDatabaseNames(): array
+    public function getDatabaseNames(): null|array
     {
         return $this->provider->getDatabaseNames();
     }
 
     /**
      * Get the list of layout name in a database.
-     * @return array The information of layouts in the target database. Every element is an object and just having 'name'
+     * @return null|array The information of layouts in the target database. Every element is an object and just having 'name'
      * property.
      * Ex.: [{"name": "person_layout"},{"name": "contact_to"},{"name": "history_to"}...]
      * @throws Exception In case of any error, an exception arises.
      */
-    public function getLayoutNames(): array
+    public function getLayoutNames(): null|array
     {
         return $this->provider->getLayoutNames();
     }
 
     /**
      * Get the list of script name in database.
-     * @return array The information of scripts in the target database. Every element is an object and having 'name' property.
+     * @return null|array The information of scripts in the target database. Every element is an object and having 'name' property.
      * The 'isFolder' property is true if it's a folder item, and it has the 'folderScriptNames' property and includes
      * an object with the same structure.
      * Ex.: [{"name": "TestScript1","isFolder": false},{"name": "TestScript2","isFolder": false},{"name": "Maintenance",
      * "isFolder": true, "folderScriptNames": [{"name": "DataImport","isFolder": false}]}]
      * @throws Exception In case of any error, an exception arises.
      */
-    public function getScriptNames(): array
+    public function getScriptNames(): null|array
     {
         return $this->provider->getScriptNames();
     }
@@ -353,7 +353,7 @@ class FMDataAPI
     /**
      * Get the table occurrence name of just a previous query.
      * Usually this method returns the information of the FileMakerRelation class.
-     * @return string  The table name.
+     * @return null|string  The table name.
      * @see FileMakerRelation::getTargetTable()
      */
     public function getTargetTable(): null|string
@@ -364,10 +364,10 @@ class FMDataAPI
     /**
      * Get the total record count of just a previous query.
      * Usually this method returns the information of the FileMakerRelation class.
-     * @return int  The total record count.
+     * @return null|int  The total record count.
      * @see FileMakerRelation::getTotalCount()
      */
-    public function getTotalCount(): int
+    public function getTotalCount(): null|int
     {
         return $this->provider->totalCount;
     }
@@ -375,10 +375,10 @@ class FMDataAPI
     /**
      * Get the founded record count of just a previous query.
      * Usually this method returns the information of the FileMakerRelation class.
-     * @return int  The founded record count.
-     * @see FileMakerRelation::getFoundCount()
+     * @return null|int  The founded record count.
+     * @see FileMakerRelation::getFoundCount(): null|int
      */
-    public function getFoundCount(): int
+    public function getFoundCount(): null|int
     {
         return $this->provider->foundCount;
     }
@@ -386,10 +386,10 @@ class FMDataAPI
     /**
      * Get the returned record count of just a previous query.
      * Usually this method returns the information of the FileMakerRelation class.
-     * @return int  The returned record count.
+     * @return null|int  The returned record count.
      * @see FileMakerRelation::getReturnedCount()
      */
-    public function getReturnedCount(): int
+    public function getReturnedCount(): null|int
     {
         return $this->provider->returnedCount;
     }

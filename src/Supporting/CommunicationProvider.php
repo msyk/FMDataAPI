@@ -156,7 +156,7 @@ class CommunicationProvider
      * @var bool
      * @ignore
      */
-    public bool $isCertVaridating;
+    public bool $isCertValidating = false;
     /**
      * @var bool
      * @ignore
@@ -206,7 +206,7 @@ class CommunicationProvider
      * @var int
      * @ignore
      */
-    public int $timeout;
+    public null|int $timeout = null;
     /**
      * @var bool
      * @ignore
@@ -376,13 +376,13 @@ class CommunicationProvider
     }
 
     /**
-     * @return array|false
+     * @return object|null
      * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function getProductInfo(): ?array
+    public function getProductInfo(): object|null
     {
-        $returnValue = false;
+        $returnValue = null;
         $params = ["productInfo" => null];
         $request = [];
         try {
@@ -402,13 +402,13 @@ class CommunicationProvider
     }
 
     /**
-     * @return array|false
+     * @return array|null
      * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function getDatabaseNames(): array|false
+    public function getDatabaseNames(): array|null
     {
-        $returnValue = false;
+        $returnValue = null;
         if ($this->useOAuth) {
             $headers = [
                 "Content-Type" => "application/json",
@@ -436,13 +436,13 @@ class CommunicationProvider
     }
 
     /**
-     * @return array|false
+     * @return null|array
      * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function getLayoutNames(): array|false
+    public function getLayoutNames(): null|array
     {
-        $returnValue = false;
+        $returnValue = null;
         if ($this->login()) {
             $params = ["layouts" => null];
             $request = [];
@@ -466,9 +466,9 @@ class CommunicationProvider
      * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function getScriptNames()
+    public function getScriptNames(): null|array
     {
-        $returnValue = false;
+        $returnValue = null;
         if ($this->login()) {
             $params = ["scripts" => null];
             $request = [];
@@ -617,7 +617,7 @@ class CommunicationProvider
         } elseif (in_array($methodLower, ['put', 'patch', 'delete', 'get'], true)) {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($methodLower));
         }
-        if ($this->isCertVaridating) {
+        if ($this->isCertValidating) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
             // Use the OS native certificate authorities, if possible.
@@ -712,7 +712,7 @@ class CommunicationProvider
         $ch = curl_init($url); //visit the container URL to set the cookie
         curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        if ($this->isCertVaridating) {
+        if ($this->isCertValidating) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
         } else {
@@ -731,7 +731,7 @@ class CommunicationProvider
         $ch = curl_init($url); //visit container URL again
         curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        if ($this->isCertVaridating) {
+        if ($this->isCertValidating) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
         } else {
