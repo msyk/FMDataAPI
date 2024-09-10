@@ -3,6 +3,7 @@
 namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
 
 use Iterator;
+use Exception;
 
 /**
  * Class FileMakerRelation is the record set of queried data. This class implements Iterator interface.
@@ -69,7 +70,7 @@ class FileMakerRelation implements Iterator
      * @ignore
      */
     public function __construct(array|object $responseData, object|array $infoData, string $result = "PORTAL",
-                                int   $errorCode = 0, ?string $portalName = null, CommunicationProvider $provider = null)
+                                int $errorCode = 0, ?string $portalName = null, CommunicationProvider $provider = null)
     {
         $this->data = $responseData;
         $this->dataInfo = $infoData;
@@ -387,7 +388,7 @@ class FileMakerRelation implements Iterator
                         if (isset($this->data[$this->pointer]->fieldData->$name)
                         ) {
                             $value = $this->data[$this->pointer]->fieldData->$name;
-                        } else if (isset($this->data[$this->pointer]->portalData->$name)
+                        } elseif (isset($this->data[$this->pointer]->portalData->$name)
                         ) {
                             $infoData = property_exists($this->data[$this->pointer], 'portalDataInfo') ?
                                 $this->data[$this->pointer]->portalDataInfo : null;
@@ -405,11 +406,11 @@ class FileMakerRelation implements Iterator
                 case "RECORD":
                     if (isset($this->data->fieldData->$name)) {
                         $value = $this->data->fieldData->$name;
-                    } else if (isset($this->data->portalData->$name)) {
+                    } elseif (isset($this->data->portalData->$name)) {
                         $infoData = property_exists($this->data, 'portalDataInfo') ? $this->data->portalDataInfo : null;
                         $value = new FileMakerRelation($this->data->portalData->$name, $infoData,
                             "PORTAL", 0, $name, $this->restAPI);
-                    } else if (isset($this->data->fieldData->$fieldName)) {
+                    } elseif (isset($this->data->fieldData->$fieldName)) {
                         $value = $this->data->fieldData->$fieldName;
                     }
                     break;
@@ -417,7 +418,7 @@ class FileMakerRelation implements Iterator
                     $convinedName = "{$this->portalName}::{$fieldName}";
                     if (isset($this->data->$fieldName)) {
                         $value = $this->data->$fieldName;
-                    } else if (isset($this->data->$convinedName)) {
+                    } elseif (isset($this->data->$convinedName)) {
                         $value = $this->data->$convinedName;
                     }
                     break;
