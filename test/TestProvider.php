@@ -11,7 +11,24 @@ namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
 class TestProvider extends CommunicationProvider
 {
 
-    public function __construct($solution, $user, $password, $host = NULL, $port = NULL, $protocol = NULL, $fmDataSource = NULL)
+    /**
+     * TestProvider constructor.
+     * @param string $solution
+     * @param string $user
+     * @param string $password
+     * @param string|null $host
+     * @param string|null $port
+     * @param string|null $protocol
+     * @param array|null $fmDataSource
+     * @param string $solution
+     * @param string $user
+     * @param string $password
+     * @param null|string $host
+     * @param null|int $port
+     * @param null|string $protocol
+     * @ignore
+     */
+    public function __construct($solution, $user, $password, $host = null, $port = null, $protocol = null, $fmDataSource = null)
     {
         parent::__construct($solution, $user, $password, $host, $port, $protocol, $fmDataSource);
         $this->buildResponses();
@@ -19,13 +36,19 @@ class TestProvider extends CommunicationProvider
 
     /**
      * Override communication method.
-     * @param $params
-     * @param $isAddToken
+     * @param array $params
+     * @param bool $isAddToken
      * @param string $method
-     * @param null $request
-     * @param null $addHeader
+     * @param array|null $request
+     * @param array|null $addHeader
+     * @param bool $isSystem for Metadata
+     * @param string|null|false $directPath
+     * @return void
+     * @throws Exception In case of any error, an exception arises.
+     * @ignore
      */
-    public function callRestAPI($params, $isAddToken, $method = 'GET', $request = NULL, $addHeader = null, $isSystem = false, $directPath = false)
+    public function callRestAPI(array $params, bool $isAddToken, string $method = 'GET', $request = null,
+                                $addHeader = null, $isSystem = false, string|null|false $directPath = null)
     {
         $methodLower = strtolower($method);
         $url = $this->getURL($params, $request, $methodLower);
@@ -51,12 +74,12 @@ class TestProvider extends CommunicationProvider
 
     /**
      * Override communication method.
-     * @param $url
-     * @return string
+     * @param string $url
+     * @return string The base64 encoded data in container field.
      */
-    public function accessToContainer($url): string
+    public function accessToContainer(string $url): string
     {
-        return '';
+        return "TODO TestProvider::accessToContainer()";
     }
 
     private function validResponse($input)

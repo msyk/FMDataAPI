@@ -3,6 +3,7 @@
 namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
 
 use Exception;
+use CurlHandle;
 
 /**
  * Class CommunicationProvider is for internal use to communicate with FileMaker Server.
@@ -258,19 +259,19 @@ class CommunicationProvider
 
     /**
      * @param array $params Array to build the API path. Ex: `["layouts" => null]` or `["sessions" => $this->accessToken]`.
-     * @param null|array $request The query parameters as `"key" => "value"`.
+     * @param array|null $request The query parameters as `"key" => "value"`.
      * @param string $methodLower The method in lowercase. Ex: `"get"`, `"delete"`, etc.
      * @param bool $isSystem If the query is for the system (sessions, databases, etc) or for a database.
-     * @param false|string $directPath If we don't want to build the path with the other parameters, you can provide the direct path.
+     * @param string|null|false $directPath If we don't want to build the path with the other parameters, you can provide the direct path.
      * @return string
      * @ignore
      */
-    public function getURL(array $params, string|array|null $request, string $methodLower,
-                           bool  $isSystem = false, bool $directPath = false): string
+    public function getURL(array $params, ?array $request, string $methodLower,
+                           bool $isSystem = false, string|null|false $directPath = null): string
     {
         $vStr = $this->vNum < 1 ? 'Latest' : strval($this->vNum);
         $url = "$this->protocol://$this->host:$this->port";
-        if ($directPath) {
+        if (!empty($directPath)) {
             $url .= $directPath;
         } else {
             $url .= "/fmi/data/v$vStr" . ((!$isSystem) ? "/databases/$this->solution" : "");
@@ -278,11 +279,7 @@ class CommunicationProvider
         foreach ($params as $key => $value) {
             $url .= "/$key" . (is_null($value) ? "" : "/$value");
         }
-        if (!is_string($request) &&
-            in_array($methodLower, array('get', 'delete')) &&
-            !is_null($request) &&
-            (count($request) > 0)
-        ) {
+        if (!empty($request) && in_array($methodLower, array('get', 'delete'))) {
             $url .= '?';
             foreach ($request as $key => $value) {
                 if (key($request) !== $key) {
@@ -293,7 +290,7 @@ class CommunicationProvider
                     if ($sortParam !== '[]') {
                         $url .= '_' . $key . '=' . $sortParam;
                     }
-                } else if ($key === 'limit' || $key === 'offset') {
+                } elseif ($key === 'limit' || $key === 'offset') {
                     $url .= '_' . $key . '=' . (is_array($value) ? json_encode($value) : $value);
                 } else {
                     // handling portal object name etc.
@@ -361,7 +358,7 @@ class CommunicationProvider
 
         if (isset($result['sort'])) {
             $sort = [];
-            foreach ($result['sort'] as $sortKey => $sortCondition) {
+            foreach ($result['sort'] as $sortCondition) {
                 if (isset($sortCondition[0])) {
                     $sortOrder = 'ascend';
                     if (isset($sortCondition[1])) {
@@ -490,14 +487,12 @@ class CommunicationProvider
 
     /**
      * @throws Exception In case of any error, an exception arises.
+     * @return bool
      * @ignore
      */
-    public function login()
+    public function login(): bool
     {
-        if ($this->keepAuth) {
-            return true;
-        }
-        if (!is_null($this->accessToken)) {
+        if ($this->keepAuth || !is_null($this->accessToken)) {
             return true;
         }
 
@@ -509,7 +504,10 @@ class CommunicationProvider
             ];
         } else {
             $value = "Basic " . base64_encode("{$this->user}:{$this->password}");
-            $headers = ["Content-Type" => "application/json", "Authorization" => $value];
+            $headers = [
+                "Content-Type" => "application/json",
+                "Authorization" => $value
+            ];
         }
         $params = ["sessions" => null];
         $request = [];
@@ -531,6 +529,7 @@ class CommunicationProvider
     /**
      *
      * @throws Exception In case of any error, an exception arises.
+     * @return void
      * @ignore
      */
     public function logout()
@@ -564,16 +563,21 @@ class CommunicationProvider
     private function getOAuthIdentifier($provider)
     {
         try {
-            $this->callRestAPI([], [
-                "trackingID" => rand(10000000, 99999999),
-                "provider" => $provider,
-                "address" => "127.0.0.1",
-                "X-FMS-OAuth-AuthType" => 2
-            ], 'GET', [], [
-                "X-FMS-Application-Type" => 9,
-                "X-FMS-Application-Version" => 15,
-                "X-FMS-Return-URL" => "http://127.0.0.1/",
-            ], false, "/oauth/getoauthurl");
+            $this->callRestAPI(
+                [], false, 'GET',
+                [
+                    "trackingID" => rand(10000000, 99999999),
+                    "provider" => $provider,
+                    "address" => "127.0.0.1",
+                    "X-FMS-OAuth-AuthType" => 2
+                ],
+                [
+                    "X-FMS-Application-Type" => 9,
+                    "X-FMS-Application-Version" => 15,
+                    "X-FMS-Return-URL" => "http://127.0.0.1/",
+                ],
+                false, "/oauth/getoauthurl"
+            );
             $result = [];
             foreach ($this->responseBody as $key => $item) {
 
@@ -585,17 +589,19 @@ class CommunicationProvider
     }
 
     /**
-     * @param $params
-     * @param $layout
-     * @param boolean $isAddToken
+     * @param array $params
+     * @param bool $isAddToken
      * @param string $method
-     * @param array $request
-     * @param array $addHeader
-     * @param boolean $isSystem for Metadata
+     * @param array|null $request
+     * @param array|null $addHeader
+     * @param bool $isSystem for Metadata
+     * @param string|null|false $directPath
+     * @return void
      * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function callRestAPI($params, $isAddToken, $method = 'GET', $request = null, $addHeader = null, $isSystem = false, $directPath = false)
+    public function callRestAPI(array $params, bool $isAddToken, string $method = 'GET', $request = null,
+                                $addHeader = null, $isSystem = false, string|null|false $directPath = null)
     {
         $methodLower = strtolower($method);
         $url = $this->getURL($params, $request, $methodLower, $isSystem, $directPath);
@@ -603,37 +609,18 @@ class CommunicationProvider
         $jsonEncoding = true;
         if (is_string($request)) {
             $jsonEncoding = false;
-        } else if ($methodLower !== 'get' && !is_null($request)) {
+        } elseif ($methodLower !== 'get' && !is_null($request)) {
             $request = $this->justifyRequest($request);
         }
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
+        $ch = $this->_createCurlHandle($url);
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
         curl_setopt($ch, CURLOPT_HEADER, 1);
-        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_DEFAULT);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         if ($methodLower == 'post') {
             curl_setopt($ch, CURLOPT_POST, 1);
         } elseif (in_array($methodLower, ['put', 'patch', 'delete', 'get'], true)) {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($methodLower));
         }
-        if ($this->isCertValidating) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-            // Use the OS native certificate authorities, if possible.
-            // This fixes SSL validation errors if `php.ini` doesn't have
-            // [curl] `curl.cainfo` set properly of if this PEM file isn't
-            // up to date. Better rely on the OS certificate authorities, which
-            // is maintained automatically.
-            if (defined('CURLSSLOPT_NATIVE_CA')
-                && version_compare(curl_version()['version'], '7.71', '>=')) {
-                curl_setopt($ch, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);
-            }
-        } else {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        }
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         if ($methodLower != 'get') {
             if ($jsonEncoding) {
@@ -647,9 +634,6 @@ class CommunicationProvider
             } else {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
             }
-        }
-        if (!is_null($this->timeout)) {
-            curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
         }
         $response = curl_exec($ch);
         $this->curlInfo = curl_getinfo($ch);
@@ -699,55 +683,37 @@ class CommunicationProvider
     /**
      * Return the base64 encoded data in container field.
      * Thanks to 'base64bits' as https://github.com/msyk/FMDataAPI/issues/18.
-     * @param string $name The container field name.
-     * The table occurrence name of the portal can be the portal name, and also the object name of the portal.
-     * @param string $toName The table occurrence name of the portal as the prefix of the field name.
+     * @param string $url
      * @return string The base64 encoded data in container field.
      * @ignore
      */
-    public function accessToContainer($url)
+    public function accessToContainer(string $url): string
     {
-        $cookieFile = tempnam(sys_get_temp_dir(), "CURLCOOKIE"); //create a cookie file
+        $cookieFile = tempnam(sys_get_temp_dir(), "CURLCOOKIE"); // Create a cookie file.
 
-        $ch = curl_init($url); //visit the container URL to set the cookie
+        // Visit the container URL to set the cookie.
+        $ch = $this->_createCurlHandle($url);
         curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        if ($this->isCertValidating) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-        } else {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        }
-        if (!is_null($this->timeout)) {
-            curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
-        }
         curl_exec($ch);
         if (curl_errno($ch) !== 0) {
             $errMsg = curl_error($ch);
+            curl_close($ch);
             throw new Exception("Error in creating cookie file. {$errMsg}");
         }
+        curl_close($ch);
 
-        $ch = curl_init($url); //visit container URL again
+        // Visit the container URL again.
+        $ch = $this->_createCurlHandle($url);
         curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        if ($this->isCertValidating) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-        } else {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        }
-        if (!is_null($this->timeout)) {
-            curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
-        }
         $output = curl_exec($ch);
         if (curl_errno($ch) !== 0) {
             $errMsg = curl_error($ch);
+            curl_close($ch);
             throw new Exception("Error in downloading content of file. {$errMsg}");
         }
+        curl_close($ch);
 
-        return base64_encode($output); //process the image data as need it
+        return base64_encode($output); // Process the data as needed.
     }
 
     /**
@@ -811,11 +777,11 @@ class CommunicationProvider
      * @return string
      * @ignore
      */
-    public function adjustSortDirection($direction)
+    public function adjustSortDirection($direction): string
     {
         if (strtoupper($direction) == 'ASC') {
             $direction = 'ascend';
-        } else if (strtoupper($direction) == 'DESC') {
+        } elseif (strtoupper($direction) == 'DESC') {
             $direction = 'descend';
         }
 
@@ -837,7 +803,7 @@ class CommunicationProvider
      * @return string
      * @ignore
      */
-    public function debugOutput($isReturnValue = false)
+    public function debugOutput(bool $isReturnValue = false): string
     {
         $str = "<div style='background-color: #DDDDDD'>URL: ";
         $str .= $this->method . ' ' . htmlspecialchars($this->url);
@@ -872,7 +838,7 @@ class CommunicationProvider
      * @return string
      * @ignore
      */
-    private function _buildSortParameters($value)
+    private function _buildSortParameters(array $value): string
     {
         $param = '[';
         foreach ($value as $sortCondition) {
@@ -899,7 +865,7 @@ class CommunicationProvider
      * @return string
      * @ignore
      */
-    private function _json_urlencode($value)
+    private function _json_urlencode(array $value): string
     {
         $str = '[';
         if (count($value) > 0) {
@@ -913,5 +879,53 @@ class CommunicationProvider
         $str .= ']';
 
         return $str;
+    }
+
+    /**
+     * To create and configure cURL at a single place, avoiding code redundancy.
+     * If later we need some specific settings for some cases, then add new
+     * parameters to this function.
+     *
+     * @param string|null $url The URL you want to access.
+     * @param bool $returnTransfer By default, sets CURLOPT_RETURNTRANSFER to `true`.
+     *                             But it can be set to false if needed.
+     * @return CurlHandle
+     */
+    private function _createCurlHandle(string|null $url = null, bool $returnTransfer = true): CurlHandle
+    {
+        $ch = curl_init();
+
+        if (!is_null($url)) {
+            curl_setopt($ch, CURLOPT_URL, $url);
+        }
+
+        if ($returnTransfer) {
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        }
+        
+        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_DEFAULT);
+
+        if ($this->isCertValidating) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+            // Use the OS native certificate authorities, if possible.
+            // This fixes SSL validation errors if `php.ini` doesn't have
+            // [curl] `curl.cainfo` set properly of if this PEM file isn't
+            // up to date. Better rely on the OS certificate authorities, which
+            // is maintained automatically.
+            if (defined('CURLSSLOPT_NATIVE_CA')
+                && version_compare(curl_version()['version'], '7.71', '>=')) {
+                curl_setopt($ch, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);
+            }
+        } else {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+
+        if (!is_null($this->timeout)) {
+            curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+        }
+
+        return $ch;
     }
 }

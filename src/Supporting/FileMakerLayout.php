@@ -90,17 +90,19 @@ class FileMakerLayout
      * @return array
      * @ignore
      */
-    private function buildScriptParameters($param)
+    private function buildScriptParameters(array $param)
     {
         $request = [];
-        $scriptKeys = ["script", "script.param", "script.prerequest", "script.prerequest.param",
-            "script.presort", "script.presort.param", "layout.response"];
+        $scriptKeys = [
+            "script", "script.param", "script.prerequest", "script.prerequest.param",
+            "script.presort", "script.presort.param", "layout.response"
+        ];
         foreach ($scriptKeys as $key) {
             if (isset($param[$key])) {
                 $request[$key] = $param[$key];
             }
         }
-        if (count($request) === 0) {
+        if (!empty($request)) {
             switch (count($request)) {
                 case 1:
                     $request["script"] = $param[0];
@@ -127,7 +129,7 @@ class FileMakerLayout
 
     /**
      * Query to the FileMaker Database and returns the result as FileMakerRelation object.
-     * @param array $condition The array of associated array which has a field name and "omit" keys as like:
+     * @param array|null $condition The array of associated array which has a field name and "omit" keys as like:
      * array(array("FamilyName"=>"Nii*", "Country"=>"Japan")).
      * In this example of apply the AND operation for two fields,
      * and "FamilyName" and "Country" are field name. The value can contain the operator:
@@ -137,19 +139,19 @@ class FileMakerLayout
      * If you want to omit records match with condition set the "omit" element as like:
      * array("FamilyName"=>"Nii*", "omit"=>"true").
      * If you want to query all records in the layout, set the first parameter to null.
-     * @param array $sort The array of array which has 2 elements as a field name and order key:
+     * @param array|null $sort The array of array which has 2 elements as a field name and order key:
      * array(array("FamilyName", "ascend"), array("GivenName", "descend")).
      * The value of order key can be 'ascend', 'descend' or value list name. The default value is 'ascend'.
      * @param int $offset The start number of the record set, and the first record is 1, but the number 0
      * queries from the first record. The default value is 0.
      * @param int $range The number of records contains in the result record set. The default value is 100.
-     * @param array $portal The array of the portal's object names. The query result is going to contain portals
+     * @param array|null $portal The array of the portal's object names. The query result is going to contain portals
      * specified in this parameter. If you want to include all portals, set it null or omit it.
      * Simple case is array('portal1', portal2'), and just includes two portals named 'portal1' and 'portal2'
      * in the query result. If you set the range of records to a portal, you have to build associated array as like:
      * array('portal1' => array('offset'=>1,'limit'=>5), 'portal2' => null). The record 1 to 5 of portal1 include
      * the query result, and also all records in portal2 do.
-     * @param array $script scripts that should execute right timings.
+     * @param array|null $script scripts that should execute right timings.
      * The most understandable description is an associated array with API's keywords "script", "script.param",
      * "script.prerequest", "script.prerequest.param", "script.presort", "script.presort.param", "layout.response."
      * These keywords have to be a key, and the value is script name or script parameter,
@@ -161,7 +163,8 @@ class FileMakerLayout
      * @return FileMakerRelation|null Query result.
      * @throws Exception In case of any error, an exception arises.
      */
-    public function query($condition = null, $sort = null, $offset = 0, $range = 0, $portal = null, $script = null)
+    public function query(array|null $condition = null, array|null $sort = null, int $offset = 0,
+                          int $range = 0, array|null $portal = null, array|null $script = null)
     {
         try {
             if ($this->restAPI->login()) {
