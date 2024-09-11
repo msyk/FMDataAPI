@@ -19,10 +19,10 @@ try {
     // Instantiate the class FMDataAPI with database name, user name, password and host.
     // Although the port number and protocol can be set in parameters of constructor,
     // these parameters can be omitted with default values.
-    $fmdb = new FMDataAPI("TestDB", "web", "password", "localhost");
+    $fmdb = new FMDataAPI("TestDB", "web", null, "localhost");
 
     //==============================
-    //$fmdb = new FMDataAPI("TestDB", "web", "password", "localserver");
+    //$fmdb = new FMDataAPI("TestDB", "web", null, "localserver");
     // "localserver" is added on Ver.2 and it's a magic term for FMDataAPI. It happens direct connect to
     // FileMaker Server in the same host. I've refered Atsushi Matsuo's script below and I got his way
     // to be able to connect port number 3000.

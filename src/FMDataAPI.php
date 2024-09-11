@@ -30,7 +30,7 @@ class FMDataAPI
      * @var FileMakerLayout[] Keeping the FileMakerLayout object for each layout.
      * @ignore
      */
-    private $layoutTable = [];
+    private array $layoutTable = [];
 
     /**
      * @var null|CommunicationProvider Keeping the CommunicationProvider object.
@@ -45,22 +45,29 @@ class FMDataAPI
      * Every database must have the accessing privilege 'fmrest' including external data sources.
      * @param string $user The fmrest privilege accessible user to the database.
      * If you’re going to call useOAuth method, you have to specify the data for X-FM-Data-OAuth-Request-Id.
-     * @param string $password The password of the above user.
+     * @param string|null $password The password of the above user.
      * If you’re going to call useOAuth method, you have to specify the data for X-FM-Data-OAuth-Identifier.
-     * @param ?string $host FileMaker Server's host name or IP address. If omitted, 'localhost' is chosen.
+     * @param string|null $host FileMaker Server's host name or IP address. If omitted, 'localhost' is chosen.
      * The value "localserver" tries to connect directory 127.0.0.1, and you don't have to set $port and $protocol.
-     * @param int $port FileMaker Server's port number. If omitted, 443 is chosen.
-     * @param string $protocol FileMaker Server's protocol name. If omitted, 'https' is chosen.
-     * @param array $fmDataSource Authentication information for external data sources.
-     * Ex.  [{"database"=>"<databaseName>", "username"=>"<username>", "password"=>"<password>"].
+     * @param int|null $port FileMaker Server's port number. If omitted, 443 is chosen.
+     * @param string|null $protocol FileMaker Server's protocol name. If omitted, 'https' is chosen.
+     * @param array|null $fmDataSource Authentication information for external data sources.
+     * Ex.  [{"database"=>"<databaseName>", "username"=>"<username>", "password"=>"<password>"}].
      * If you use OAuth, "oAuthRequestId" and "oAuthIdentifier" keys have to be spedified.
      * @param boolean $isUnitTest If it's set to true, the communication provider just works locally.
      */
-    public function __construct(
-        string  $solution, string $user, string $password,
-        ?string $host = null, ?int $port = null, ?string $protocol = null,
-        ?array  $fmDataSource = null, bool $isUnitTest = false)
+    public function __construct(string      $solution,
+                                string      $user,
+                                string|null $password,
+                                string|null $host = null,
+                                int|null    $port = null,
+                                string|null $protocol = null,
+                                array|null  $fmDataSource = null,
+                                bool        $isUnitTest = false)
     {
+        if (is_null($password)) {
+            $password = "password"; // For testing purpose.
+        }
         if (!$isUnitTest) {
             $this->provider = new Supporting\CommunicationProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource);
         } else {
@@ -75,7 +82,8 @@ class FMDataAPI
      * @throws Exception
      * @ignore
      */
-    public function __set(string $key, mixed $value): void
+    public function __set(string $key,
+                          mixed  $value): void
     {
         throw new Exception("The $key property is read-only, and can't set any value.");
     }
@@ -158,7 +166,7 @@ class FMDataAPI
      * If this property is set to true,
      * FileMakerRelation class's field method (including describing field name directly) returns the value processed
      * with the htmlspecialchars.
-     * This means kind of compatible mode of FileMaker API for PHP.
+     * This means kind of compatible mode to FileMaker API for PHP.
      * This feature works whole the FMDataAPI library.
      * @param bool $value Turn on to verify the certificate if the value is true.
      */
@@ -205,7 +213,7 @@ class FMDataAPI
 
     /**
      * The error message of curl, text representation of code.
-     * @return string The error message of curl.
+     * @return string|null The error message of curl.
      */
     public function curlErrorMessage(): null|string
     {
@@ -214,9 +222,9 @@ class FMDataAPI
 
     /**
      * The HTTP status code of the latest response from the REST API.
-     * @return int The HTTP status code.
+     * @return int|null The HTTP status code.
      */
-    public function httpStatus(): null|int
+    public function httpStatus(): int|null
     {
         return $this->provider->httpStatus;
     }
@@ -235,9 +243,9 @@ class FMDataAPI
     /**
      * The error message of the latest response from the REST API.
      * This error message is associated with FileMaker's error code.
-     * @return string The error message.
+     * @return string|null The error message.
      */
-    public function errorMessage(): null|string
+    public function errorMessage(): string|null
     {
         return $this->provider->errorMessage;
     }
@@ -294,7 +302,7 @@ class FMDataAPI
             $headers = ["Content-Type" => "application/json"];
             $params = ["globals" => null];
             $request = ["globalFields" => $fields];
-            $this->provider->callRestAPI($params, true, "PATCH", $request, $headers);
+            $this->provider->callRestAPI($params, true, "PATCH", $request, $headers); // Throw Exception
             $this->provider->storeToProperties();
             $this->provider->logout();
         }

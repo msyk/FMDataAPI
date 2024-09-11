@@ -22,7 +22,7 @@ use Exception;
 class FileMakerRelation implements Iterator
 {
     /**
-     * @var null|object
+     * @var null|array|object
      * @ignore
      */
     private null|array|object $data;
@@ -35,12 +35,12 @@ class FileMakerRelation implements Iterator
      * @var null|string
      * @ignore
      */
-    private ?string $result; // OK for output from API, RECORD, PORTAL, PORTALRECORD
+    private string|null $result; // OK for output from API, RECORD, PORTAL, PORTALRECORD
     /**
      * @var int|null
      * @ignore
      */
-    private ?int $errorCode;
+    private int|null $errorCode;
     /**
      * @var int
      * @ignore
@@ -50,7 +50,7 @@ class FileMakerRelation implements Iterator
      * @var string|null
      * @ignore
      */
-    private ?string $portalName;
+    private string|null $portalName;
     /**
      * @var null|CommunicationProvider The instance of the communication class.
      * @ignore
@@ -69,8 +69,12 @@ class FileMakerRelation implements Iterator
      *
      * @ignore
      */
-    public function __construct(array|object $responseData, object|array $infoData, string $result = "PORTAL",
-                                int $errorCode = 0, ?string $portalName = null, CommunicationProvider $provider = null)
+    public function __construct(array|object          $responseData,
+                                object|array          $infoData,
+                                string                $result = "PORTAL",
+                                int                   $errorCode = 0,
+                                string|null           $portalName = null,
+                                CommunicationProvider $provider = null)
     {
         $this->data = $responseData;
         $this->dataInfo = $infoData;
@@ -257,7 +261,7 @@ class FileMakerRelation implements Iterator
         if (isset($this->data[$num])) {
             $tmpInfo = $this->getDataInfo();
             $dataInfo = null;
-            if ($tmpInfo !== null && is_object($tmpInfo)) {
+            if (is_object($tmpInfo)) {
                 $dataInfo = clone $tmpInfo;
                 $dataInfo->returnedCount = 1;
             }
@@ -269,7 +273,7 @@ class FileMakerRelation implements Iterator
     }
 
     /**
-     * Returns the fiest record of the query result.
+     * Returns the first record of the query result.
      *
      * @return FileMakerRelation|null The record set of the record.
      */
@@ -514,7 +518,7 @@ class FileMakerRelation implements Iterator
      * @return string|null The base64 encoded data in container field.
      * @throws Exception
      */
-    public function getContainerData(string $name, ?string $toName = null): ?string
+    public function getContainerData(string $name, string|null $toName = null): string|null
     {
         $fieldValue = $this->field($name, $toName);
         if (!str_starts_with($fieldValue, "https://")) {
