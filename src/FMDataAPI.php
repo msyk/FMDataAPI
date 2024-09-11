@@ -45,7 +45,7 @@ class FMDataAPI
      * Every database must have the accessing privilege 'fmrest' including external data sources.
      * @param string $user The fmrest privilege accessible user to the database.
      * If you’re going to call useOAuth method, you have to specify the data for X-FM-Data-OAuth-Request-Id.
-     * @param string $password The password of the above user.
+     * @param string|null $password The password of the above user.
      * If you’re going to call useOAuth method, you have to specify the data for X-FM-Data-OAuth-Identifier.
      * @param string|null $host FileMaker Server's host name or IP address. If omitted, 'localhost' is chosen.
      * The value "localserver" tries to connect directory 127.0.0.1, and you don't have to set $port and $protocol.
@@ -56,11 +56,18 @@ class FMDataAPI
      * If you use OAuth, "oAuthRequestId" and "oAuthIdentifier" keys have to be spedified.
      * @param boolean $isUnitTest If it's set to true, the communication provider just works locally.
      */
-    public function __construct(
-        string  $solution, string $user, string $password,
-        string|null $host = null, int|null $port = null, string|null $protocol = null,
-        array|null  $fmDataSource = null, bool $isUnitTest = false)
+    public function __construct(string      $solution,
+                                string      $user,
+                                string|null $password,
+                                string|null $host = null,
+                                int|null    $port = null,
+                                string|null $protocol = null,
+                                array|null  $fmDataSource = null,
+                                bool        $isUnitTest = false)
     {
+        if (is_null($password)) {
+            $password = "password"; // For testing purpose.
+        }
         if (!$isUnitTest) {
             $this->provider = new Supporting\CommunicationProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource);
         } else {
@@ -75,7 +82,8 @@ class FMDataAPI
      * @throws Exception
      * @ignore
      */
-    public function __set(string $key, mixed $value): void
+    public function __set(string $key,
+                          mixed  $value): void
     {
         throw new Exception("The $key property is read-only, and can't set any value.");
     }

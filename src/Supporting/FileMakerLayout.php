@@ -34,7 +34,8 @@ class FileMakerLayout
      * @param string $layout
      * @ignore
      */
-    public function __construct(CommunicationProvider|null $restAPI, string $layout)
+    public function __construct(CommunicationProvider|null $restAPI,
+                                string $layout)
     {
         $this->restAPI = $restAPI;
         $this->layout = $layout;
@@ -69,7 +70,9 @@ class FileMakerLayout
      * @return array
      * @ignore
      */
-    private function buildPortalParameters(array|null $param, bool|string $shortKey = false, string $method = "GET"): array
+    private function buildPortalParameters(array|null  $param,
+                                           bool|string $shortKey = false,
+                                           string      $method = "GET"): array
     {
         $key = $shortKey ? "portal" : "portalData";
         $prefix = $method === "GET" ? "" : "_";
@@ -168,8 +171,12 @@ class FileMakerLayout
      * @return FileMakerRelation|null Query result.
      * @throws Exception In case of any error, an exception arises.
      */
-    public function query(array|null $condition = null, array|null $sort = null, int $offset = 0,
-                          int        $range = 0, array|null $portal = null, array|null $script = null): FileMakerRelation|null
+    public function query(array|null $condition = null,
+                          array|null $sort = null,
+                          int        $offset = 0,
+                          int        $range = 0,
+                          array|null $portal = null,
+                          array|null $script = null): FileMakerRelation|null
     {
         if ($this->restAPI->login()) {
             $headers = ["Content-Type" => "application/json"];
@@ -217,14 +224,19 @@ class FileMakerLayout
 
     /**
      * Query to the FileMaker Database with recordId special field and returns the result as FileMakerRelation object.
-     * @param int $recordId The recordId.
+     * @param int|null $recordId The recordId.
      * @param array|null $portal See the query() method's same parameter.
      * @param array|null $script scripts that should execute the right timings. See FileMakerRelation::query().
      * @return FileMakerRelation|null Query result.
      * @throws Exception In case of any error, an exception arises.
      */
-    public function getRecord(int $recordId, array|null $portal = null, array|null $script = null): FileMakerRelation|null
+    public function getRecord(int|null   $recordId,
+                              array|null $portal = null,
+                              array|null $script = null): FileMakerRelation|null
     {
+        if (is_null($recordId)) {
+            return null;
+        }
         if ($this->restAPI->login()) {
             $request = [];
             if (!is_null($portal)) {
@@ -266,7 +278,9 @@ class FileMakerLayout
      * If the returned value is an integer larger than 0, it shows one record was created.
      * @throws Exception In case of any error, an exception arises.
      */
-    public function create(array|null $data = null, array|null $portal = null, array|null $script = null): int|null
+    public function create(array|null $data = null,
+                           array|null $portal = null,
+                           array|null $script = null): int|null
     {
         if ($this->restAPI->login()) {
             $headers = ["Content-Type" => "application/json"];
@@ -290,12 +304,16 @@ class FileMakerLayout
 
     /**
      * Duplicate the record.
-     * @param int $recordId The valid recordId value to duplicate.
+     * @param int|nulll $recordId The valid recordId value to duplicate.
      * @param array|null $script scripts that should execute the right timings. See FileMakerRelation::query().
      * @throws Exception In case of any error, an exception arises.
      */
-    public function duplicate(int $recordId, array|null $script = null): void
+    public function duplicate(int|null   $recordId,
+                              array|null $script = null): void
     {
+        if (is_null($recordId)) {
+            return;
+        }
         if ($this->restAPI->login()) {
             $request = "{}"; //FileMaker expects an empty object, so we have to set "{}" here
             $headers = ["Content-Type" => "application/json"];
@@ -311,12 +329,16 @@ class FileMakerLayout
 
     /**
      * Delete the record.
-     * @param int $recordId The valid recordId value to delete.
+     * @param int|null $recordId The valid recordId value to delete.
      * @param array|null $script scripts that should execute the right timings. See FileMakerRelation::query().
      * @throws Exception In case of any error, an exception arises.
      */
-    public function delete(int $recordId, array|null $script = null): void
+    public function delete(int|null   $recordId,
+                           array|null $script = null): void
     {
+        if (is_null($recordId)) {
+            return;
+        }
         if ($this->restAPI->login()) {
             $request = [];
             $headers = null;
@@ -332,7 +354,7 @@ class FileMakerLayout
 
     /**
      * Update fields in one record.
-     * @param int $recordId The valid recordId value to update.
+     * @param int|null $recordId The valid recordId value to update.
      * @param array|null $data Associated array contains the modifying values.
      * Keys are field names and values is these initial values.
      * @param int $modId The modId to allow updating. This parameter is for detect to modifying other users.
@@ -343,9 +365,15 @@ class FileMakerLayout
      * @param array|null $script scripts that should execute the right timings. See FileMakerRelation::query().
      * @throws Exception In case of any error, an exception arises.
      */
-    public function update(int        $recordId, array|null $data, int $modId = -1,
-                           array|null $portal = null, array|null $script = null): void
+    public function update(int|null   $recordId,
+                           array|null $data,
+                           int        $modId = -1,
+                           array|null $portal = null,
+                           array|null $script = null): void
     {
+        if (is_null($recordId)) {
+            return;
+        }
         if ($this->restAPI->login()) {
             $headers = ["Content-Type" => "application/json"];
             $params = ["layouts" => $this->layout, "records" => $recordId];
@@ -395,18 +423,24 @@ class FileMakerLayout
     /**
      * Upload the file into container filed.
      * @param string $filePath The file path to upload.
-     * @param int $recordId The Record ID of the record.
+     * @param int|null $recordId The Record ID of the record.
      * @param string $containerFieldName The field name of container field.
      * @param int|null $containerFieldRepetition In the case of repetiton field, this has to be the number from 1.
      * If omitted this, the number "1" is going to be specified.
      * @param string|null $fileName Another file name for uploading file. If omitted, the original file name is chosen.
      * @throws Exception In case of any error, an exception arises.
      */
-    public function uploadFile(string   $filePath, int $recordId, string $containerFieldName,
-                               int|null $containerFieldRepetition = null, string|null $fileName = null): void
+    public function uploadFile(string      $filePath,
+                               int|null    $recordId,
+                               string      $containerFieldName,
+                               int|null    $containerFieldRepetition = null,
+                               string|null $fileName = null): void
     {
         if (!file_exists($filePath)) {
             throw new Exception("File doesn't exsist: {$filePath}.");
+        }
+        if (is_null($recordId)) {
+            return;
         }
         if ($this->restAPI->login()) {
             $CRLF = chr(13) . chr(10);
@@ -433,13 +467,13 @@ class FileMakerLayout
 
     /**
      * Get the metadata information of the layout. Until ver.16 this method was 'getMetadata'.
-     * @return object|null The metadata information of the layout. It has just 1 property 'metaData' the array of the field
+     * @return object|null|bool The metadata information of the layout. It has just 1 property 'metaData' the array of the field
      * information is set under the 'metaData' property. There is no information about portals. Ex.:
      * {"metaData": [{"name": "id","type": "normal","result": "number","global": "false","repetitions": 1,"id": "1"},
      *{"name": "name","type": "normal","result": "text","global": "false","repetitions": 1,"id": "2"},....,]}
      * @throws Exception In case of any error, an exception arises.
      */
-    public function getMetadataOld(): object|null
+    public function getMetadataOld(): object|null|bool
     {
         $returnValue = false;
         if ($this->restAPI->login()) {
@@ -457,7 +491,7 @@ class FileMakerLayout
 
     /**
      * Get metadata information of the layout.
-     * @return object|null The metadata information of the layout. It has 3 properties 'fieldMetaData', 'portalMetaData' and 'valueLists'.
+     * @return object|null|bool The metadata information of the layout. It has 3 properties 'fieldMetaData', 'portalMetaData' and 'valueLists'.
      * The later one has properties having portal object name of TO name. The array of the field information is set under
      * 'fieldMetaData' and the portal named properties.
      * Ex.: {"fieldMetaData": [{"name": "id","type": "normal","displayType": "editText","result": "number","global": false,
@@ -467,7 +501,7 @@ class FileMakerLayout
      * ...}...]}
      * @throws Exception In case of any error, an exception arises.
      */
-    public function getMetadata(): object|null
+    public function getMetadata(): object|null|bool
     {
         $returnValue = false;
         if ($this->restAPI->login()) {

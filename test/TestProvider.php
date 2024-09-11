@@ -15,20 +15,20 @@ class TestProvider extends CommunicationProvider
      * TestProvider constructor.
      * @param string $solution
      * @param string $user
-     * @param string $password
+     * @param string|null $password
      * @param string|null $host
      * @param string|null $port
      * @param string|null $protocol
      * @param array|null $fmDataSource
-     * @param string $solution
-     * @param string $user
-     * @param string $password
-     * @param null|string $host
-     * @param null|int $port
-     * @param null|string $protocol
      * @ignore
      */
-    public function __construct($solution, $user, $password, $host = null, $port = null, $protocol = null, $fmDataSource = null)
+    public function __construct(string      $solution,
+                                string      $user,
+                                string|null $password,
+                                string|null $host = null,
+                                string|null $port = null,
+                                string|null $protocol = null,
+                                array|null  $fmDataSource = null)
     {
         parent::__construct($solution, $user, $password, $host, $port, $protocol, $fmDataSource);
         $this->buildResponses();
@@ -39,7 +39,7 @@ class TestProvider extends CommunicationProvider
      * @param array $params
      * @param bool $isAddToken
      * @param string $method
-     * @param array|null $request
+     * @param array|null|string $request
      * @param array|null $addHeader
      * @param bool $isSystem for Metadata
      * @param string|null|false $directPath
@@ -47,8 +47,13 @@ class TestProvider extends CommunicationProvider
      * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function callRestAPI(array $params, bool $isAddToken, string $method = 'GET', $request = null,
-                                array $addHeader = null, bool $isSystem = false, string|null|false $directPath = null): void
+    public function callRestAPI(array             $params,
+                                bool              $isAddToken,
+                                string            $method = 'GET',
+                                array|null|string $request = null,
+                                array             $addHeader = null,
+                                bool              $isSystem = false,
+                                string|null|false $directPath = null): void
     {
         $methodLower = strtolower($method);
         $url = $this->getURL($params, $request, $methodLower);
@@ -67,7 +72,7 @@ class TestProvider extends CommunicationProvider
         $this->url = $url;
         $this->requestHeader = $header;
         $this->requestBody = ($methodLower != 'get') ? $request : null;
-        if($response['response']) {
+        if ($response['response']) {
             $this->responseBody = json_decode($response['response'], false, 512, JSON_BIGINT_AS_STRING);
         }
     }

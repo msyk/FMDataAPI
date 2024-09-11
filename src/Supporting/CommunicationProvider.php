@@ -895,7 +895,8 @@ class CommunicationProvider
      *                             But it can be set to false if needed.
      * @return CurlHandle
      */
-    private function _createCurlHandle(string|null $url = null, bool $returnTransfer = true): CurlHandle
+    private function _createCurlHandle(string|null $url = null,
+                                       bool        $returnTransfer = true): CurlHandle
     {
         $ch = curl_init();
 
