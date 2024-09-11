@@ -16,7 +16,7 @@ use INTERMediator\FileMakerServer\RESTAPI\FMDataAPI as FMDataAPI;
 
 // FMDataAPI class handles an error as an exception by default.
 try {
-    // Instantiate the class FMDataAPI with database name, user name, password and host.
+    // Instantiate the class FMDataAPI with database name, username, password and host.
     // Although the port number and protocol can be set in parameters of constructor,
     // these parameters can be omitted with default values.
     $fmdb = new FMDataAPI("TestDB", "web", null, "localhost");
