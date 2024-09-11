@@ -544,6 +544,10 @@ class CommunicationProvider
         $this->accessToken = null;
     }
 
+    /**
+     * @return array|null
+     * @ignore
+     */
     private function getSupportingProviders(): null|array
     {
         try {
@@ -559,6 +563,11 @@ class CommunicationProvider
         }
     }
 
+    /**
+     * @param $provider
+     * @return string|array|null
+     * @ignore
+     */
     private function getOAuthIdentifier($provider): string|array|null
     {
         try {

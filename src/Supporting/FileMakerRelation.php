@@ -255,7 +255,12 @@ class FileMakerRelation implements Iterator
         return $list;
     }
 
-    private function getNumberedRecord($num): ?FileMakerRelation
+    /**
+     * @param int $num
+     * @return FileMakerRelation|null
+     * @ignore
+     */
+    private function getNumberedRecord(int $num): ?FileMakerRelation
     {
         $value = null;
         if (isset($this->data[$num])) {
