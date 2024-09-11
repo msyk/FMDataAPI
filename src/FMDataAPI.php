@@ -46,6 +46,9 @@ class FMDataAPI
      * @param string $user The fmrest privilege accessible user to the database.
      * If you’re going to call useOAuth method, you have to specify the data for X-FM-Data-OAuth-Request-Id.
      * @param string|null $password The password of the above user.
+     * This can be null for testing purpose only. Null data is going to replace the string "password".
+     * This prevents to be detected as a security issue.
+     * On the real solutions, you have to set a valid password string.
      * If you’re going to call useOAuth method, you have to specify the data for X-FM-Data-OAuth-Identifier.
      * @param string|null $host FileMaker Server's host name or IP address. If omitted, 'localhost' is chosen.
      * The value "localserver" tries to connect directory 127.0.0.1, and you don't have to set $port and $protocol.
