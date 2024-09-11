@@ -25,7 +25,7 @@ class CommunicationProvider
      * @var null|string
      * @ignore
      */
-    private ?string $host = "127.0.0.1";
+    private string|null $host = "127.0.0.1";
     /**
      * @var string
      * @ignore
@@ -40,23 +40,23 @@ class CommunicationProvider
      * @var string|null
      * @ignore
      */
-    private ?string $solution;
+    private string|null $solution;
     /**
      * @var null|string
      * @ignore
      */
-    private ?string $protocol = 'https';
+    private string|null $protocol = 'https';
     /**
      * @var int|null
      * @ignore
      */
-    private ?int $port = 443;
+    private int|null $port = 443;
 
     /**
      * @var string|null
      * @ignore
      */
-    public ?string $accessToken = null;
+    public string|null $accessToken = null;
     /**
      * @var string
      * @ignore
@@ -73,7 +73,7 @@ class CommunicationProvider
      */
     protected array $requestHeader;
     /**
-     * @var string
+     * @var null|array|string
      * @ignore
      */
     public null|array|string $requestBody = "";
@@ -103,7 +103,7 @@ class CommunicationProvider
      */
     private bool $isLocalServer = false;
     /**
-     * @var string
+     * @var null|string
      * @ignore
      */
     public null|string $targetTable = '';
@@ -113,22 +113,22 @@ class CommunicationProvider
      */
     public null|int $totalCount = null;
     /**
-     * @var int
+     * @var null|int
      * @ignore
      */
     public null|int $foundCount = null;
     /**
-     * @var int
+     * @var null|int
      * @ignore
      */
     public null|int $returnedCount = null;
     /**
-     * @var object
+     * @var null|object
      * @ignore
      */
     public null|object $responseBody = null;
     /**
-     * @var int
+     * @var null|int
      * @ignore
      */
     public null|int $httpStatus = null;
@@ -169,7 +169,7 @@ class CommunicationProvider
      */
     public bool $useOAuth = false;
     /**
-     * @var array
+     * @var null|array
      * @ignore
      */
     private null|array $fmDataSource;
@@ -179,32 +179,32 @@ class CommunicationProvider
      */
     public null|string $scriptError = "";
     /**
-     * @var string
+     * @var null|string
      * @ignore
      */
     public null|string $scriptResult = "";
     /**
-     * @var string
+     * @var null|string
      * @ignore
      */
     public null|string $scriptErrorPrerequest = "";
     /**
-     * @var string
+     * @var null|string
      * @ignore
      */
     public null|string $scriptResultPrerequest = "";
     /**
-     * @var string
+     * @var null|string
      * @ignore
      */
     public null|string $scriptErrorPresort = "";
     /**
-     * @var string
+     * @var null|string
      * @ignore
      */
     public null|string $scriptResultPresort = "";
     /**
-     * @var int
+     * @var null|int
      * @ignore
      */
     public null|int $timeout = null;
@@ -223,16 +223,15 @@ class CommunicationProvider
      * @param string|null $port
      * @param string|null $protocol
      * @param array|null $fmDataSource
-     * @param string $solution
-     * @param string $user
-     * @param string $password
-     * @param null|string $host
-     * @param null|int $port
-     * @param null|string $protocol
      * @ignore
      */
-    public function __construct(string  $solution, string $user, string $password, ?string $host = null,
-                                ?string $port = null, ?string $protocol = null, ?array $fmDataSource = null)
+    public function __construct(string      $solution,
+                                string      $user,
+                                string      $password,
+                                string|null $host = null,
+                                string|null $port = null,
+                                string|null $protocol = null,
+                                array|null  $fmDataSource = null)
     {
         $this->solution = rawurlencode($solution);
         $this->user = $user;
@@ -259,15 +258,18 @@ class CommunicationProvider
 
     /**
      * @param array $params Array to build the API path. Ex: `["layouts" => null]` or `["sessions" => $this->accessToken]`.
-     * @param array|null $request The query parameters as `"key" => "value"`.
+     * @param string|array|null $request The query parameters as `"key" => "value"`.
      * @param string $methodLower The method in lowercase. Ex: `"get"`, `"delete"`, etc.
      * @param bool $isSystem If the query is for the system (sessions, databases, etc) or for a database.
      * @param string|null|false $directPath If we don't want to build the path with the other parameters, you can provide the direct path.
      * @return string
      * @ignore
      */
-    public function getURL(array $params, ?array $request, string $methodLower,
-                           bool $isSystem = false, string|null|false $directPath = null): string
+    public function getURL(array             $params,
+                           string|array|null $request,
+                           string            $methodLower,
+                           bool              $isSystem = false,
+                           string|null|false $directPath = null): string
     {
         $vStr = $this->vNum < 1 ? 'Latest' : strval($this->vNum);
         $url = "$this->protocol://$this->host:$this->port";
@@ -307,7 +309,7 @@ class CommunicationProvider
      * @return array
      * @ignore
      */
-    public function getHeaders(bool $isAddToken, ?array $addHeader): array
+    public function getHeaders(bool $isAddToken, array|null $addHeader): array
     {
         $header = [];
         if ($this->isLocalServer) {
@@ -337,7 +339,7 @@ class CommunicationProvider
      * @return array
      * @ignore
      */
-    public function justifyRequest(?array $request): array
+    public function justifyRequest(array|null $request): array
     {
         $result = $request;
         // cast a number
@@ -383,7 +385,7 @@ class CommunicationProvider
         $params = ["productInfo" => null];
         $request = [];
         try {
-            $this->callRestAPI($params, false, "GET", $request, null, true);
+            $this->callRestAPI($params, false, "GET", $request, null, true); // Throw Exception
             $this->storeToProperties();
             if ($this->httpStatus == 200 && $this->errorCode == 0) {
                 $returnValue = $this->responseBody->response->productInfo;
@@ -419,7 +421,7 @@ class CommunicationProvider
         $params = ["databases" => null];
         $request = [];
         try {
-            $this->callRestAPI($params, false, "GET", $request, $headers, true);
+            $this->callRestAPI($params, false, "GET", $request, $headers, true); // Throw Exception
             $this->storeToProperties();
             if ($this->httpStatus == 200 && $this->errorCode == 0) {
                 $returnValue = $this->responseBody->response->databases;
@@ -445,7 +447,7 @@ class CommunicationProvider
             $request = [];
             $headers = [];
             try {
-                $this->callRestAPI($params, true, "GET", $request, $headers);
+                $this->callRestAPI($params, true, "GET", $request, $headers); // Throw Exception
                 $this->storeToProperties();
                 if ($this->httpStatus == 200 && $this->errorCode == 0) {
                     $returnValue = $this->responseBody->response->layouts;
@@ -471,7 +473,7 @@ class CommunicationProvider
             $request = [];
             $headers = [];
             try {
-                $this->callRestAPI($params, true, "GET", $request, $headers);
+                $this->callRestAPI($params, true, "GET", $request, $headers); // Throw Exception
                 $this->storeToProperties();
                 if ($this->httpStatus == 200 && $this->errorCode == 0) {
                     $returnValue = $this->responseBody->response->scripts;
@@ -486,8 +488,8 @@ class CommunicationProvider
     }
 
     /**
-     * @throws Exception In case of any error, an exception arises.
      * @return bool
+     * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
     public function login(): bool
@@ -513,7 +515,7 @@ class CommunicationProvider
         $request = [];
         $request["fmDataSource"] = (!is_null($this->fmDataSource)) ? $this->fmDataSource : [];
         try {
-            $this->callRestAPI($params, false, "POST", $request, $headers);
+            $this->callRestAPI($params, false, "POST", $request, $headers); // Throw Exception
             $this->storeToProperties();
             if ($this->httpStatus == 200 && $this->errorCode == 0) {
                 $this->accessToken = $this->responseBody->response->token;
@@ -528,28 +530,25 @@ class CommunicationProvider
 
     /**
      *
-     * @throws Exception In case of any error, an exception arises.
      * @return void
+     * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function logout()
+    public function logout(): void
     {
         if ($this->keepAuth) {
             return;
         }
         $params = ["sessions" => $this->accessToken];
-        try {
-            $this->callRestAPI($params, true, "DELETE");
-            $this->accessToken = null;
-        } catch (Exception $e) {
-            throw $e;
-        }
+        $this->callRestAPI($params, true, "DELETE"); // Throw Exception
+        $this->accessToken = null;
     }
 
-    private function getSupportingProviders()
+    private function getSupportingProviders(): null|array
     {
         try {
-            $this->callRestAPI([], true, 'GET', [], [], false, "/fmws/oauthproviderinfo");
+            $this->callRestAPI([], true, 'GET', [], [],
+                false, "/fmws/oauthproviderinfo"); // Throw Exception
             $result = [];
             foreach ($this->responseBody as $key => $item) {
 
@@ -560,7 +559,7 @@ class CommunicationProvider
         }
     }
 
-    private function getOAuthIdentifier($provider)
+    private function getOAuthIdentifier($provider): string|array|null
     {
         try {
             $this->callRestAPI(
@@ -577,7 +576,7 @@ class CommunicationProvider
                     "X-FMS-Return-URL" => "http://127.0.0.1/",
                 ],
                 false, "/oauth/getoauthurl"
-            );
+            ); // Throw Exception
             $result = [];
             foreach ($this->responseBody as $key => $item) {
 
@@ -600,8 +599,13 @@ class CommunicationProvider
      * @throws Exception In case of any error, an exception arises.
      * @ignore
      */
-    public function callRestAPI(array $params, bool $isAddToken, string $method = 'GET', $request = null,
-                                $addHeader = null, $isSystem = false, string|null|false $directPath = null)
+    public function callRestAPI(array             $params,
+                                bool              $isAddToken,
+                                string            $method = 'GET',
+                                string|array|null $request = null,
+                                array|null        $addHeader = null,
+                                bool              $isSystem = false,
+                                string|null|false $directPath = null): void
     {
         $methodLower = strtolower($method);
         $url = $this->getURL($params, $request, $methodLower, $isSystem, $directPath);
@@ -902,7 +906,7 @@ class CommunicationProvider
         if ($returnTransfer) {
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         }
-        
+
         curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_DEFAULT);
 
         if ($this->isCertValidating) {

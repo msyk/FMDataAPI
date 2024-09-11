@@ -48,7 +48,7 @@ class TestProvider extends CommunicationProvider
      * @ignore
      */
     public function callRestAPI(array $params, bool $isAddToken, string $method = 'GET', $request = null,
-                                $addHeader = null, $isSystem = false, string|null|false $directPath = null)
+                                array $addHeader = null, bool $isSystem = false, string|null|false $directPath = null): void
     {
         $methodLower = strtolower($method);
         $url = $this->getURL($params, $request, $methodLower);
