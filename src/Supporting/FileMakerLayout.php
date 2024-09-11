@@ -304,7 +304,7 @@ class FileMakerLayout
 
     /**
      * Duplicate the record.
-     * @param int|nulll $recordId The valid recordId value to duplicate.
+     * @param int|null $recordId The valid recordId value to duplicate.
      * @param array|null $script scripts that should execute the right timings. See FileMakerRelation::query().
      * @throws Exception In case of any error, an exception arises.
      */
