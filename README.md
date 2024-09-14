@@ -91,8 +91,8 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
     - These are for GitHub.
 - test
     - Some files for unit testing.
-- .github, docker-compose.yml, Dockerfile
-    - For the GitHub action with testing.
+- .github, docker-compose.yml
+    - Files for GitHub Actions to run CI Jobs.
 
 ## Licence
 
