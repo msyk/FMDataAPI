@@ -69,12 +69,12 @@ class FileMakerRelation implements Iterator
      *
      * @ignore
      */
-    public function __construct(array|object          $responseData,
-                                object|array          $infoData,
-                                string                $result = "PORTAL",
-                                int                   $errorCode = 0,
-                                string|null           $portalName = null,
-                                CommunicationProvider $provider = null)
+    public function __construct(array|object           $responseData,
+                                object|array           $infoData,
+                                string                 $result = "PORTAL",
+                                int                    $errorCode = 0,
+                                string|null            $portalName = null,
+                                ?CommunicationProvider $provider = null)
     {
         $this->data = $responseData;
         $this->dataInfo = $infoData;
@@ -385,7 +385,7 @@ class FileMakerRelation implements Iterator
      * @see FMDataAPI::setFieldHTMLEncoding() Compatible mode for FileMaker API for PHP.
      *
      */
-    public function field(string $name, string $toName = null): string|FileMakerRelation
+    public function field(string $name, string|null $toName = null): string|FileMakerRelation
     {
         $toName = is_null($toName) ? "" : "{$toName}::";
         $fieldName = "{$toName}$name";
