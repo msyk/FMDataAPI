@@ -8,6 +8,8 @@
 
 namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
 
+use Exception;
+
 class TestProvider extends CommunicationProvider
 {
 
@@ -51,7 +53,7 @@ class TestProvider extends CommunicationProvider
                                 bool              $isAddToken,
                                 string            $method = 'GET',
                                 array|null|string $request = null,
-                                array             $addHeader = null,
+                                array|null        $addHeader = null,
                                 bool              $isSystem = false,
                                 string|null|false $directPath = null): void
     {

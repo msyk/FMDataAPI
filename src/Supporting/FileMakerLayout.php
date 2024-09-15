@@ -359,7 +359,7 @@ class FileMakerLayout
      * Keys are field names and values is these initial values.
      * @param int $modId The modId to allow updating. This parameter is for detect to modifying other users.
      * If you omit this parameter, update operation does not care the value of modId special field.
-     * @param array|null $portal Associated array contains the modifying values in the portal.
+     * @param array|object|null $portal Associated array contains the modifying values in the portal.
      * Ex.: {"<PortalName>"=>{"<FieldName>"=>"<Value>", "recordId"=>"12"}}. FieldName has to "<TOCName>::<FieldName>".
      * The recordId key specifiy the record to edit in portal.
      * @param array|null $script scripts that should execute the right timings. See FileMakerRelation::query().
@@ -368,7 +368,7 @@ class FileMakerLayout
     public function update(int|null   $recordId,
                            array|null $data,
                            int        $modId = -1,
-                           array|null $portal = null,
+                           array|object|null $portal = null,
                            array|null $script = null): void
     {
         if (is_null($recordId)) {
