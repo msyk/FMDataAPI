@@ -26,10 +26,10 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2.31.1
         with:
-          php-version: '8.3'
+          php-version: '8.4'
 
-      - name: Install PHPStan
-        run: composer require --dev phpstan/phpstan
+      - name: Remove phpDocumentor temporarily and Install PHPStan
+        run: composer remove --dev --no-update phpdocumentor/phpdocumentor; composer update
 
       - name: Restore cached baseline for PHPStan
         id: cache-baseline-restore
