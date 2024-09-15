@@ -16,9 +16,9 @@ jobs:
     runs-on: 'ubuntu-latest'
     strategy:
       matrix:
-        level: [ 0, 1, 2 ]
+        level: [ 1, 2 ]
         include:
-          - current-level: 0
+          - current-level: 1
           - max-level: 2
     steps:
       - uses: actions/checkout@v4
@@ -46,7 +46,6 @@ jobs:
         continue-on-error: true
         run: |
              ./vendor/bin/phpstan analyse --memory-limit 1G -c test/phpstan.neon src test -l "${{ matrix.level }}"
-             exit 0
 
       - name: Run PHPStan
         if: matrix.level > matrix.current-level
