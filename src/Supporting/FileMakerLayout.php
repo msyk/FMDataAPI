@@ -11,7 +11,7 @@ use Exception;
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 31
+ * @version 32
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2024 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
@@ -467,15 +467,16 @@ class FileMakerLayout
 
     /**
      * Get the metadata information of the layout. Until ver.16 this method was 'getMetadata'.
-     * @return object|null|bool The metadata information of the layout. It has just 1 property 'metaData' the array of the field
-     * information is set under the 'metaData' property. There is no information about portals. Ex.:
+     * @return object|null The metadata information of the layout.
+     * It has just 1 property 'metaData' the array of the field information is set under the 'metaData' property.
+     * There is no information about portals. Ex.:
      * {"metaData": [{"name": "id","type": "normal","result": "number","global": "false","repetitions": 1,"id": "1"},
      *{"name": "name","type": "normal","result": "text","global": "false","repetitions": 1,"id": "2"},....,]}
      * @throws Exception In case of any error, an exception arises.
      */
-    public function getMetadataOld(): object|null|bool
+    public function getMetadataOld(): object|null
     {
-        $returnValue = false;
+        $returnValue = null;
         if ($this->restAPI->login()) {
             $request = [];
             $headers = ["Content-Type" => "application/json"];
@@ -491,9 +492,10 @@ class FileMakerLayout
 
     /**
      * Get metadata information of the layout.
-     * @return object|null|bool The metadata information of the layout. It has 3 properties 'fieldMetaData', 'portalMetaData' and 'valueLists'.
-     * The later one has properties having portal object name of TO name. The array of the field information is set under
-     * 'fieldMetaData' and the portal named properties.
+     * @return object|null The metadata information of the layout.
+     * It has 3 properties 'fieldMetaData', 'portalMetaData' and 'valueLists'.
+     * The later one has properties having portal object name of TO name.
+     * The array of the field information is set under 'fieldMetaData' and the portal named properties.
      * Ex.: {"fieldMetaData": [{"name": "id","type": "normal","displayType": "editText","result": "number","global": false,
      * "autoEnter": true,"fourDigitYear": false,"maxRepeat": 1,"maxCharacters": 0,"notEmpty": false,"numeric": false,
      * "timeOfDay": false,"repetitionStart": 1,"repetitionEnd": 1},....,],"portalMetaData": {"Contact": [{
@@ -501,9 +503,9 @@ class FileMakerLayout
      * ...}...]}
      * @throws Exception In case of any error, an exception arises.
      */
-    public function getMetadata(): object|null|bool
+    public function getMetadata(): object|null
     {
-        $returnValue = false;
+        $returnValue = null;
         if ($this->restAPI->login()) {
             $request = [];
             $headers = ["Content-Type" => "application/json"];

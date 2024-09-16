@@ -15,9 +15,9 @@ use Exception;
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
- * Ver * @version 31
+ * Ver * @version 32
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2023 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
+ * @copyright 2017-2024 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
 class FileMakerRelation implements Iterator
 {
@@ -27,10 +27,10 @@ class FileMakerRelation implements Iterator
      */
     private null|array|object $data;
     /**
-     * @var null|object
+     * @var object|array|null
      * @ignore
      */
-    private mixed $dataInfo;
+    private object|array|null $dataInfo;
     /**
      * @var null|string
      * @ignore
@@ -95,7 +95,7 @@ class FileMakerRelation implements Iterator
     /**
      * @ignore
      */
-    public function getDataInfo()
+    public function getDataInfo(): object|array|null
     {
         return $this->dataInfo;
     }
@@ -446,9 +446,9 @@ class FileMakerRelation implements Iterator
     /**
      * Return the value of special field recordId in the current pointing record.
      *
-     * @return int The value of special field recordId.
+     * @return int|null The value of special field recordId.
      */
-    public function getRecordId(): int
+    public function getRecordId(): int|null
     {
         $value = null;
         switch ($this->result) {

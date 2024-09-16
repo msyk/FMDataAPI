@@ -1,7 +1,7 @@
 {
   "name": "inter-mediator/fmdataapi",
-  "version": "31",
-  "time": "2023-06-20",
+  "version": "32",
+  "time": "2024-09-16",
   "repositories": [
     {
       "type": "git",
@@ -16,7 +16,6 @@
   },
   "require-dev": {
     "phpunit/phpunit": "*",
-    "phpdocumentor/phpdocumentor": ">=3",
     "phpstan/phpstan": "^1.12"
   },
   "autoload": {
@@ -28,7 +27,7 @@
       "test/TestProvider.php"
     ]
   },
-  "description": "FMDataAPI is a class developed in PHP to access FileMaker database with FileMaker Data API.",
+  "description": "FMDataAPI is the class library in PHP for accessing FileMaker database with FileMaker Data API.",
   "type": "library",
   "keywords": [
     "INTER-Mediator",

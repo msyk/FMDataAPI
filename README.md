@@ -24,12 +24,12 @@ They created pull requests. Thanks for cooperating.
 ## At a Glance
 
 The FileMaker database named "TestDB.fmp12" is hosted on localhost, and
-it set the "fmrest" as access privilege. The account to connect with REST API is "web"
-and "password". This database has the layout named "person_layout", and you
+it sets the "fmrest" as access privilege. The account to connect with REST API is "web"
+and "password." This database has the layout named "person_layout," and you
 can use the layout name as a property of the FMDataAPI instance. The return
-value of the "query" method is Iterator and can repeat in foreach statement
+value of the "query" method is Iterator and can repeat in the foreach statement
 with each record in the query result. This layout has the field named
-"FamilyName" and "GivenName", and can use the field name as a property.
+"FamilyName" and "GivenName," and can use the field name as a property.
 
 ```
 $fmdb = new FMDataAPI("TestDB", "web", "password");
@@ -125,10 +125,10 @@ MIT License
   Add methods(setFieldHTMLEncoding, getFieldHTMLEncoding) to the FMDataAPI class.
   These are going to use for compatibility mode of FileMaker API for PHP.
 - 2022-06-06: [Ver.27]
-  Dropped the support of PHP5, minimal version is PHP 7.1, but 7.2 or later is recommended.
+  Dropped the support of PHP5, the minimum version is PHP 7.1, but 7.2 or later is recommended.
 - 2022-08-04: [Ver.28]
   Added the getContainerData(URL) method to the FMDataAPI class for accessing container data from the url containing /Streaming/MainDB.
-  [BUG FIX] The FileMakerRelation class's toArray method didn't return array (Thanks to Talwinder Singh).
+  [BUG FIX] The FileMakerRelation class's toArray method didn't return an array (Thanks to Talwinder Singh).
 - 2022-12-28: [Ver.29]
   Fixed the 'HTTP/2 stream 0 was not closed cleanly' problem with the new FileMaker (Thanks to @thijsmeijer).
   Also fixed the getPortalNames issue for single record relation (Thanks to @PGMMattias).
@@ -137,5 +137,8 @@ MIT License
 - 2023-11-24: [Ver.31]
   The curlErrorMessage() method returns the error message from curl (Thanks to @P1-Roger).
   Corrected phpdoc issue (Thanks to @patacra).
-- 2024-XX-XX: [Ver.31] (upcoming release)
-  Fix SSL certificate check errors by using the system's certificate authorities (Thanks to @patacra)
+- 2024-XX-XX: [Ver.32] (upcoming release)
+  From this version, the minimum PHP version is 8.1.
+  Fix SSL certificate check errors by using the system's certificate authorities (Thanks to @patacra).
+  FileMakerLayout::getMetadataOld and getMetadata methods don't return the false value in the case of log-in error.
+  It returns just null.
