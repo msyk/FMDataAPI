@@ -64,7 +64,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     libfreetype6-dev \
  && apt -y clean \
  && rm -rf /var/lib/apt/lists/*
-RUN git clone --depth 1 --branch PHP-8.4 https://github.com/php/php-src.git
+RUN git clone --depth 1 --branch master https://github.com/php/php-src.git
 RUN cd php-src; export CC=clang; export CXX=clang++; export CFLAGS="-DZEND_TRACK_ARENA_ALLOC"; ./buildconf --force; ./configure --enable-debug --enable-mbstring --with-openssl --with-curl; make -j$(/usr/bin/nproc); make TEST_PHP_ARGS=-j$(/usr/bin/nproc) test; make install
 COPY composer.json /composer.json
 COPY composer.lock /composer.lock
