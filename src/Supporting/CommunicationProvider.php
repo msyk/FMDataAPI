@@ -260,7 +260,7 @@ class CommunicationProvider
      * @param array $params Array to build the API path. Ex: `["layouts" => null]` or `["sessions" => $this->accessToken]`.
      * @param string|array|null $request The query parameters as `"key" => "value"`.
      * @param string $methodLower The method in lowercase. Ex: `"get"`, `"delete"`, etc.
-     * @param bool $isSystem If the query is for the system (sessions, databases, etc) or for a database.
+     * @param bool $isSystem If the query is for the system (sessions, databases, etc.) or for a database.
      * @param string|null|false $directPath If we don't want to build the path with the other parameters, you can provide the direct path.
      * @return string
      * @ignore
@@ -554,9 +554,9 @@ class CommunicationProvider
             $this->callRestAPI([], true, 'GET', [], [],
                 false, "/fmws/oauthproviderinfo"); // Throw Exception
             $result = [];
-            foreach ($this->responseBody as $key => $item) {
-
-            }
+//            foreach ($this->responseBody as $key => $item) {
+//
+//            }
             return $result;
         } catch (Exception $ex) {
             return null;
@@ -587,9 +587,9 @@ class CommunicationProvider
                 false, "/oauth/getoauthurl"
             ); // Throw Exception
             $result = [];
-            foreach ($this->responseBody as $key => $item) {
-
-            }
+//            foreach ($this->responseBody as $key => $item) {
+//
+//            }
             return $result;
         } catch (Exception $ex) {
             return null;
@@ -600,7 +600,7 @@ class CommunicationProvider
      * @param array $params
      * @param bool $isAddToken
      * @param string $method
-     * @param array|null $request
+     * @param string|array|null $request
      * @param array|null $addHeader
      * @param bool $isSystem for Metadata
      * @param string|null|false $directPath
@@ -698,6 +698,7 @@ class CommunicationProvider
      * Thanks to 'base64bits' as https://github.com/msyk/FMDataAPI/issues/18.
      * @param string $url
      * @return string The base64 encoded data in container field.
+     * @throws Exception
      * @ignore
      */
     public function accessToContainer(string $url): string
@@ -732,7 +733,7 @@ class CommunicationProvider
     /**
      * @ignore
      */
-    public function storeToProperties()
+    public function storeToProperties(): void
     {
         $this->httpStatus = 0;
         $this->errorCode = -1;
@@ -790,7 +791,7 @@ class CommunicationProvider
      * @return string
      * @ignore
      */
-    public function adjustSortDirection($direction): string
+    public function adjustSortDirection(string $direction): string
     {
         if (strtoupper($direction) == 'ASC') {
             $direction = 'ascend';
@@ -806,7 +807,7 @@ class CommunicationProvider
      * @return mixed
      * @ignore
      */
-    public function getCurlInfo($key)
+    public function getCurlInfo($key): mixed
     {
         return $this->curlInfo[$key];
     }

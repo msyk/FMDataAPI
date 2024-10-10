@@ -147,7 +147,7 @@ class FileMakerLayout
      * If you want to omit record match with condition set the "omit" element as like:
      * array("FamilyName"=>"Nii*", "omit"=>"true").
      * If you want to query all records in the layout, set the first parameter to null.
-     * @param array|null $sort The array of array which has 2 elements as a field name and order key:
+     * @param array|null $sort The array of array which has two elements as a field name and order key:
      * array(array("FamilyName", "ascend"), array("GivenName", "descend")).
      * The value of order key can be 'ascend', 'descend' or value list name. The default value is 'ascend'.
      * @param int $offset The start number of the record set, and the first record is 1, but the number 0
@@ -579,8 +579,8 @@ class FileMakerLayout
     }
 
     /**
-     * Get the return value from the presort script.
-     * @return string|null  The return value from the presort script.
+     * Get the return value from the presorted script.
+     * @return string|null  The return value from the presorted script.
      * If any script wasn't called, returns null.
      */
     public function getScriptResultPresort(): string|null

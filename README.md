@@ -1,4 +1,4 @@
-# FMDataAPI Ver.31 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
+# FMDataAPI Ver.32 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -51,13 +51,13 @@ Although the Custom Web Publishing is the way to access the database
 for a long while, FileMaker Inc. has introduced the modern feature to operate
 the database. The current version of FMDataAPI works on just FileMaker 18 and 19 platform.
 
-For now, I'm focusing to develop the web application framework "INTER-Mediator"
+For now, I'm focusing on developing the web application framework "INTER-Mediator"
 (https://inter-mediator.com/ or https://github.com/INTER-Mediator/INTER-Mediator.git)
 which can develop the core features of database-driven web application
 with declarative descriptions. INTER-Mediator has already supported the Custom
 Web Publishing with FX.php, and I develop codes here for support REST APIs.
 
-Bug reports and contribution are welcome.
+Bug reports and contributions are welcome.
 
 ## Installing to Your Project
 
@@ -101,7 +101,7 @@ MIT License
 ## Acknoledgement
 
 - Thanks to Atsushi Matsuo. Your script is quite helpful to implement the "localserver" feature.
-(https://gist.github.com/matsuo/ef5cb7c98bb494d507731886883bcbc1) Moreover thanks for updating and fixing bugs.
+(https://gist.github.com/matsuo/ef5cb7c98bb494d507731886883bcbc1) Moreover, thanks for updating and fixing bugs.
 - Thanks to Frank Gonzalez. Your bug report is brilliant, and I could fix it quickly.
 - Thanks to base64bits for coding about container field.
 - Thanks to phpsa for bug fix.
@@ -137,7 +137,7 @@ MIT License
 - 2023-11-24: [Ver.31]
   The curlErrorMessage() method returns the error message from curl (Thanks to @P1-Roger).
   Corrected phpdoc issue (Thanks to @patacra).
-- 2024-XX-XX: [Ver.32] (upcoming release)
+- 2024-10-10: [Ver.32]
   From this version, the minimum PHP version is 8.1.
   Fix SSL certificate check errors by using the system's certificate authorities (Thanks to @patacra).
   FileMakerLayout::getMetadataOld and getMetadata methods don't return the false value in the case of log-in error.
