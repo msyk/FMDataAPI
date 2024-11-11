@@ -20,6 +20,7 @@ They created pull requests. Thanks for cooperating.
 - Thijs Meijer
 - Patrick Janser
 - Roger Engström
+- Stathis Askaridis
 
 ## At a Glance
 
@@ -142,3 +143,5 @@ MIT License
   Fix SSL certificate check errors by using the system's certificate authorities (Thanks to @patacra).
   FileMakerLayout::getMetadataOld and getMetadata methods don't return the false value in the case of log-in error.
   It returns just null.
+- Upcoming date: [Ver.33]
+  The query method supports date format parameter (Thanks to @stathisaska).
