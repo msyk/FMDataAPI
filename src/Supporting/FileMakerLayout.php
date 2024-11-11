@@ -168,6 +168,7 @@ class FileMakerLayout
      * If $script is array with two elements, these are handled as values of "script" and "layout.response."
      * If it's three elements, these are "script", "script.param" and "layout.response."
      * If it's four elements, these are "script.prerequest", "script.presort", "script" and "layout.response."
+     * @param int|null $dateformats; Use this option to specify date formats for date, time, and timestamp fields. The relevant values are: 0 for US, 1 for file locale, or 2 for ISO8601
      * @return FileMakerRelation|null Query result.
      * @throws Exception In case of any error, an exception arises.
      */
@@ -176,7 +177,8 @@ class FileMakerLayout
                           int        $offset = 0,
                           int        $range = 0,
                           array|null $portal = null,
-                          array|null $script = null): FileMakerRelation|null
+                          array|null $script = null,
+                          int        $dateformats = null): FileMakerRelation|null
     {
         if ($this->restAPI->login()) {
             $headers = ["Content-Type" => "application/json"];
@@ -202,6 +204,9 @@ class FileMakerLayout
                 $params = ["layouts" => $this->layout, "_find" => null];
             } else {
                 $params = ["layouts" => $this->layout, "records" => null];
+            }
+            if (!is_null($dateformats)) {
+                $request["dateformats"] = $dateformats;
             }
             $this->restAPI->callRestAPI($params, true, $method, $request, $headers); // Throw Exception
             $this->restAPI->storeToProperties();
