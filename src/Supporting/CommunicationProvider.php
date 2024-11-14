@@ -420,17 +420,12 @@ class CommunicationProvider
         }
         $params = ["databases" => null];
         $request = [];
-        try {
-            $this->callRestAPI($params, false, "GET", $request, $headers, true); // Throw Exception
-            $this->storeToProperties();
-            if ($this->httpStatus == 200 && $this->errorCode == 0) {
-                $returnValue = $this->responseBody->response->databases;
-            }
-        } catch (Exception $e) {
-            throw $e;
-        } finally {
-            $this->logout();
+        $this->callRestAPI($params, false, "GET", $request, $headers, true); // Throw Exception
+        $this->storeToProperties();
+        if ($this->httpStatus == 200 && $this->errorCode == 0) {
+            $returnValue = $this->responseBody->response->databases;
         }
+        $this->logout();
         return $returnValue;
     }
 
@@ -446,17 +441,12 @@ class CommunicationProvider
             $params = ["layouts" => null];
             $request = [];
             $headers = [];
-            try {
-                $this->callRestAPI($params, true, "GET", $request, $headers); // Throw Exception
-                $this->storeToProperties();
-                if ($this->httpStatus == 200 && $this->errorCode == 0) {
-                    $returnValue = $this->responseBody->response->layouts;
-                }
-            } catch (Exception $e) {
-                throw $e;
-            } finally {
-                $this->logout();
+            $this->callRestAPI($params, true, "GET", $request, $headers); // Throw Exception
+            $this->storeToProperties();
+            if ($this->httpStatus == 200 && $this->errorCode == 0) {
+                $returnValue = $this->responseBody->response->layouts;
             }
+            $this->logout();
         }
         return $returnValue;
     }
@@ -472,17 +462,12 @@ class CommunicationProvider
             $params = ["scripts" => null];
             $request = [];
             $headers = [];
-            try {
-                $this->callRestAPI($params, true, "GET", $request, $headers); // Throw Exception
-                $this->storeToProperties();
-                if ($this->httpStatus == 200 && $this->errorCode == 0) {
-                    $returnValue = $this->responseBody->response->scripts;
-                }
-            } catch (Exception $e) {
-                throw $e;
-            } finally {
-                $this->logout();
+            $this->callRestAPI($params, true, "GET", $request, $headers); // Throw Exception
+            $this->storeToProperties();
+            if ($this->httpStatus == 200 && $this->errorCode == 0) {
+                $returnValue = $this->responseBody->response->scripts;
             }
+            $this->logout();
         }
         return $returnValue;
     }
@@ -897,37 +882,23 @@ class CommunicationProvider
 
     /**
      * To create and configure cURL at a single place, avoiding code redundancy.
-     * If later we need some specific settings for some cases, then add new
-     * parameters to this function.
      *
-     * @param string|null $url The URL you want to access.
-     * @param bool $returnTransfer By default, sets CURLOPT_RETURNTRANSFER to `true`.
-     *                             But it can be set to false if needed.
+     * @param string $url The URL you want to access.
      * @return CurlHandle
      */
-    private function _createCurlHandle(string|null $url = null,
-                                       bool        $returnTransfer = true): CurlHandle
+    private function _createCurlHandle(string $url): CurlHandle
     {
         $ch = curl_init();
-
-        if (!is_null($url)) {
-            curl_setopt($ch, CURLOPT_URL, $url);
-        }
-
-        if ($returnTransfer) {
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        }
-
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_DEFAULT);
-
         if ($this->isCertValidating) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-            // Use the OS native certificate authorities, if possible.
-            // This fixes SSL validation errors if `php.ini` doesn't have
-            // [curl] `curl.cainfo` set properly of if this PEM file isn't
-            // up to date. Better rely on the OS certificate authorities, which
-            // is maintained automatically.
+            /* Use the OS native certificate authorities, if possible.
+            This fixes SSL validation errors if `php.ini` doesn't have [curl] `curl.cainfo`,
+            set properly of if this PEM file isn't up to date.
+            Better rely on the OS certificate authorities, which is maintained automatically. */
             if (defined('CURLSSLOPT_NATIVE_CA')
                 && version_compare(curl_version()['version'], '7.71', '>=')) {
                 curl_setopt($ch, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);
@@ -936,11 +907,9 @@ class CommunicationProvider
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         }
-
         if (!is_null($this->timeout)) {
             curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
         }
-
         return $ch;
     }
 }

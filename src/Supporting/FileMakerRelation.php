@@ -326,7 +326,6 @@ class FileMakerRelation implements Iterator
                     $resultArray[] = $record->toArray();
                 }
                 return json_decode(json_encode($resultArray), true);
-                break;
             case 'PORTALRECORD':
                 if (isset($this->data)) {
                     return json_decode(json_encode($this->data), true);
@@ -591,7 +590,6 @@ class FileMakerRelation implements Iterator
             case "RECORD":
             case "PORTALRECORD":
                 return $this->pointer == 0;
-                break;
         }
         return false;
     }
