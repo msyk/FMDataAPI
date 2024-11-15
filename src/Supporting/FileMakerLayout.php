@@ -178,7 +178,7 @@ class FileMakerLayout
                           int        $range = 0,
                           array|null $portal = null,
                           array|null $script = null,
-                          int        $dateformats = null): FileMakerRelation|null
+                          int|null   $dateformats = null): FileMakerRelation|null
     {
         if ($this->restAPI->login()) {
             $headers = ["Content-Type" => "application/json"];
