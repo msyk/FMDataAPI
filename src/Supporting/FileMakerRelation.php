@@ -107,7 +107,7 @@ class FileMakerRelation implements Iterator
      */
     public function getTargetTable(): null|string
     {
-        return ($this->dataInfo) ? $this->dataInfo->table : null;
+        return $this->dataInfo->table ?? null;
     }
 
     /**
@@ -118,8 +118,7 @@ class FileMakerRelation implements Iterator
      */
     public function getTotalCount(): null|int
     {
-        return ($this->dataInfo && property_exists($this->dataInfo, 'totalRecordCount')) ?
-            $this->dataInfo->totalRecordCount : null;
+        return $this->dataInfo->totalRecordCount ?? null;
     }
 
     /**
@@ -131,7 +130,7 @@ class FileMakerRelation implements Iterator
      */
     public function getFoundCount(): null|int
     {
-        return ($this->dataInfo) ? $this->dataInfo->foundCount : null;
+        return $this->dataInfo->foundCount ?? null;
     }
 
     /**
@@ -143,7 +142,7 @@ class FileMakerRelation implements Iterator
      */
     public function getReturnedCount(): null|int
     {
-        return ($this->dataInfo) ? $this->dataInfo->returnedCount : null;
+        return $this->dataInfo->returnedCount ?? null;
     }
 
     /**
