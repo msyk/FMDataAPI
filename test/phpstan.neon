@@ -3,3 +3,5 @@ includes:
 
 parameters:
 	reportUnmatchedIgnoredErrors: false
+	universalObjectCratesClasses:
+		- INTERMediator\FileMakerServer\RESTAPI\FMDataAPI

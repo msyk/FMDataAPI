@@ -15,7 +15,7 @@ use Exception;
  * @property string $<<field_name>> The field value named as the property name.
  * @property FileMakerRelation $<<portal_name>> FileMakerRelation object associated with the property name.
  *    The table occurrence name of the portal can be the 'portal_name,' and also the object name of the portal.
- * Ver * @version 32
+ * @version 32
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2024 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
@@ -107,7 +107,7 @@ class FileMakerRelation implements Iterator
      */
     public function getTargetTable(): null|string
     {
-        return ($this->dataInfo) ? $this->dataInfo->table : null;
+        return $this->dataInfo->table ?? null;
     }
 
     /**
@@ -118,8 +118,7 @@ class FileMakerRelation implements Iterator
      */
     public function getTotalCount(): null|int
     {
-        return ($this->dataInfo && property_exists($this->dataInfo, 'totalRecordCount')) ?
-            $this->dataInfo->totalRecordCount : null;
+        return $this->dataInfo->totalRecordCount ?? null;
     }
 
     /**
@@ -131,7 +130,7 @@ class FileMakerRelation implements Iterator
      */
     public function getFoundCount(): null|int
     {
-        return ($this->dataInfo) ? $this->dataInfo->foundCount : null;
+        return $this->dataInfo->foundCount ?? null;
     }
 
     /**
@@ -143,7 +142,7 @@ class FileMakerRelation implements Iterator
      */
     public function getReturnedCount(): null|int
     {
-        return ($this->dataInfo) ? $this->dataInfo->returnedCount : null;
+        return $this->dataInfo->returnedCount ?? null;
     }
 
     /**
