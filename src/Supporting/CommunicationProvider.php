@@ -152,7 +152,7 @@ class CommunicationProvider
      * @var bool
      * @ignore
      */
-    public bool $isDebug;
+    public bool $isDebug = false;
     /**
      * @var bool
      * @ignore

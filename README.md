@@ -145,3 +145,4 @@ MIT License
   It returns just null.
 - Upcoming date: [Ver.33]
   The query method supports date format parameter (Thanks to @stathisaska).
+  The debug property of the CommunicationProvider class initializes the bool false value (Thanks to Bernhard).
