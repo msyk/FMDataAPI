@@ -366,7 +366,7 @@ class FileMakerLayout
      * If you omit this parameter, update operation does not care the value of modId special field.
      * @param array|object|null $portal Associated array contains the modifying values in the portal.
      * Ex.: {"<PortalName>"=>{"<FieldName>"=>"<Value>", "recordId"=>"12"}}. FieldName has to "<TOCName>::<FieldName>".
-     * The recordId key specifiy the record to edit in portal.
+     * The recordId key specifies the record to edit in the portal.
      * @param array|null $script scripts that should execute the right timings. See FileMakerRelation::query().
      * @throws Exception In case of any error, an exception arises.
      */
@@ -432,7 +432,7 @@ class FileMakerLayout
      * @param string $containerFieldName The field name of container field.
      * @param int|null $containerFieldRepetition In the case of repetiton field, this has to be the number from 1.
      * If omitted this, the number "1" is going to be specified.
-     * @param string|null $fileName Another file name for uploading file. If omitted, the original file name is chosen.
+     * @param string|null $fileName Another file name for an uploading file. If omitted, the original file name is chosen.
      * @throws Exception In case of any error, an exception arises.
      */
     public function uploadFile(string      $filePath,
@@ -442,7 +442,7 @@ class FileMakerLayout
                                string|null $fileName = null): void
     {
         if (!file_exists($filePath)) {
-            throw new Exception("File doesn't exsist: {$filePath}.");
+            throw new Exception("File doesn't exist: {$filePath}.");
         }
         if (is_null($recordId)) {
             return;

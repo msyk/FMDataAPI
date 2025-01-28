@@ -56,7 +56,7 @@ class FMDataAPI
      * @param string|null $protocol FileMaker Server's protocol name. If omitted, 'https' is chosen.
      * @param array|null $fmDataSource Authentication information for external data sources.
      * Ex.  [{"database"=>"<databaseName>", "username"=>"<username>", "password"=>"<password>"}].
-     * If you use OAuth, "oAuthRequestId" and "oAuthIdentifier" keys have to be spedified.
+     * If you use OAuth, "oAuthRequestId" and "oAuthIdentifier" keys have to be specified.
      * @param boolean $isUnitTest If it's set to true, the communication provider just works locally.
      */
     public function __construct(string      $solution,
