@@ -9,10 +9,10 @@
 - 2018-02-03: [Ver.5] Bug fix of sorting parameters in query method.
 - 2018-02-18: [Ver.6] Bug fix of creating record with no default value.
 - 2018-03-25: [Ver.7] getSessionToken method added. OAuth handling implemented but not well debugged.
-- 2018-05-09: The Version 7 is the last version which supports FileMaker 16-based Data API.
+- 2018-05-09: The Version 7 is the last version that supports FileMaker 16-based Data API.
 - 2018-05-15: [Ver.8] Update for FileMaker 17. FileMaker Data API v1 is supported from this version.
   The preview version of FileMaker Data API doesn't support anymore.
-- 2018-05-27: [Ver.9] composer.json is added, and can install "inter-mediator/fmdataapi".
+- 2018-05-27: [Ver.9] composer.json is added, and can install "inter-mediator/fmdataapi."
   FMDataAPITrial directory deleted because it's already discontinued api.
   Add the "samples" directory and move sample files into it.
 - 2018-06-22: [Ver.10] Added the getContainerData method (Thanks to base64bits!),
@@ -40,23 +40,23 @@
 - 2019-09-12: [Ver.19]
   Add the duplicate() method to the FileMakerLayout class. Thanks to schube.
 - 2019-09-16: [Ver.20]
-  The default values  of limit and range parameters changed to 0 and both just applied for over 0 values. Thanks to schube.
+  The default values of limit and range parameters changed to 0 and both just applied for over 0 values. Thanks to schube.
 - 2020-08-23: [Ver.21]
   Bug fix about the field referencing of a related field without any portals. Thanks to frankeg.
-  Checked on the FileMaker Server 19.
+  Check on the FileMaker Server 19.
 
 (History of recent date is [here](../README.md))
 
 ## API Differences between ver.8 and 7.
 ### FMDataAPI class
 The setAPIVersion method added. This is for a future update of FileMaker Data API.
-As far as FMDataAPI Ver.8 goes, This isn't required.
+As far as FMDataAPI Ver. 8 goes, This isn't required.
 - public function __construct($solution, $user, $password, $host = NULL, $port = NULL, $protocol = NULL, [New]$fmDataSource = null)
 - [New]public function setAPIVersion($vNum)
 
 ### FileMakerRelation class
 The following methods added to script parameters. See the query method's document for specifying it.
-Twe methods added to portal parameter.
+The methods added to portal parameter.
 
 - public function query($condition = NULL, $sort = NULL, $offset = -1, $range = -1, $portal = null, [New]$script = null)
 - public function getRecord($recordId, $portal = null, [New]$script = null)
