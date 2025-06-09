@@ -21,6 +21,7 @@ They created pull requests. Thanks for cooperating.
 - Patrick Janser
 - Roger Engström
 - Stathis Askaridis
+- filiptorphage-mjuk
 
 ## At a Glance
 
@@ -146,3 +147,5 @@ MIT License
 - 2025-03-19: [Ver.33]
   The query method supports date format parameter (Thanks to @stathisaska).
   The debug property of the CommunicationProvider class initializes the bool false value (Thanks to Bernhard).
+- 2025-xx-xx: [Ver.34]
+  Bug fix in the sort parameter (Thanks to @filiptorphage-mjuk).
