@@ -856,7 +856,7 @@ class CommunicationProvider
         }
         $param .= ']';
 
-        return $param;
+        return rawurlencode($param);
     }
 
     /**
