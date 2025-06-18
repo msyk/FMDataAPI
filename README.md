@@ -149,3 +149,4 @@ MIT License
   The debug property of the CommunicationProvider class initializes the bool false value (Thanks to Bernhard).
 - 2025-xx-xx: [Ver.34]
   Bug fix in the sort parameter (Thanks to @filiptorphage-mjuk).
+  Added date format parameter  (Thanks to @filiptorphage-mjuk).
