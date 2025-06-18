@@ -232,12 +232,14 @@ class FileMakerLayout
      * @param int|null $recordId The recordId.
      * @param array|null $portal See the query() method's same parameter.
      * @param array|null $script scripts that should execute the right timings. See FileMakerRelation::query().
+     * @param int|null $dateformats Use this option to specify date formats for date, time, and timestamp fields. The relevant values are: 0 for US, 1 for file locale, or 2 for ISO8601
      * @return FileMakerRelation|null Query result.
      * @throws Exception In case of any error, an exception arises.
      */
     public function getRecord(int|null   $recordId,
                               array|null $portal = null,
-                              array|null $script = null): FileMakerRelation|null
+                              array|null $script = null,
+                              int|null   $dateformats = null): FileMakerRelation|null
     {
         if (is_null($recordId)) {
             return null;
@@ -249,6 +251,9 @@ class FileMakerLayout
             }
             if (!is_null($script)) {
                 $request = array_merge($request, $this->buildScriptParameters($script));
+            }
+            if (!is_null($dateformats)) {
+                $request["dateformats"] = $dateformats;
             }
             $headers = ["Content-Type" => "application/json"];
             $params = ["layouts" => $this->layout, "records" => $recordId];
@@ -279,13 +284,15 @@ class FileMakerLayout
      * @param array|null $portal Associated array contains the modifying values in the portal.
      * Ex.: {"<PortalName>"=>{"<FieldName>"=>"<Value>"...}}. FieldName has to "<TOCName>::<FieldName>".
      * @param array|null $script scripts that should execute the right timings. See FileMakerRelation::query().
+     * @param int|null $dateformats Use this option to specify date formats for date, time, and timestamp fields. The relevant values are: 0 for US, 1 for file locale, or 2 for ISO8601
      * @return int|null The recordId of created record.
      * If the returned value is an integer larger than 0, it shows one record was created.
      * @throws Exception In case of any error, an exception arises.
      */
     public function create(array|null $data = null,
                            array|null $portal = null,
-                           array|null $script = null): int|null
+                           array|null $script = null,
+                           int|null   $dateformats = null): int|null
     {
         if ($this->restAPI->login()) {
             $headers = ["Content-Type" => "application/json"];
@@ -296,6 +303,9 @@ class FileMakerLayout
             }
             if (!is_null($script)) {
                 $request = array_merge($request, $this->buildScriptParameters($script));
+            }
+            if (!is_null($dateformats)) {
+                $request["dateformats"] = $dateformats;
             }
             $this->restAPI->callRestAPI($params, true, "POST", $request, $headers); // Throw Exception
             $result = $this->restAPI->responseBody;
@@ -368,13 +378,15 @@ class FileMakerLayout
      * Ex.: {"<PortalName>"=>{"<FieldName>"=>"<Value>", "recordId"=>"12"}}. FieldName has to "<TOCName>::<FieldName>".
      * The recordId key specifies the record to edit in the portal.
      * @param array|null $script scripts that should execute the right timings. See FileMakerRelation::query().
+     * @param int|null $dateformats Use this option to specify date formats for date, time, and timestamp fields. The relevant values are: 0 for US, 1 for file locale, or 2 for ISO8601
      * @throws Exception In case of any error, an exception arises.
      */
     public function update(int|null   $recordId,
                            array|null $data,
                            int        $modId = -1,
                            array|object|null $portal = null,
-                           array|null $script = null): void
+                           array|null $script = null,
+                           int|null   $dateformats = null): void
     {
         if (is_null($recordId)) {
             return;
@@ -391,6 +403,9 @@ class FileMakerLayout
             }
             if (!is_null($script)) {
                 $request = array_merge($request, $this->buildScriptParameters($script));
+            }
+            if (!is_null($dateformats)) {
+                $request["dateformats"] = $dateformats;
             }
             if ($modId > -1) {
                 $request = array_merge($request, ["modId" => (string)$modId]);
