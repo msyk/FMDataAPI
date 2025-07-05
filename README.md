@@ -145,8 +145,9 @@ MIT License
   FileMakerLayout::getMetadataOld and getMetadata methods don't return the false value in the case of log-in error.
   It returns just null.
 - 2025-03-19: [Ver.33]
-  The query method supports date format parameter (Thanks to @stathisaska).
-  The debug property of the CommunicationProvider class initializes the bool false value (Thanks to Bernhard).
+  The query method supports a date format parameter (Thanks to @stathisaska).
+  The debug property of the CommunicationProvider class initializes to the bool false value (Thanks to Bernhard).
 - 2025-xx-xx: [Ver.34]
-  Bug fix in the sort parameter (Thanks to @filiptorphage-mjuk).
-  Added date format parameter  (Thanks to @filiptorphage-mjuk).
+  Bug fixes were made in the sort parameter.
+  A date format parameter was added.
+  The FileMakerLayout::update method does nothing if the second parameter is null or {}. (Thanks to @filiptorphage-mjuk)

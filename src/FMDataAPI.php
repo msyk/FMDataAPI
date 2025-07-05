@@ -198,9 +198,9 @@ class FMDataAPI
 
     /**
      * The session token earned after authentication.
-     * @return string The session token.
+     * @return string|null The session token.
      */
-    public function getSessionToken(): string
+    public function getSessionToken(): string|null
     {
         return $this->provider->accessToken;
     }

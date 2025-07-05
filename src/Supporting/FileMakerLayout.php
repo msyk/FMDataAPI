@@ -35,7 +35,7 @@ class FileMakerLayout
      * @ignore
      */
     public function __construct(CommunicationProvider|null $restAPI,
-                                string $layout)
+                                string                     $layout)
     {
         $this->restAPI = $restAPI;
         $this->layout = $layout;
@@ -371,7 +371,8 @@ class FileMakerLayout
      * Update fields in one record.
      * @param int|null $recordId The valid recordId value to update.
      * @param array|null $data Associated array contains the modifying values.
-     * Keys are field names and values is these initial values.
+     * Keys are field names and values are these initial values.
+     * If it's null or [], no operation is going.
      * @param int $modId The modId to allow updating. This parameter is for detect to modifying other users.
      * If you omit this parameter, update operation does not care the value of modId special field.
      * @param array|object|null $portal Associated array contains the modifying values in the portal.
@@ -381,14 +382,16 @@ class FileMakerLayout
      * @param int|null $dateformats Use this option to specify date formats for date, time, and timestamp fields. The relevant values are: 0 for US, 1 for file locale, or 2 for ISO8601
      * @throws Exception In case of any error, an exception arises.
      */
-    public function update(int|null   $recordId,
-                           array|null $data,
-                           int        $modId = -1,
+    public function update(int|null          $recordId,
+                           array|null        $data,
+                           int               $modId = -1,
                            array|object|null $portal = null,
-                           array|null $script = null,
-                           int|null   $dateformats = null): void
+                           array|null        $script = null,
+                           int|null          $dateformats = null): void
     {
-        if (is_null($recordId)) {
+        if (is_null($recordId)
+            || ((is_null($data) || count($data) === 0)
+                && (is_null($portal) || count($portal) === 0))) {
             return;
         }
         if ($this->restAPI->login()) {
