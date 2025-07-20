@@ -19,7 +19,7 @@ try {
     // Instantiate the class FMDataAPI with database name, username, password and host.
     // Although the port number and protocol can be set in parameters of constructor,
     // these parameters can be omitted with default values.
-    $fmdb = new FMDataAPI("TestDB", "web", null, "localhost");
+    $fmdb = new FMDataAPI("TestDB", "web", "password", "localhost");
 
     //==============================
     //$fmdb = new FMDataAPI("TestDB", "web", null, "localserver");
@@ -172,7 +172,9 @@ try {
     $result = $fmdb->postalcode->getRecord($recId);
     if (!is_null($result)) {
         foreach ($result as $record) {
+            $x = $record->{"f3"};
             echo htmlspecialchars("f3: {$record->f3},", ENT_QUOTES, "UTF-8");
+            echo htmlspecialchars("f3: {$x},", ENT_QUOTES, "UTF-8");
             echo htmlspecialchars("f7: {$record->f7},", ENT_QUOTES, "UTF-8");
             echo htmlspecialchars("f8: {$record->f8}", ENT_QUOTES, "UTF-8") . "<hr>";
             echo "<hr>";
