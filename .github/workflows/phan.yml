@@ -1,0 +1,44 @@
+name: Phan
+
+permissions:
+  contents: read
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  run:
+    name: Run Phan
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@0f7f1d08e3e32076e51cae65eb0b0c871405b16e # v2.34.1
+        with:
+          php-version: '8.4'
+          tools: phan
+          coverage: none
+
+      - name: Restore cached baseline for Phan
+        id: cache-baseline-restore
+        uses: actions/cache/restore@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+        with:
+          path: |
+            test/phan-baseline.php
+          key: phan-baseline-${{ github.run_id }}"
+          restore-keys: |
+            phan-baseline-
+
+      - name: Run Phan
+        continue-on-error: true
+        run: |
+          if [ -f test/phan-baseline.php ]; then
+            echo "Cached baseline for Phan is found. Running Phan with baseline."
+            phan -d ./ -k .phan/config.php --load-baseline test/phan-baseline.php --no-progress-bar
+          else
+            echo "Cached baseline for Phan is not found. Running Phan without baseline."
+            phan -d ./ -k .phan/config.php --no-progress-bar
+            exit 0
+          fi
