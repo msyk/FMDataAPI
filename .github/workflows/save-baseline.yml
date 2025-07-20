@@ -1,0 +1,54 @@
+name: Save Baseline for Phan and PHPStan
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  run:
+    name: Save Baseline
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@0f7f1d08e3e32076e51cae65eb0b0c871405b16e # v2.34.1
+        with:
+          php-version: '8.4'
+          tools: phan
+          coverage: none
+
+      - name: Install PHPStan
+        run: composer install
+
+      - name: Generate the baseline for Phan
+        continue-on-error: true
+        run: |
+          phan -d ./ -k .phan/config.php --save-baseline test/phan-baseline.php --no-progress-bar
+          exit 0
+
+      - name: Generate the baseline for PHPStan
+        continue-on-error: true
+        run: |
+          ./vendor/bin/phpstan analyse --memory-limit 1G -c test/phpstan.neon --generate-baseline test/phpstan-baseline.neon src test -vvv --debug -l 2
+          exit 0
+
+      - name: Save the baseline for Phan
+        id: save-the-baseline-for-phan
+        uses: actions/cache/save@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+        with:
+          path: |
+            test/phan-baseline.php
+          key: phan-baseline-${{ github.run_id }}"
+
+      - name: Save the baseline for PHPStan
+        id: cache-baseline-save
+        uses: actions/cache/save@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+        with:
+          path: |
+            test/phpstan-baseline.neon
+          key: phpstan-baseline-${{ github.run_id }}"

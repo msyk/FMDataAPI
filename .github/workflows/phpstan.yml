@@ -1,14 +1,11 @@
 name: PHPStan
 
+permissions:
+  contents: read
+
 on:
   push:
-    branches:
-      - "*"
   pull_request:
-    branches: [ 'master', 'main' ]
-  pull_request_target:
-    types:
-      - closed
 
 jobs:
   run:
@@ -19,17 +16,16 @@ jobs:
         level: [ 1, 2 ]
         include:
           - current-level: 1
-          - max-level: 2
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # v2.32.0
+        uses: shivammathur/setup-php@0f7f1d08e3e32076e51cae65eb0b0c871405b16e # v2.34.1
         with:
           php-version: '8.4'
 
-      - name: Remove phpDocumentor temporarily and Install PHPStan
-        run: composer remove --dev --no-update phpdocumentor/phpdocumentor; composer update
+      - name: Install PHPStan
+        run: composer install
 
       - name: Restore cached baseline for PHPStan
         id: cache-baseline-restore
@@ -42,30 +38,13 @@ jobs:
             phpstan-baseline-
 
       - name: Run PHPStan
-        if: matrix.level == matrix.current-level
-        continue-on-error: true
+        if: matrix.level < matrix.current-level || matrix.level == matrix.current-level
         run: |
-             ./vendor/bin/phpstan analyse --memory-limit 1G -c test/phpstan.neon src test -l "${{ matrix.level }}"
+          ./vendor/bin/phpstan analyse --memory-limit 1G -c test/phpstan.neon src test -l "${{ matrix.level }}"
 
       - name: Run PHPStan
         if: matrix.level > matrix.current-level
         continue-on-error: true
         run: |
-             ./vendor/bin/phpstan analyse --memory-limit 1G -c test/phpstan.neon src test -l "${{ matrix.level }}"
-             exit 0
-
-      - name: Generate the baseline for PHPStan
-        if: matrix.level == matrix.max-level && github.event.pull_request.merged == true
-        continue-on-error: true
-        run: |
-             ./vendor/bin/phpstan analyse --memory-limit 1G -c test/phpstan.neon --generate-baseline test/phpstan-baseline.neon src test -vvv --debug -l "${{ matrix.level }}"
-             exit 0
-
-      - name: Save the baseline for PHPStan
-        id: cache-baseline-save
-        if: matrix.level == matrix.max-level && github.event.pull_request.merged == true
-        uses: actions/cache/save@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
-        with:
-          path: |
-            test/phpstan-baseline.neon
-          key: phpstan-baseline-${{ github.run_id }}"
+          ./vendor/bin/phpstan analyse --memory-limit 1G -c test/phpstan.neon src test -l "${{ matrix.level }}"
+          exit 0

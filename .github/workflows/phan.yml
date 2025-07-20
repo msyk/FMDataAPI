@@ -5,13 +5,7 @@ permissions:
 
 on:
   push:
-    branches:
-      - "*"
   pull_request:
-    branches: [ 'master', 'main' ]
-  pull_request_target:
-    types:
-      - closed
 
 jobs:
   run:
@@ -24,7 +18,7 @@ jobs:
         uses: shivammathur/setup-php@0f7f1d08e3e32076e51cae65eb0b0c871405b16e # v2.34.1
         with:
           php-version: '8.4'
-          tools: phan:5.5.0
+          tools: phan
           coverage: none
 
       - name: Restore cached baseline for Phan
@@ -40,27 +34,11 @@ jobs:
       - name: Run Phan
         continue-on-error: true
         run: |
-          if [ -f ~/test/phan-baseline.php ]; then
+          if [ -f test/phan-baseline.php ]; then
             echo "Cached baseline for Phan is found. Running Phan with baseline."
-            phan -d ./ -k .phan/config.php --load-baseline ~/test/phan-baseline.php --no-progress-bar
+            phan -d ./ -k .phan/config.php --load-baseline test/phan-baseline.php --no-progress-bar
           else
             echo "Cached baseline for Phan is not found. Running Phan without baseline."
             phan -d ./ -k .phan/config.php --no-progress-bar
             exit 0
           fi
-
-      - name: Generate the baseline for Phan
-        continue-on-error: true
-        if: github.event.pull_request.merged == true
-        run: |
-          phan -d ./ -k .phan/config.php --save-baseline ~/test/phan-baseline.php --no-progress-bar
-          exit 0
-
-      - name: Save the baseline for Phan
-        id: save-the-baseline-for-phan
-        if: github.event.pull_request.merged == true
-        uses: actions/cache/save@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
-        with:
-          path: |
-            test/phan-baseline.php
-          key: phan-baseline-${{ github.run_id }}"
