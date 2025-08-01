@@ -1,4 +1,4 @@
-# FMDataAPI Ver.33 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
+# FMDataAPI Ver.34 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -69,7 +69,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"33"
+  "inter-mediator/fmdataapi":"34"
 } ...
 ```
 
@@ -147,7 +147,7 @@ MIT License
 - 2025-03-19: [Ver.33]
   The query method supports a date format parameter (Thanks to @stathisaska).
   The debug property of the CommunicationProvider class initializes to the bool false value (Thanks to Bernhard).
-- 2025-xx-xx: [Ver.34]
+- 2025-08-02: [Ver.34]
   Bug fixes were made in the sort parameter.
   A date format parameter was added.
   The FileMakerLayout::update method does nothing if the second parameter is null or {}. (Thanks to @filiptorphage-mjuk)
