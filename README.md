@@ -151,3 +151,5 @@ MIT License
   Bug fixes were made in the sort parameter.
   A date format parameter was added.
   The FileMakerLayout::update method does nothing if the second parameter is null or {}. (Thanks to @filiptorphage-mjuk)
+- xxxx-xx-xx: [Ver.35] Next release version
+  Bug fix for the script parameter (Thanks to @frankeg).
