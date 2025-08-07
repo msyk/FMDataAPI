@@ -19,7 +19,7 @@ try {
     // Instantiate the class FMDataAPI with database name, username, password and host.
     // Although the port number and protocol can be set in parameters of constructor,
     // these parameters can be omitted with default values.
-    $fmdb = new FMDataAPI("TestDB", "web", "password", "10.211.62.2");
+    $fmdb = new FMDataAPI("TestDB", "web", "password", "localhost");
 
     //==============================
     //$fmdb = new FMDataAPI("TestDB", "web", null, "localserver");

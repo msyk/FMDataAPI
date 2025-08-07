@@ -110,8 +110,8 @@ class FileMakerLayout
                 $request[$key] = $param[$key];
             }
         }
-        if (!empty($request) && !is_null($param)) {
-            switch (count($request)) {
+        if (empty($request) && !is_null($param)) {
+            switch (count($param)) {
                 case 1:
                     $request["script"] = $param[0];
                     break;
