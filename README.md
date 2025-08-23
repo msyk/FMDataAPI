@@ -1,4 +1,4 @@
-# FMDataAPI Ver.34 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
+# FMDataAPI Ver.35 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -69,7 +69,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"34"
+  "inter-mediator/fmdataapi":"35"
 } ...
 ```
 
@@ -151,5 +151,7 @@ MIT License
   Bug fixes were made in the sort parameter.
   A date format parameter was added.
   The FileMakerLayout::update method does nothing if the second parameter is null or {}. (Thanks to @filiptorphage-mjuk)
-- xxxx-xx-xx: [Ver.35] Next release version
+- 2025-08-23: [Ver.35]
   Bug fix for the script parameter (Thanks to @frankeg).
+  Also, bug fix for script parameter to keep the old way myself.
+- xxxx-xx-xx: [Ver.36] Next release version
