@@ -155,3 +155,4 @@ MIT License
   Bug fix for the script parameter (Thanks to @frankeg).
   Also, bug fix for script parameter to keep the old way myself.
 - xxxx-xx-xx: [Ver.36] Next release version
+  Bug fix for limit and offset parameters (Thanks to Roger Engström).
