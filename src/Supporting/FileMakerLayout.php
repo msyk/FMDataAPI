@@ -75,7 +75,7 @@ class FileMakerLayout
                                            string      $method = "GET"): array
     {
         $key = $shortKey ? "portal" : "portalData";
-        $prefix = $method === "GET" ? "" : "_";
+        $prefix = $method === "GET" ? "_" : "";
         $request = [];
         if (array_values($param) === $param) {
             $request[$key] = $param;
