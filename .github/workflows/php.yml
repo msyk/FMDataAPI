@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         # https://github.com/shivammathur/setup-php?tab=readme-ov-file#cloud-osplatform-support
-        os: [ 'ubuntu-22.04', 'ubuntu-24.04', 'ubuntu-22.04-arm', 'ubuntu-24.04-arm', 'windows-2022', 'macos-14', 'macos-15' ]
+        os: [ 'ubuntu-22.04', 'ubuntu-24.04', 'ubuntu-22.04-arm', 'ubuntu-24.04-arm', 'windows-2022', 'macos-14', 'macos-15', 'macos-26' ]
         php-version: [ '8.1', '8.2', '8.3', '8.4', '8.5' ]
     steps:
       - name: Checkout
