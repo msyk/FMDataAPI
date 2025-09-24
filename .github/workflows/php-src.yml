@@ -1,5 +1,8 @@
 name: Test with php-src
 
+permissions:
+  contents: read
+
 on:
   push:
   pull_request:
@@ -13,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.1', '8.2', '8.3', '8.4', 'master' ]
+        php: [ '8.1', '8.2', '8.3', '8.4', '8.5', 'master' ]
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Run docker compose
