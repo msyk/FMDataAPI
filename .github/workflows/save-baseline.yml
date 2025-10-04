@@ -16,11 +16,7 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@ec406be512d7077f68eed36e63f4d91bc006edc4 # v2.35.4
-        with:
-          php-version: '8.4'
-          tools: phan
-          coverage: none
+        uses: ./.github/actions/setup-php
 
       - name: Install PHPStan
         run: composer install

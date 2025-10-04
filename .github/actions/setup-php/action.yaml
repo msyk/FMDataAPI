@@ -1,0 +1,26 @@
+name: Setup PHP
+
+inputs:
+  php-version:
+    description: 'PHP version to setup'
+    required: false
+    default: '8.4'
+  extensions:
+    description: 'Comma-separated list of PHP extensions to install'
+    required: false
+    default: 'mbstring, json, bcmath, zip, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, exif, gd, ldap, fileinfo'
+  tools:
+    description: 'Comma-separated list of tools to install'
+    required: false
+    default: composer:2.8.12, phan:5.5.1
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup PHP
+      uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # v2.35.5
+      with:
+        php-version: ${{ inputs.php-version }}
+        coverage: none
+        extensions: ${{ inputs.extensions }}
+        tools: ${{ inputs.tools }}

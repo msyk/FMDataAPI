@@ -14,8 +14,6 @@ jobs:
   test:
     name: Test
     runs-on: ${{ matrix.os }}
-    env:
-      PHP_EXTENSIONS: mbstring, json, bcmath, zip, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, exif, gd, ldap, fileinfo
     strategy:
       matrix:
         # https://github.com/shivammathur/setup-php?tab=readme-ov-file#cloud-osplatform-support
@@ -25,12 +23,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Install PHP with extensions
-        uses: shivammathur/setup-php@ec406be512d7077f68eed36e63f4d91bc006edc4 # v2.35.4
+      - name: Setup PHP
+        uses: ./.github/actions/setup-php
         with:
           php-version: ${{ matrix.php-version }}
-          coverage: none
-          extensions: ${{ env.PHP_EXTENSIONS }}
 
       - name: Prepare environment
         run: composer update
