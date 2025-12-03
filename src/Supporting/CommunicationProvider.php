@@ -639,7 +639,6 @@ class CommunicationProvider
         if ($this->curlErrorNumber) {
             $this->curlError = curl_error($ch);
         }
-        curl_close($ch);
 
         $this->method = $method;
         $this->url = $url;
@@ -696,10 +695,8 @@ class CommunicationProvider
         curl_exec($ch);
         if (curl_errno($ch) !== 0) {
             $errMsg = curl_error($ch);
-            curl_close($ch);
             throw new Exception("Error in creating cookie file. {$errMsg}");
         }
-        curl_close($ch);
 
         // Visit the container URL again.
         $ch = $this->_createCurlHandle($url);
@@ -707,10 +704,8 @@ class CommunicationProvider
         $output = curl_exec($ch);
         if (curl_errno($ch) !== 0) {
             $errMsg = curl_error($ch);
-            curl_close($ch);
             throw new Exception("Error in downloading content of file. {$errMsg}");
         }
-        curl_close($ch);
 
         return base64_encode($output); // Process the data as needed.
     }
