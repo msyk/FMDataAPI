@@ -14,15 +14,15 @@ use Exception;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @property-read FileMakerLayout $layout Returns the FileMakerLayout object from the layout named with the property.
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
- * @version 35
+ * @version 36
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2024 Masayuki Nii
- * (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
+ * (Claris FileMaker is a registered trademark of Claris International Inc. in the U.S. and other countries.)
  */
 class FMDataAPI
 {
     /* Document generating:
-     * - Install PHP Documentor, and enter command below.
+     * - Install PHP Documentor, and enter the command below.
      * php ../phpDocumentor.phar run -f ./src/FMDataAPI.php -f ./src/Supporting/CommunicationProvider.php -f ./src/Supporting/FileMakerLayout.php -f ./src/Supporting/FileMakerRelation.php  -t ../INTER-Mediator_Documents/FMDataAPI
      */
 
@@ -46,8 +46,8 @@ class FMDataAPI
      * @param string $user The fmrest privilege accessible user to the database.
      * If you’re going to call useOAuth method, you have to specify the data for X-FM-Data-OAuth-Request-Id.
      * @param string|null $password The password of the above user.
-     * This can be null for testing purpose only. Null data is going to replace the string "password".
-     * This prevents to be detected as a security issue.
+     * This can be null for testing purposes only. Null data is going to replace the string "password".
+     * This prevents to being detected as a security issue.
      * On the real solutions, you have to set a valid password string.
      * If you’re going to call useOAuth method, you have to specify the data for X-FM-Data-OAuth-Identifier.
      * @param string|null $host FileMaker Server's host name or IP address. If omitted, 'localhost' is chosen.
@@ -103,10 +103,10 @@ class FMDataAPI
     }
 
     /**
-     * Refers the FileMakerLayout object as the proxy of the layout.
-     * If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
+     * Refers to the FileMakerLayout object as the proxy of the layout.
+     * If the layout doesn't exist, no error arises here. Any errors might arise on methods of the FileMakerLayout class.
      * @param string $layout_name Layout name.
-     * @return FileMakerLayout object which is proxy of FileMaker's layout.
+     * @return FileMakerLayout object which is a proxy of FileMaker's layout.
      */
     public function layout(string $layout_name): FileMakerLayout
     {
@@ -135,7 +135,7 @@ class FMDataAPI
     }
 
     /**
-     * On the authentication session, username and password are handled as OAuth parameters.
+     * In the authentication session, username and password are handled as OAuth parameters.
      */
     public function useOAuth(): void
     {
@@ -153,7 +153,7 @@ class FMDataAPI
     }
 
     /**
-     * Set to verify the server certificate. The default is to handle as self-signed certificate and doesn't verify.
+     * Set to verify the server certificate. The default is to handle as a self-signed certificate and doesn't verify.
      * @param bool $value Turn on to verify the certificate if the value is true.
      */
     public function setCertValidating(bool $value): void
@@ -169,7 +169,7 @@ class FMDataAPI
      * If this property is set to true,
      * FileMakerRelation class's field method (including describing field name directly) returns the value processed
      * with the htmlspecialchars.
-     * This means kind of compatible mode to FileMaker API for PHP.
+     * This means a kind of compatible mode to FileMaker API for PHP.
      * This feature works whole the FMDataAPI library.
      * @param bool $value Turn on to verify the certificate if the value is true.
      */
@@ -296,7 +296,7 @@ class FMDataAPI
     /**
      * Set the value to the global field.
      * @param array $fields Associated array contains the global field names (Field names must be Fully Qualified) and its values.
-     * Keys are global field names and values is these values.
+     * Keys are global field names and values are these values.
      * @throws Exception In case of any error, an exception arises.
      */
     public function setGlobalField(array $fields): void
@@ -324,10 +324,10 @@ class FMDataAPI
     }
 
     /**
-     * Get the information about hosting database. It includes the target database and others in FileMaker Server.
+     * Get the information about a hosting database. It includes the target database and others in FileMaker Server.
      * This is required to authenticate.
-     * @return null|array The information of hosting databases. Every element is an object and just having 'name'
-     * property.Ex.: [{"name": "TestDB"},{"name": "sample_db"}]
+     * @return null|array The information of hosting databases. Every element is an object and just has 'name'
+     * property.Ex.: [{"name": "TestDB"},{"name": "sample_db" }]
      * @throws Exception In case of any error, an exception arises.
      */
     public function getDatabaseNames(): null|array
@@ -337,7 +337,7 @@ class FMDataAPI
 
     /**
      * Get the list of layout name in a database.
-     * @return null|array The information of layouts in the target database. Every element is an object and just having 'name'
+     * @return null|array The information of layouts in the target database. Every element is an object and just has 'name'
      * property.
      * Ex.: [{"name": "person_layout"},{"name": "contact_to"},{"name": "history_to"}...]
      * @throws Exception In case of any error, an exception arises.
@@ -348,8 +348,8 @@ class FMDataAPI
     }
 
     /**
-     * Get the list of script name in database.
-     * @return null|array The information of scripts in the target database. Every element is an object and having 'name' property.
+     * Get the list of script name in a database.
+     * @return null|array The information of scripts in the target database. Every element is an object and has a 'name' property.
      * The 'isFolder' property is true if it's a folder item, and it has the 'folderScriptNames' property and includes
      * an object with the same structure.
      * Ex.: [{"name": "TestScript1","isFolder": false},{"name": "TestScript2","isFolder": false},{"name": "Maintenance",
@@ -406,9 +406,9 @@ class FMDataAPI
     }
 
     /**
-     * Return the base64 encoded data in container field with streaming url.
+     * Return the base64 encoded data in the container field with streaming url.
      * @param string $url The container data URL.
-     * @return string The base64 encoded data in container field.
+     * @return string The base64 encoded data in the container field.
      * @throws Exception The exception from the accessToContainer method.
      */
     public function getContainerData(string $url): string

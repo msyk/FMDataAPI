@@ -10,7 +10,7 @@ use CurlHandle;
  *
  * @package INTER-Mediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 35
+ * @version 36
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2024 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
@@ -678,10 +678,10 @@ class CommunicationProvider
     }
 
     /**
-     * Return the base64 encoded data in container field.
+     * Return the base64 encoded data in the container field.
      * Thanks to 'base64bits' as https://github.com/msyk/FMDataAPI/issues/18.
      * @param string $url
-     * @return string The base64 encoded data in container field.
+     * @return string The base64 encoded data in the container field.
      * @throws Exception
      * @ignore
      */

@@ -1,4 +1,4 @@
-# FMDataAPI Ver.35 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
+# FMDataAPI Ver.36 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -29,7 +29,7 @@ The FileMaker database named "TestDB.fmp12" is hosted on localhost, and
 it sets the "fmrest" as access privilege. The account to connect with REST API is "web"
 and "password." This database has the layout named "person_layout," and you
 can use the layout name as a property of the FMDataAPI instance. The return
-value of the "query" method is Iterator and can repeat in the foreach statement
+value of the "query" method is Iterator and can be repeated in the foreach statement
 with each record in the query result. This layout has the field named
 "FamilyName" and "GivenName," and can use the field name as a property.
 
@@ -69,7 +69,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"35"
+  "inter-mediator/fmdataapi":"36"
 } ...
 ```
 
@@ -154,5 +154,6 @@ MIT License
 - 2025-08-23: [Ver.35]
   Bug fix for the script parameter (Thanks to @frankeg).
   Also, bug fix for script parameter to keep the old way myself.
-- xxxx-xx-xx: [Ver.36] Next release version
+- 2025-12-03: [Ver.36] Next release version
   Bug fix for limit and offset parameters (Thanks to Roger Engström).
+  Deprecated function curl_close was removed (Thanks to @PGMMattias and @matsuo).
