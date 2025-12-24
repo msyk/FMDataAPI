@@ -13,11 +13,11 @@ jobs:
     runs-on: 'ubuntu-latest'
     strategy:
       matrix:
-        level: [ 1, 2 ]
+        level: [ 2, 3 ]
         include:
-          - current-level: 1
+          - current-level: 2
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Setup PHP
         uses: ./.github/actions/setup-php
@@ -27,13 +27,11 @@ jobs:
 
       - name: Restore cached baseline for PHPStan
         id: cache-baseline-restore
-        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
-          path: |
-            test/phpstan-baseline.neon
+          path: test/phpstan-baseline.neon
           key: phpstan-baseline-${{ github.run_id }}"
-          restore-keys: |
-            phpstan-baseline-
+          restore-keys: phpstan-baseline-
 
       - name: Run PHPStan
         if: matrix.level < matrix.current-level || matrix.level == matrix.current-level
