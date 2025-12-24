@@ -554,10 +554,10 @@ class FileMakerLayout
 
     /**
      * Get the script error code.
-     * @return int|null The value of the error code.
+     * @return string|null The value of the error code.
      * If any script wasn't called, it returns null.
      */
-    public function getScriptError(): int|null
+    public function getScriptError(): string|null
     {
         return $this->restAPI->scriptError;
     }
@@ -574,10 +574,10 @@ class FileMakerLayout
 
     /**
      * Get the prerequest script error code.
-     * @return int|null The value of the error code.
+     * @return string|null The value of the error code.
      * If any script wasn't called, it returns null.
      */
-    public function getScriptErrorPrerequest(): int|null
+    public function getScriptErrorPrerequest(): string|null
     {
         return $this->restAPI->scriptErrorPrerequest;
     }
@@ -594,10 +594,10 @@ class FileMakerLayout
 
     /**
      * Get the presort script error code.
-     * @return int|null The value of the error code.
+     * @return string|null The value of the error code.
      * If any script wasn't called, it returns null.
      */
-    public function getScriptErrorPresort(): int|null
+    public function getScriptErrorPresort(): string|null
     {
         return $this->restAPI->scriptErrorPresort;
     }

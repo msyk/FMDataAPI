@@ -239,13 +239,13 @@ class CommunicationProvider
         if (!is_null($host)) {
             if ($host == "localserver") {
                 $this->host = "127.0.0.1";
-                $this->port = "3000";
+                $this->port = 3000;
                 $this->isLocalServer = true;
                 $this->protocol = "http";
             } else {
                 $this->host = $host;
                 if (!is_null($port)) {
-                    $this->port = $port;
+                    $this->port = intval($port);
                 }
                 if (!is_null($protocol)) {
                     $this->protocol = $protocol;
@@ -272,7 +272,7 @@ class CommunicationProvider
                            string|null|false $directPath = null): string
     {
         $vStr = $this->vNum < 1 ? 'Latest' : strval($this->vNum);
-        $url = "$this->protocol://$this->host:$this->port";
+        $url = "$this->protocol://$this->host:" . strval($this->port);
         if (!empty($directPath)) {
             $url .= $directPath;
         } else {
