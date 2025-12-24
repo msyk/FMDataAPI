@@ -360,7 +360,7 @@ class FileMakerRelation implements Iterator
                     }
                     break;
                 case 'RECORD':
-                    if (property_exists($this->data, 'portalData')) {
+                    if (property_exists($this->data, 'portalData') && isset($this->data->portalData)) {
                         foreach ($this->data->portalData as $name => $val) {
                             $list[] = $name;
                         }
