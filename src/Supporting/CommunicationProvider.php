@@ -22,10 +22,10 @@ class CommunicationProvider
      */
     public int $vNum = -1;
     /**
-     * @var null|string
+     * @var string
      * @ignore
      */
-    private string|null $host = "127.0.0.1";
+    private string $host = "127.0.0.1";
     /**
      * @var string
      * @ignore
@@ -37,20 +37,20 @@ class CommunicationProvider
      */
     private string $password;
     /**
-     * @var string|null
+     * @var string
      * @ignore
      */
-    private string|null $solution;
+    private string $solution;
     /**
-     * @var null|string
+     * @var string
      * @ignore
      */
-    private string|null $protocol = 'https';
+    private string $protocol = 'https';
     /**
-     * @var int|null
+     * @var int
      * @ignore
      */
-    private int|null $port = 443;
+    private int $port = 443;
 
     /**
      * @var string|null
