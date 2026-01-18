@@ -61,7 +61,7 @@ class FileMakerRelation implements Iterator
      * FileMakerRelation constructor.
      *
      * @param array<object> $responseData
-     * @param object|array $infoData
+     * @param object|array|null $infoData
      * @param string $result
      * @param int $errorCode
      * @param string|null $portalName
@@ -70,7 +70,7 @@ class FileMakerRelation implements Iterator
      * @ignore
      */
     public function __construct(array|object           $responseData,
-                                object|array           $infoData,
+                                object|array|null      $infoData,
                                 string                 $result = "PORTAL",
                                 int                    $errorCode = 0,
                                 string|null            $portalName = null,
