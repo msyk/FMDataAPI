@@ -729,38 +729,36 @@ class CommunicationProvider
         $this->returnedCount = null;
         $this->errorMessage = null;
 
-        if (property_exists($this, 'responseBody')) {
-            $rbody = $this->responseBody;
-            if (is_object($rbody)) {
-                if (property_exists($rbody, 'messages')) {
-                    $result = $rbody->messages[0];
-                    $this->httpStatus = $this->getCurlInfo("http_code");
-                    $this->errorCode = property_exists($result, 'code') ? $result->code : -1;
-                    $this->errorMessage = property_exists($result, 'message') && $result->code != 0 ? $result->message : null;
-                }
-                if (property_exists($rbody, 'response')) {
-                    $result = $rbody->response;
-                    $this->scriptError = property_exists($result, 'scriptError') ? $result->scriptError : null;
-                    $this->scriptResult = property_exists($result, 'scriptResult') ? $result->scriptResult : null;
-                    $this->scriptErrorPrerequest = property_exists($result, 'scriptError.prerequest') ?
-                        $result->{'scriptError.prerequest'} : null;
-                    $this->scriptResultPrerequest = property_exists($result, 'scriptResult.prerequest') ?
-                        $result->{'scriptResult.prerequest'} : null;
-                    $this->scriptErrorPresort = property_exists($result, "scriptError.presort") ?
-                        $result->{"scriptError.presort"} : null;
-                    $this->scriptResultPresort = property_exists($result, "scriptResult.presort") ?
-                        $result->{"scriptResult.presort"} : null;
-                    if (property_exists($result, 'dataInfo')) {
-                        $dataInfo = $result->dataInfo;
-                        $this->targetTable = property_exists($dataInfo, 'table') ?
-                            $dataInfo->table : null;
-                        $this->totalCount = property_exists($dataInfo, 'totalRecordCount') ?
-                            $dataInfo->totalRecordCount : null;
-                        $this->foundCount = property_exists($dataInfo, 'foundCount') ?
-                            $dataInfo->foundCount : null;
-                        $this->returnedCount = property_exists($dataInfo, 'returnedCount') ?
-                            $dataInfo->returnedCount : null;
-                    }
+        $rbody = $this->responseBody;
+        if (is_object($rbody)) {
+            if (property_exists($rbody, 'messages')) {
+                $result = $rbody->messages[0];
+                $this->httpStatus = $this->getCurlInfo("http_code");
+                $this->errorCode = property_exists($result, 'code') ? $result->code : -1;
+                $this->errorMessage = property_exists($result, 'message') && $result->code != 0 ? $result->message : null;
+            }
+            if (property_exists($rbody, 'response')) {
+                $result = $rbody->response;
+                $this->scriptError = property_exists($result, 'scriptError') ? $result->scriptError : null;
+                $this->scriptResult = property_exists($result, 'scriptResult') ? $result->scriptResult : null;
+                $this->scriptErrorPrerequest = property_exists($result, 'scriptError.prerequest') ?
+                    $result->{'scriptError.prerequest'} : null;
+                $this->scriptResultPrerequest = property_exists($result, 'scriptResult.prerequest') ?
+                    $result->{'scriptResult.prerequest'} : null;
+                $this->scriptErrorPresort = property_exists($result, "scriptError.presort") ?
+                    $result->{"scriptError.presort"} : null;
+                $this->scriptResultPresort = property_exists($result, "scriptResult.presort") ?
+                    $result->{"scriptResult.presort"} : null;
+                if (property_exists($result, 'dataInfo')) {
+                    $dataInfo = $result->dataInfo;
+                    $this->targetTable = property_exists($dataInfo, 'table') ?
+                        $dataInfo->table : null;
+                    $this->totalCount = property_exists($dataInfo, 'totalRecordCount') ?
+                        $dataInfo->totalRecordCount : null;
+                    $this->foundCount = property_exists($dataInfo, 'foundCount') ?
+                        $dataInfo->foundCount : null;
+                    $this->returnedCount = property_exists($dataInfo, 'returnedCount') ?
+                        $dataInfo->returnedCount : null;
                 }
             }
         }
