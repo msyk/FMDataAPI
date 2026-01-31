@@ -550,10 +550,10 @@ class CommunicationProvider
 
     /**
      * @param $provider
-     * @return string|array|null
+     * @return array|null
      * @ignore
      */
-    private function getOAuthIdentifier($provider): string|array|null
+    private function getOAuthIdentifier($provider): array|null
     {
         try {
             $this->callRestAPI(
