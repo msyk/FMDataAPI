@@ -532,6 +532,7 @@ class CommunicationProvider
     /**
      * @return array|null
      * @ignore
+     * @phpstan-ignore method.unused
      */
     private function getSupportingProviders(): null|array
     {
@@ -552,6 +553,7 @@ class CommunicationProvider
      * @param $provider
      * @return array|null
      * @ignore
+     * @phpstan-ignore method.unused
      */
     private function getOAuthIdentifier($provider): array|null
     {
