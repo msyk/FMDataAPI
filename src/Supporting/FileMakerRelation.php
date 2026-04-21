@@ -18,7 +18,7 @@ use Exception;
  *   The table occurrence name of the portal can be the 'portalName', and also the object name of the portal.
  * @version 36
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2024 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
+ * @copyright 2017-2026 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
 class FileMakerRelation implements Iterator
 {

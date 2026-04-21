@@ -16,7 +16,7 @@ use Exception;
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
  * @version 36
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2024 Masayuki Nii
+ * @copyright 2017-2026 Masayuki Nii
  * (Claris FileMaker is a registered trademark of Claris International Inc. in the U.S. and other countries.)
  */
 class FMDataAPI
@@ -416,4 +416,13 @@ class FMDataAPI
         return $this->provider->accessToContainer($url);
     }
 
+    /**
+     * Set the property of the communication provider for excluding the timestamp from the exception message.
+     * The default value of this property is false.
+     * @param bool $value Excluding the timestamp from the exception message if true.
+     */
+    public function setExcludeTimeStampInException(bool $value = true): void
+    {
+        $this->provider->excludeTimeStampInException = $value;
+    }
 }

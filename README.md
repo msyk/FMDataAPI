@@ -154,6 +154,7 @@ MIT License
 - 2025-08-23: [Ver.35]
   Bug fix for the script parameter (Thanks to @frankeg).
   Also, bug fix for script parameter to keep the old way myself.
-- 2025-12-03: [Ver.36] Next release version
+- 2025-12-03: [Ver.36]
   Bug fix for limit and offset parameters (Thanks to Roger Engström).
   Deprecated function curl_close was removed (Thanks to @PGMMattias and @matsuo).
+- 2026-XX-XX: [Ver.37] Next release version.

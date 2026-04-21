@@ -13,7 +13,7 @@ use Exception;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @version 36
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2024 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
+ * @copyright 2017-2026 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
 class FileMakerLayout
 {
@@ -42,8 +42,8 @@ class FileMakerLayout
     }
 
     /**
-     * Start a transaction which is a serial calling of any database operations,
-     * and login with the target layout.
+     * Start a transaction which is a serial calling of any database operations
+     * and log in with the target layout.
      * @throws Exception
      */
     public function startCommunication(): void
@@ -144,7 +144,7 @@ class FileMakerLayout
      * and "FamilyName" and "Country" are a field name. The value can contain the operator:
      * =, ==, !, <, ≤ or <=, >, ≥ or >=, ..., //, ?, @, #, *, \, "", ~.
      * If you want to apply the OR operation, describe array of array as like:
-     * array(array("FamilyName"=>"Nii*"), array("Country"=>"Japan")).
+     * array (array("FamilyName"=>"Nii*"), array("Country"=>"Japan")).
      * If you want to omit a record match with a condition, set the "omit" element as like:
      * array("FamilyName"=>"Nii*", "omit"=>"true").
      * If you want to query all records in the layout, set the first parameter to null.
@@ -495,7 +495,7 @@ class FileMakerLayout
      * It has just 1 property 'metaData' the array of the field information is set under the 'metaData' property.
      * There is no information about portals. Ex.:
      * {"metaData": [{"name": "id","type": "normal","result": "number","global": "false","repetitions": 1,"id": "1"},
-     *{"name": "name","type": "normal","result": "text","global": "false","repetitions": 1,"id": "2"},....,]}
+     *{"name": "name","type": "normal","result": "text","global": "false","repetitions": 1,"id": "2"}, ....,]}
      * @throws Exception In case of any error, an exception arises.
      */
     public function getMetadataOld(): object|null

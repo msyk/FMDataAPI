@@ -2,6 +2,7 @@
 
 namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
 
+use DateTime;
 use Exception;
 use CurlHandle;
 
@@ -12,7 +13,7 @@ use CurlHandle;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @version 36
  * @author Masayuki Nii <nii@msyk.net>
- * @copyright 2017-2024 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
+ * @copyright 2017-2026 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
 class CommunicationProvider
 {
@@ -213,6 +214,12 @@ class CommunicationProvider
      * @ignore
      */
     public bool $fieldHTMLEncoding = false;
+
+    /**
+     * @var bool
+     * @ignore
+     */
+    public bool $excludeTimeStampInException = false;
 
     /**
      * CommunicationProvider constructor.
@@ -670,8 +677,8 @@ class CommunicationProvider
                 }
             }
             if ($description !== '') {
-                $description = date('Y-m-d H:i:s ') . "{$description}";
-                $description .= "[URL({$this->method}): {$this->url}]";
+                $description = (($this->excludeTimeStampInException) ? "" : (new DateTime())->format('Y-m-d H:i:s '))
+                    . "{$description} [URL({$this->method}): {$this->url}]";
                 if ($errorCode !== 401) {
                     throw new Exception($description, $errorCode);
                 }

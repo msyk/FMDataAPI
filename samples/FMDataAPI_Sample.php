@@ -17,23 +17,23 @@ use INTERMediator\FileMakerServer\RESTAPI\FMDataAPI as FMDataAPI;
 // FMDataAPI class handles an error as an exception by default.
 try {
     // Instantiate the class FMDataAPI with database name, username, password and host.
-    // Although the port number and protocol can be set in parameters of constructor,
+    // Although the port number and protocol can be set in parameters of the constructor,
     // these parameters can be omitted with default values.
-    $fmdb = new FMDataAPI("TestDB", "web", "password", "localhost");
+    $fmdb = new FMDataAPI("TestDB", "web", "password", "192.168.65.2");
 
     //==============================
     //$fmdb = new FMDataAPI("TestDB", "web", null, "localserver");
     // "localserver" is added on Ver.2, and it's a magic term for FMDataAPI.
     // It happens to directly connect to FileMaker Server in the same host.
-    // I've referred Atsushi Matsuo's script below, and I got his way
+    // I've referred to Atsushi Matsuo's script below, and I got his way
     // to be able to connect port number 3000.
     // https://gist.github.com/matsuo/ef5cb7c98bb494d507731886883bcbc1
     //==============================
 
-    // If you want to try this program just right now, it's convinient to download the FileMaker database file:
+    // If you want to try this program just right now, it's convenient to download the FileMaker database file:
     // https://github.com/INTER-Mediator/INTER-Mediator/blob/master/dist-docs/TestDB.fmp12?raw=true
 
-    // You can turn off to throw an exception in case of error. You have to handle errors with checking result error.
+    // You can turn off to throw an exception in case of error. You have to handle errors by checking the result error.
     $fmdb->setThrowException(false);
 
     // If you call with true, the debug mode is activated. Debug mode echos the contents of communication
@@ -41,7 +41,7 @@ try {
     $fmdb->setDebug(true);
 
     // If you call with true, the certificate from the server is going to verify.
-    // In the case of self-signed one (usually default situation), you don't have to call this method.
+    // In the case of a self-signed one (usually the default situation), you don't have to call this method.
     //$fmdb->setCertValidating(true);
 
     // Metadata API is the new feature of FMS18.
@@ -61,15 +61,15 @@ try {
     echo htmlspecialchars("Layout Metadata (Old): {$pInfo}", ENT_QUOTES, "UTF-8") . "<hr>";
 
     // The FMDataAPI has the property as the same name of layout. This sample database has the 'person_layout' layout,
-    // so '$fmdb->person_layout' refers FMLayout object fo the proxy of the layout. FMLayout class has the 'query' method
-    // and returns FileMakerRelation class's object. The condition spread in parameter is the same as FileMaker's Find Record API.
+    // so '$fmdb->person_layout' refers FMLayout object to the proxy of the layout. FMLayout class has the 'query' method
+    // and returns the FileMakerRelation class's object. The condition spread in parameter is the same as FileMaker's Find Record API.
     $result = $fmdb->person_layout->query(/*array(array("id" => ">1"))*/);
 
     // The 'httpStatus()' method returns the HTTP status code in the latest response.
     echo htmlspecialchars("HTTP Status: {$fmdb->httpStatus()}", ENT_QUOTES, "UTF-8") . "<hr>";
 
     // The following two methods return the error code and message of the latest API call which is submitted in query() method.
-    // You can check API calling succeed or fail if error code is or isn't 0 every after API calling methods.
+    // You can check API calling succeeds or fails if the error code is or isn't 0 every after API calling methods.
     echo htmlspecialchars("Error Code: {$fmdb->errorCode()}", ENT_QUOTES, "UTF-8") . "<hr>";
     echo htmlspecialchars("Error Message: {$fmdb->errorMessage()}", ENT_QUOTES, "UTF-8") . "<hr>";
 
@@ -96,7 +96,7 @@ try {
             // If you named field name as not variable friendly, you can use field('field_name') method or
             // set the name to any variable such as $fname = 'field_name'; echo $record->$fname;.
 
-            // In the case of a related field but outside portal, the field method is available as below:
+            // In the case of a related field but outside the portal, the field method is available as below:
             // echo $record->field("summary", "contact_to");
 
             // A portal name property returns records of portal as FileMakerRelation object.
@@ -111,12 +111,12 @@ try {
             // You can repeat with foreach for the portal records.
             foreach ($contacts as $item) {
                 // Technically portal field has to be refered as "contact_to::id" but it can be an indentifier in PHP.
-                // In this case, you can call field method as like 'field("summary", "contact_to").'
+                // In this case, you can call field method as like 'field ("summary", "contact_to").'
                 // If the field belongs to the table occurrence for the portal, you can refer the field as like '$item->id.'
                 // If the field belongs to another table occurrence, you have to call the 'field()' method.
                 echo htmlspecialchars("[PORTAL(contact_to)] id: {$item->field("id", "contact_to")},", ENT_QUOTES, "UTF-8");
                 echo htmlspecialchars("summary: {$item->field("summary", "contact_to")}", ENT_QUOTES, "UTF-8") . "<hr>";
-                // If the object name of the portal is blank, it can be referred as the table occurrence name.
+                // If the object name of the portal is blank, it can be referred to as the table occurrence name.
                 // If the object name is specified, you have to access with the object name, and it means you have to
                 // call 'field()' method to get the value.
             }
@@ -146,7 +146,7 @@ try {
         $result->rewind();
 
         // The FileMakerRelation object from 'query()' method can be accessed as like the 'cursor' style repeating.
-        // The 'count()' method returns the number of records in response. The variable $result refers current
+        // The 'count()' method returns the number of records in response. The variable $result refers to the current
         // record, and you can get the field value with the propaty having the same field name.
         // The portal can be done with same way. The 'next()' method steps forward the pointer of the current record.
         for ($i = 0; $i < $result->count(); $i++) {
@@ -163,8 +163,8 @@ try {
             $result->next();
         }
     }
-    // The 'create()' method creates a record with values in parameter.
-    // The associated array of the parameter has to be a series of field name key and its value.
+    // The 'create()' method creates a record with values in the parameter.
+    // The associated array of the parameter has to be a series of a field name key and its value.
     $recId = $fmdb->postalcode->create(array("f3" => "field 3 data", "f7" => "field 7 data"));
 
     // The 'getRecord()' method query the record with the recordId of the parameter.
@@ -218,7 +218,7 @@ try {
         echo htmlspecialchars("Script Result: {$fmdb->person_layout->getScriptResult()}", ENT_QUOTES, "UTF-8") . "<hr>";
     }
 
-    // A new record is created in "testtable" table.
+    // A new record is created in the "testtable" table.
     $recId = $fmdb->testtable->create();
     echo "RecId = {$recId}";
     // The "testtable" table has a container filed "vc1". One image file is going to be uploaded to it.
@@ -282,7 +282,7 @@ try {
         }
     }
     // The 'query()' method can have several parameters.
-    // The forth parameter is limit record number to query, and the third is offset.
+    // The fourth parameter is the limit record number to query, and the third is offset.
     $result = $fmdb->person_layout->query(null, null, 2, 2);
     if (!is_null($result)) {
         foreach ($result as $record) {
@@ -293,7 +293,7 @@ try {
         }
     }
 
-    // The getFirstRecord method returns FileMakerRelation class object.
+    // The getFirstRecord method returns a FileMakerRelation class object.
     $result = $fmdb->person_layout->query();
     $first = $result->getFirstRecord();
     echo "id field of the first record: {$first->field('id')}<br>";
