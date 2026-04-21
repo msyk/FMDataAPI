@@ -2,10 +2,14 @@
 
 namespace INTERMediator\FileMakerServer\RESTAPI;
 
+use Exception;
+use INTERMediator\FileMakerServer\RESTAPI\PersistentSession\ApcuSessionCache;
+use INTERMediator\FileMakerServer\RESTAPI\PersistentSession\PersistentSession;
+use INTERMediator\FileMakerServer\RESTAPI\PersistentSession\SessionCacheInterface;
+use INTERMediator\FileMakerServer\RESTAPI\Supporting\CommunicationProvider;
 use INTERMediator\FileMakerServer\RESTAPI\Supporting\FileMakerLayout;
 use INTERMediator\FileMakerServer\RESTAPI\Supporting\FileMakerRelation;
-use INTERMediator\FileMakerServer\RESTAPI\Supporting\CommunicationProvider;
-use Exception;
+use RuntimeException;
 
 /**
  * Class FMDataAPI is the wrapper of The REST API in Claris FileMaker Server and FileMaker Cloud for AWS.
@@ -39,6 +43,12 @@ class FMDataAPI
     private CommunicationProvider|null $provider;
 
     /**
+     * @var null|PersistentSession Keeping the PersistentSession object.
+     * @ignore
+     */
+    private PersistentSession|null $persistentSession = null;
+
+    /**
      * FMDataAPI constructor. If you want to activate OAuth authentication, $user and $password are set as
      * oAuthRequestId and oAuthIdentifier. Moreover, call useOAuth method before accessing layouts.
      * @param string $solution The database file name which is just hosting.
@@ -58,6 +68,8 @@ class FMDataAPI
      * Ex.  [{"database"=>"<databaseName>", "username"=>"<username>", "password"=>"<password>"}].
      * If you use OAuth, "oAuthRequestId" and "oAuthIdentifier" keys have to be specified.
      * @param boolean $isUnitTest If it's set to true, the communication provider just works locally.
+     * @param SessionCacheInterface|null $sessionCache Cache backend for persistent sessions. If omitted, APCu will be
+     * used if available, otherwise, no caching will be used.
      */
     public function __construct(string      $solution,
                                 string      $user,
@@ -66,7 +78,8 @@ class FMDataAPI
                                 int|null    $port = null,
                                 string|null $protocol = null,
                                 array|null  $fmDataSource = null,
-                                bool        $isUnitTest = false)
+                                bool        $isUnitTest = false,
+                                SessionCacheInterface|null $sessionCache = null)
     {
         if (is_null($password)) {
             $password = "password"; // For testing purpose.
@@ -75,6 +88,14 @@ class FMDataAPI
             $this->provider = new Supporting\CommunicationProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource);
         } else {
             $this->provider = new Supporting\TestProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource);
+        }
+
+        if ($sessionCache !== null) {
+            $this->persistentSession = new PersistentSession($sessionCache, $solution, $user);
+            $this->provider->keepPersistentSession = true;
+        } elseif (function_exists('apcu_fetch')) {
+            $this->persistentSession = new PersistentSession(new ApcuSessionCache(), $solution, $user);
+            $this->provider->keepPersistentSession = true;
         }
     }
 
@@ -189,9 +210,9 @@ class FMDataAPI
 
     /**
      * Set session token
-     * @param string $value The session token.
+     * @param string|null $value The session token.
      */
-    public function setSessionToken(string $value): void
+    public function setSessionToken(string|null $value): void
     {
         $this->provider->accessToken = $value;
     }
@@ -291,6 +312,109 @@ class FMDataAPI
     {
         $this->provider->keepAuth = false;
         $this->provider->logout();
+    }
+
+    /**
+     * Begin a persistent session which is a serial calling of any database operations, and keep the session token.
+     *
+     * This persistent session persists between multiple PHP requests.
+     * @throws Exception
+     */
+    public function beginPersistentSession(): void
+    {
+        if ($this->persistentSession === null) {
+            throw new RuntimeException(
+                "Persistent sessions require a cache backend. Install ext-apcu or provide a SessionCacheInterface implementation."
+            );
+        }
+
+        try {
+            if (!$this->persistentSession->applyCachedSessionToken($this)) {
+                if ($this->provider->login()) {
+                    $this->persistentSession->cacheCurrentSessionToken($this);
+                }
+            }
+            $this->provider->keepPersistentSession = true;
+        } catch (Exception $e) {
+            $this->persistentSession->clearCachedSessionToken();
+            $this->setSessionToken(null);
+            $this->provider->keepPersistentSession = false;
+            throw $e;
+        }
+    }
+
+    /**
+     * End a persistent session which is a serial calling of any database operations, and logout.
+     * @throws Exception
+     */
+    public function closePersistentSession(): void
+    {
+        if ($this->persistentSession !== null) {
+            $this->persistentSession->clearCachedSessionToken();
+        }
+        $this->provider->keepPersistentSession = false;
+        $this->provider->logout();
+    }
+
+    /**
+     * Execute a callback with this FMDataAPI instance.
+     *
+     * When persistent sessions are enabled, this method uses the cached session when available. If the session is no
+     * longer valid, it creates and caches a new one, then retries the callback once.
+     *
+     * When persistent sessions are not enabled, the callback is invoked immediately with this instance.
+     *
+     * Example:
+     * <code>
+     * $client = new FMDataAPI('MySolution', 'MyUser', 'MyPassword');
+     * $result = $client->execute(
+     *     fn (FMDataAPI $fm) => $fm->layout('MyLayout')->query(
+     *         // do stuff
+     *     )
+     * );
+     * </code>
+     *
+     * @template TReturn
+     * @param callable(FMDataAPI): TReturn $fn
+     * @return TReturn
+     * @throws Exception Any exception thrown by the callback or the underlying provider.
+     */
+    public function execute(callable $fn)
+    {
+        if (!$this->provider->keepPersistentSession || $this->persistentSession === null) {
+            return $fn($this);
+        }
+
+        if ($this->provider->throwExceptionInError) {
+            try {
+                return $fn($this);
+            } catch (Exception $e) {
+                if ($this->errorCode() == 952) {
+                    $this->refreshSession();
+                    return $fn($this);
+                }
+                throw $e;
+            }
+        }
+
+        $result = $fn($this);
+        if ($this->errorCode() == 952) {
+            $this->refreshSession();
+            return $fn($this);
+        }
+        return $result;
+    }
+
+    /**
+     * Clear the current persistent session state, log in again, and cache the refreshed session token.
+     * @throws Exception
+     */
+    private function refreshSession(): void
+    {
+        $this->persistentSession->clearCachedSessionToken();
+        $this->setSessionToken(null);
+        $this->provider->login();
+        $this->persistentSession->cacheCurrentSessionToken($this);
     }
 
     /**

@@ -148,6 +148,13 @@ class CommunicationProvider
      * @ignore
      */
     public bool $keepAuth = false;
+    /**
+     * @var bool Use persistent session for communication with FileMaker server. A persistent session is when a
+     * communication with FileMaker server is kept open for multiple PHP requests, making all PHP requests share the
+     * same session token.
+     * @ignore
+     */
+    public bool $keepPersistentSession = false;
 
     /**
      * @var bool
@@ -514,6 +521,7 @@ class CommunicationProvider
                 return true;
             }
         } catch (Exception $e) {
+            $this->storeToProperties();
             $this->accessToken = null;
             throw $e;
         }
@@ -528,7 +536,7 @@ class CommunicationProvider
      */
     public function logout(): void
     {
-        if ($this->keepAuth) {
+        if ($this->keepAuth || $this->keepPersistentSession) {
             return;
         }
         $params = ["sessions" => $this->accessToken];
