@@ -12,7 +12,7 @@ inputs:
   tools:
     description: 'Comma-separated list of tools to install'
     required: false
-    default: composer:2.9.8, phan:6.0.0
+    default: composer:2.9.8, phan:6.0.5
 
 runs:
   using: "composite"
