@@ -5,6 +5,7 @@ namespace INTERMediator\FileMakerServer\RESTAPI\Supporting;
 use DateTime;
 use Exception;
 use CurlHandle;
+use INTERMediator\FileMakerServer\RESTAPI\SessionCache\SessionCacheInterface;
 
 /**
  * Class CommunicationProvider is for internal use to communicate with FileMaker Server.
@@ -148,7 +149,11 @@ class CommunicationProvider
      * @ignore
      */
     public bool $keepAuth = false;
-
+    /**
+     * @var bool
+     * @ignore
+     */
+    public bool $resumeScopeAfterReauth = false;
     /**
      * @var bool
      * @ignore
@@ -222,6 +227,18 @@ class CommunicationProvider
     public bool $excludeTimeStampInException = false;
 
     /**
+     * @var bool
+     * @ignore
+     */
+    public bool $retryOnAccessTokenInvalidation = false;
+
+    /**
+     * @var SessionCacheInterface|null
+     * @ignore
+     */
+    public SessionCacheInterface|null $sessionCache = null;
+
+    /**
      * CommunicationProvider constructor.
      * @param string $solution
      * @param string $user
@@ -230,15 +247,17 @@ class CommunicationProvider
      * @param string|null $port
      * @param string|null $protocol
      * @param array|null $fmDataSource
+     * @param SessionCacheInterface|null $sessionCache
      * @ignore
      */
-    public function __construct(string      $solution,
-                                string      $user,
-                                string      $password,
-                                string|null $host = null,
-                                string|null $port = null,
-                                string|null $protocol = null,
-                                array|null  $fmDataSource = null)
+    public function __construct(string                     $solution,
+                                string                     $user,
+                                string                     $password,
+                                string|null                $host = null,
+                                string|null                $port = null,
+                                string|null                $protocol = null,
+                                array|null                 $fmDataSource = null,
+                                SessionCacheInterface|null $sessionCache = null)
     {
         $this->solution = rawurlencode($solution);
         $this->user = $user;
@@ -260,7 +279,68 @@ class CommunicationProvider
             }
         }
         $this->fmDataSource = $fmDataSource;
+        $this->sessionCache = $sessionCache;
         $this->errorCode = -1;
+        if ($this->sessionCache !== null) {
+            $this->sessionCache->setKey($this->cacheKey());
+        }
+    }
+
+    /**
+     * Start a communication scope with a shared authenticated session.
+     *
+     * Without a session cache, a new authenticated session is created and kept
+     * for the duration of the current communication scope.
+     *
+     * With a session cache, the cached session token is reused if available,
+     * avoiding a new login against the FileMaker Server. If no cached token is
+     * found, a new session is created and stored in the cache for future reuse.
+     *
+     * @throws Exception In case of any error, an exception arises.
+     */
+    public function startCommunication(): void
+    {
+        try {
+            $this->keepAuth = $this->login();
+        } catch (Exception $e) {
+            $this->keepAuth = false;
+            throw $e;
+        }
+    }
+
+    /**
+     * Finish a communication scope.
+     *
+     * Without a session cache, the authenticated session is ended and the server
+     * session is logged out.
+     *
+     * With a session cache, if the token currently held by this instance matches
+     * the one in the cache, its TTL is renewed and the session is left alive.
+     * If another process has replaced the cached token in the meantime, this
+     * instance's now-stale token is considered orphaned and logged out at the
+     * server, leaving the newer cached token intact.
+     *
+     * @throws Exception In case of any error, an exception arises.
+     */
+    public function endCommunication(): void
+    {
+        $this->keepAuth = false;
+        $this->resumeScopeAfterReauth = false;
+
+        if ($this->sessionCache !== null && $this->accessToken !== null) {
+            if ($this->sessionCache->get() === $this->accessToken) {
+                // if the cache write fails, the token will expire naturally within 15 minutes.
+                // under sustained cache failures with high concurrency, orphaned tokens could
+                // approach FileMaker's session cap (error 953).
+                $this->sessionCache->set($this->accessToken); // renew TTL
+                $this->accessToken = null;
+                return;
+            }
+            // Mismatch: another worker replaced the cached token while we were active.
+            // Our token is an orphan — fall through and DELETE it, but don't touch the cache.
+        }
+
+        $this->logout();
     }
 
     /**
@@ -490,6 +570,18 @@ class CommunicationProvider
             return true;
         }
 
+        if ($this->sessionCache !== null) {
+            $cached = $this->sessionCache->get();
+            if ($cached !== null) {
+                $this->accessToken = $cached;
+                if ($this->resumeScopeAfterReauth) {
+                    $this->keepAuth = true;
+                    $this->resumeScopeAfterReauth = false;
+                }
+                return true;
+            }
+        }
+
         if ($this->useOAuth) {
             $headers = [
                 "Content-Type" => "application/json",
@@ -507,10 +599,17 @@ class CommunicationProvider
         $request = [];
         $request["fmDataSource"] = (!is_null($this->fmDataSource)) ? $this->fmDataSource : [];
         try {
-            $this->callRestAPI($params, false, "POST", $request, $headers); // Throw Exception
+            $this->callRestAPIWithoutRetry($params, false, "POST", $request, $headers); // Throw Exception
             $this->storeToProperties();
             if ($this->httpStatus == 200 && $this->errorCode == 0) {
                 $this->accessToken = $this->responseBody->response->token;
+                if ($this->sessionCache !== null) {
+                    $this->sessionCache->set($this->accessToken);
+                }
+                if ($this->resumeScopeAfterReauth) {
+                    $this->keepAuth = true;
+                    $this->resumeScopeAfterReauth = false;
+                }
                 return true;
             }
         } catch (Exception $e) {
@@ -521,7 +620,10 @@ class CommunicationProvider
     }
 
     /**
-     *
+     * Tear down the current server-side session, unless either:
+     *   - we're inside a multi-call scope (keepAuth), or
+     *   - this token is the one currently shared via the persistent cache
+     *     (in which case the cache owns its lifecycle).
      * @return void
      * @throws Exception In case of any error, an exception arises.
      * @ignore
@@ -531,9 +633,20 @@ class CommunicationProvider
         if ($this->keepAuth) {
             return;
         }
-        $params = ["sessions" => $this->accessToken];
-        $this->callRestAPI($params, true, "DELETE"); // Throw Exception
-        $this->accessToken = null;
+        if ($this->accessToken === null) {
+            return;
+        }
+        if ($this->sessionCache !== null && $this->sessionCache->get() === $this->accessToken) {
+            $this->accessToken = null;
+            return;
+        }
+
+        try {
+            $params = ["sessions" => $this->accessToken];
+            $this->callRestAPIWithoutRetry($params, true, "DELETE"); // Throw Exception
+        } finally {
+            $this->accessToken = null;
+        }
     }
 
     /**
@@ -591,6 +704,8 @@ class CommunicationProvider
     }
 
     /**
+     * Sends a REST API request to the FileMaker Data API, retrying once on session invalidation if
+     * the retryOnAccessTokenInvalidation property is enabled.
      * @param array $params
      * @param bool $isAddToken
      * @param string $method
@@ -599,7 +714,9 @@ class CommunicationProvider
      * @param bool $isSystem for Metadata
      * @param string|null|false $directPath
      * @return void
-     * @throws Exception In case of any error, an exception arises.
+     * @throws Exception In case of any error, an exception arises. If a retry was attempted,
+     *                   the original exception is available via getPrevious().
+     * @see callRestAPIWithoutRetry() To bypass retry logic entirely.
      * @ignore
      */
     public function callRestAPI(array             $params,
@@ -609,6 +726,69 @@ class CommunicationProvider
                                 array|null        $addHeader = null,
                                 bool              $isSystem = false,
                                 string|null|false $directPath = null): void
+    {
+        $firstAttempt = null;
+        try {
+            $this->callRestAPIWithoutRetry($params, $isAddToken, $method, $request, $addHeader, $isSystem, $directPath);
+        } catch (Exception $e) {
+            $firstAttempt = $e;
+        }
+
+        if (!$this->shouldRetryOnTokenError()) {
+            if ($firstAttempt !== null) {
+                throw $firstAttempt;
+            }
+            return;
+        }
+
+        // Token rejected by the server. Clear the cache before re-login so racing workers
+        // don't re-adopt the dead token; preserve the in-process scope across the re-login.
+        if ($this->sessionCache !== null) {
+            $this->sessionCache->delete();
+        }
+        $resumeScope = $this->keepAuth;
+        $this->accessToken = null;
+        $this->keepAuth = false;
+        try {
+            if (!$this->login()) {
+                $this->resumeScopeAfterReauth = $resumeScope;
+                return;
+            }
+        } catch (Exception $e) {
+            $this->resumeScopeAfterReauth = $resumeScope;
+            throw new Exception($e->getMessage(), $e->getCode(), $firstAttempt);
+        }
+
+        // The login was successful here — retry the original call
+        $this->keepAuth = $resumeScope;
+        try {
+            $this->callRestAPIWithoutRetry($params, $isAddToken, $method, $request, $addHeader, $isSystem, $directPath);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $firstAttempt);
+        }
+    }
+
+    /**
+     * Sends a REST API request to the FileMaker Data API without any retry logic.
+     * @param array $params
+     * @param bool $isAddToken
+     * @param string $method
+     * @param string|array|null $request
+     * @param array|null $addHeader
+     * @param bool $isSystem for Metadata
+     * @param string|null|false $directPath
+     * @return void
+     * @throws Exception In case of any error, an exception arises.
+     * @see callRestAPI() For the recommended entry point with automatic retry on session invalidation.
+     * @ignore
+     */
+    protected function callRestAPIWithoutRetry(array             $params,
+                                               bool              $isAddToken,
+                                               string            $method = 'GET',
+                                               string|array|null $request = null,
+                                               array|null        $addHeader = null,
+                                               bool              $isSystem = false,
+                                               string|null|false $directPath = null): void
     {
         $methodLower = strtolower($method);
         $url = $this->getURL($params, $request, $methodLower, $isSystem, $directPath);
@@ -835,6 +1015,39 @@ class CommunicationProvider
     }
 
     /**
+     * @return bool
+     * @ignore
+     */
+    private function shouldRetryOnTokenError(): bool
+    {
+        if ($this->sessionCache === null && !$this->retryOnAccessTokenInvalidation) {
+            return false;
+        }
+
+        $errorCode = $this->extractErrorCode();
+        // Error code 952 - Invalid FileMaker Data API token
+        //                  Occurs when the access token has expired or been invalidated.
+        // Error code 112 - "Window is missing" (likely unintentional by the FileMaker Data API)
+        //                  Reproducible when a Data API session is closed externally mid-request,
+        //                  producing a spurious "window missing" error rather than a proper auth failure.
+        return $errorCode === 952 || $errorCode === 112;
+    }
+
+    /**
+     * @return int
+     * @ignore
+     */
+    private function extractErrorCode(): int
+    {
+        $errorCode = -1;
+        if (is_object($this->responseBody) && property_exists($this->responseBody, 'messages')) {
+            $result = $this->responseBody->messages[0];
+            $errorCode = property_exists($result, 'code') ? intval($result->code) : -1;
+        }
+        return $errorCode;
+    }
+
+    /**
      * @param array $value
      * @return string
      * @ignore
@@ -913,5 +1126,20 @@ class CommunicationProvider
             curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
         }
         return $ch;
+    }
+
+    private function cacheKey(): string
+    {
+        $data = [
+            $this->user,
+            $this->solution,
+            (string)$this->port,
+            $this->host,
+            $this->protocol,
+        ];
+
+        $hash = hash('sha256', implode("\0", $data));
+
+        return "fm_token_$hash";
     }
 }
