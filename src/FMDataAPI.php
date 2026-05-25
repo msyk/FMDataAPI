@@ -2,6 +2,7 @@
 
 namespace INTERMediator\FileMakerServer\RESTAPI;
 
+use INTERMediator\FileMakerServer\RESTAPI\SessionCache\SessionCacheInterface;
 use INTERMediator\FileMakerServer\RESTAPI\Supporting\FileMakerLayout;
 use INTERMediator\FileMakerServer\RESTAPI\Supporting\FileMakerRelation;
 use INTERMediator\FileMakerServer\RESTAPI\Supporting\CommunicationProvider;
@@ -58,23 +59,33 @@ class FMDataAPI
      * Ex.  [{"database"=>"<databaseName>", "username"=>"<username>", "password"=>"<password>"}].
      * If you use OAuth, "oAuthRequestId" and "oAuthIdentifier" keys have to be specified.
      * @param boolean $isUnitTest If it's set to true, the communication provider just works locally.
+     * @param SessionCacheInterface|null $sessionCache Cache backend for persistent sessions.
+     * If omitted, the library logs in and out on every database operation, or once
+     * per communication scope when using startCommunication() / endCommunication().
+     * If specified, session tokens are persisted and reused across requests via
+     * startCommunication() / endCommunication(), avoiding redundant logins against the FileMaker Server.
+     * When a session cache is specified, {@see self::setRetryOnAccessTokenInvalidation()} is
+     * automatically set to true, ensuring the library re-authenticates and retries the request if
+     * the cached token has expired on the FileMaker Server.
      */
-    public function __construct(string      $solution,
-                                string      $user,
-                                string|null $password,
-                                string|null $host = null,
-                                int|null    $port = null,
-                                string|null $protocol = null,
-                                array|null  $fmDataSource = null,
-                                bool        $isUnitTest = false)
+    public function __construct(string                     $solution,
+                                string                     $user,
+                                string|null                $password,
+                                string|null                $host = null,
+                                int|null                   $port = null,
+                                string|null                $protocol = null,
+                                array|null                 $fmDataSource = null,
+                                bool                       $isUnitTest = false,
+                                SessionCacheInterface|null $sessionCache = null)
     {
         if (is_null($password)) {
             $password = "password"; // For testing purpose.
         }
+
         if (!$isUnitTest) {
-            $this->provider = new Supporting\CommunicationProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource);
+            $this->provider = new Supporting\CommunicationProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource, $sessionCache);
         } else {
-            $this->provider = new Supporting\TestProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource);
+            $this->provider = new Supporting\TestProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource, $sessionCache);
         }
     }
 
@@ -264,33 +275,42 @@ class FMDataAPI
     }
 
     /**
-     * Start a transaction which is a serial calling of multiple database operations before the single authentication.
-     * Usually most methods login and logout before/after the database operation, and so a little bit of time is going to
-     * take.
-     * The startCommunication() login and endCommunication() logout, and methods between them don't log in/out, and
-     * it can expect faster operations.
+     * Start a communication scope with a shared authenticated session.
+     *
+     * Usually most methods login and logout before and after each database operation.
+     * By calling startCommunication() and endCommunication(), methods between them don't
+     * log in and out every time, and it can expect faster operations.
+     *
+     * Without a session cache, one authenticated session is kept for the duration of
+     * the current communication scope and discarded when endCommunication() is called.
+     *
+     * With a session cache, the session token is persisted beyond the current communication
+     * scope and reused across requests. If no cached token is available, a new session is
+     * created and stored for future reuse.
+     *
      * @throws Exception
      */
     public function startCommunication(): void
     {
-        try {
-            if ($this->provider->login()) {
-                $this->provider->keepAuth = true;
-            }
-        } catch (Exception $e) {
-            $this->provider->keepAuth = false;
-            throw $e;
-        }
+        $this->provider->startCommunication();
     }
 
     /**
-     * Finish a transaction which is a serial calling of any database operations, and logout.
+     * Finish a communication scope.
+     *
+     * Without a session cache, the authenticated session for the current communication
+     * scope is ended and the server session is logged out.
+     *
+     * With a session cache, the cached token's TTL is renewed if it still matches the
+     * token held by this instance. If another process has replaced the cached token in
+     * the meantime, only this instance's now-stale token is logged out, leaving the
+     * newer cached token intact.
+     *
      * @throws Exception
      */
     public function endCommunication(): void
     {
-        $this->provider->keepAuth = false;
-        $this->provider->logout();
+        $this->provider->endCommunication();
     }
 
     /**
@@ -424,5 +444,45 @@ class FMDataAPI
     public function setExcludeTimeStampInException(bool $value = true): void
     {
         $this->provider->excludeTimeStampInException = $value;
+    }
+
+    /**
+     * Controls whether failed Data API calls are automatically retried after session invalidation.
+     *
+     * When enabled and a call fails with error 952 (invalid token) or 112 (window missing), the
+     * current session is discarded, a new session is established, and the call is retried once.
+     *
+     * When a session cache is provided to the constructor, retry on token invalidation is always
+     * active regardless of this setting. This flag only has an effect when no session cache is
+     * configured.
+     *
+     * Warning: The retry runs in a fresh session. Any session-scoped state from the original session
+     * is lost — for example, global fields set before the retry will not carry over.
+     * @param bool $value
+     */
+    public function setRetryOnAccessTokenInvalidation(bool $value = true): void
+    {
+        $this->provider->retryOnAccessTokenInvalidation = $value;
+    }
+
+    /**
+     * Overrides the time-to-live (TTL) of the cached FileMaker Data API session token.
+     *
+     * WARNING: Setting a TTL that exceeds the FileMaker Data API session timeout (15 minutes)
+     * will cause the library to use expired tokens, resulting in authentication failures.
+     * Do not use this method unless you fully understand the implications.
+     *
+     * The default TTL is 840 seconds (14 minutes), intentionally set one minute below the
+     * FileMaker Data API session timeout of 15 minutes to ensure the cached token is
+     * invalidated before it expires on the FileMaker Server.
+     * @param int $ttl Time-to-live in seconds. Defaults to 840 seconds (14 minutes).
+     * @throws Exception If a session cache is not set, an exception is thrown.
+     */
+    public function setSessionCacheTtl(int $ttl = 840): void
+    {
+        if ($this->provider->sessionCache === null) {
+            throw new Exception("setSessionCacheTtl() requires a session cache to be configured via the constructor.");
+        }
+        $this->provider->sessionCache->setTtl($ttl);
     }
 }
