@@ -53,6 +53,7 @@ class ApcuSessionCache extends AbstractSessionCache
      */
     public function get(): string|null
     {
+        $success = false;
         $value = apcu_fetch($this->key, $success);
         return $success && is_string($value) ? $value : null;
     }

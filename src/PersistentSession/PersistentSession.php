@@ -44,14 +44,13 @@ class PersistentSession
      * @param string $database Database name.
      * @param string $user User name.
      */
-    public function __construct(
-        SessionCacheInterface $cache,
-        string                $database,
-        string                $user)
+    public function __construct(SessionCacheInterface $cache)
+//        string                $database,
+//        string                $user)
     {
         $this->cache = $cache;
-        $this->database = $database;
-        $this->user = $user;
+//        $this->database = $database;
+//        $this->user = $user;
     }
 
     /**
