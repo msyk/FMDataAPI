@@ -17,11 +17,11 @@ use RuntimeException;
  */
 class PersistentSession
 {
-    /**
-     * @var int
-     * @ignore
-     */
-    private const TOKEN_TTL = 840;
+//    /**
+//     * @var int
+//     * @ignore
+//     */
+//    private const TOKEN_TTL = 840;
 
     /**
      * @var SessionCacheInterface Cache backend for persistent sessions.
@@ -95,7 +95,7 @@ class PersistentSession
      * Retrieve a cached token. Returns false if the key doesn't exist.
      * @return string|false
      */
-    private function getCachedSessionToken(): string|false
+    private function getCachedSessionToken(): string|null
     {
 //        return $this->cache->get($this->cacheKey());
         return $this->cache->get();
@@ -113,12 +113,12 @@ class PersistentSession
         }
         return $token;
     }
-
-    /**
-     * @return string
-     */
-    private function cacheKey(): string
-    {
-        return "fm_token:{$this->database}:{$this->user}";
-    }
+//
+//    /**
+//     * @return string
+//     */
+//    private function cacheKey(): string
+//    {
+//        return "fm_token:{$this->database}:{$this->user}";
+//    }
 }
