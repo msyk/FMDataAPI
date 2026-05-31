@@ -16,7 +16,7 @@ use Exception;
  * @property string $fieldName The field value named as the property name accessed via __get().
  * @property FileMakerRelation $portalName A FileMakerRelation object associated with the property name accessed via __get().
  *   The table occurrence name of the portal can be the 'portalName', and also the object name of the portal.
- * @version 36
+ * @version 37
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2026 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */

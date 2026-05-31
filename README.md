@@ -1,4 +1,4 @@
-# FMDataAPI Ver.36 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
+# FMDataAPI Ver.37 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -69,7 +69,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"36"
+  "inter-mediator/fmdataapi":"37"
 } ...
 ```
 
@@ -157,4 +157,6 @@ MIT License
 - 2025-12-03: [Ver.36]
   Bug fix for limit and offset parameters (Thanks to Roger Engström).
   Deprecated function curl_close was removed (Thanks to @PGMMattias and @matsuo).
-- 2026-XX-XX: [Ver.37] Next release version.
+- 2026-05-31: [Ver.37]
+  Add [persistent session token support](https://github.com/msyk/FMDataAPI/pull/156) by @filiptorphage-mjuk.
+- 2026-XX-XX: [Ver.38] Next release version.
