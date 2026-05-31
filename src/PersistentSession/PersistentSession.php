@@ -28,16 +28,16 @@ class PersistentSession
      * @ignore
      */
     private SessionCacheInterface $cache;
-    /**
-     * @var string Database name.
-     * @ignore
-     */
-    private string $database;
-    /**
-     * @var string User name.
-     * @ignore
-     */
-    private string $user;
+//    /**
+//     * @var string Database name.
+//     * @ignore
+//     */
+//    private string $database;
+//    /**
+//     * @var string User name.
+//     * @ignore
+//     */
+//    private string $user;
 
     /**
      * @param SessionCacheInterface $cache
@@ -63,7 +63,7 @@ class PersistentSession
     public function applyCachedSessionToken(FMDataAPI $client): bool
     {
         $token = $this->getCachedSessionToken();
-        if ($token === false) {
+        if (is_null($token)) {
             return false;
         }
         $client->setSessionToken($token);
@@ -92,8 +92,8 @@ class PersistentSession
     }
 
     /**
-     * Retrieve a cached token. Returns false if the key doesn't exist.
-     * @return string|false
+     * Retrieve a cached token. Returns null if the key doesn't exist.
+     * @return string|null
      */
     private function getCachedSessionToken(): string|null
     {
