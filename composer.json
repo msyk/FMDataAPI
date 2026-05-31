@@ -18,6 +18,9 @@
     "phpunit/phpunit": "*",
     "phpstan/phpstan": "^2.0"
   },
+  "suggest": {
+    "ext-apcu": "Optional: required only by the built-in ApcuSessionCache backend."
+  },
   "autoload": {
     "psr-4": {
       "INTERMediator\\FileMakerServer\\RESTAPI\\": "src/"

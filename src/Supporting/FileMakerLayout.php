@@ -42,25 +42,42 @@ class FileMakerLayout
     }
 
     /**
-     * Start a transaction which is a serial calling of any database operations
-     * and log in with the target layout.
+     * Start a communication scope with a shared authenticated session.
+     *
+     * Usually most methods login and logout before and after each database operation.
+     * By calling startCommunication() and endCommunication(), methods between them don't
+     * log in and out every time, and it can expect faster operations.
+     *
+     * Without a session cache, one authenticated session is kept for the duration of
+     * the current communication scope and discarded when endCommunication() is called.
+     *
+     * With a session cache, the session token is persisted beyond the current communication
+     * scope and reused across requests. If no cached token is available, a new session is
+     * created and stored for future reuse.
+     *
      * @throws Exception
      */
     public function startCommunication(): void
     {
-        if ($this->restAPI->login()) {
-            $this->restAPI->keepAuth = true;
-        }
+        $this->restAPI->startCommunication();
     }
 
     /**
-     * Finish a transaction which is a serial calling of any database operations, and logout.
+     * Finish a communication scope.
+     *
+     * Without a session cache, the authenticated session for the current communication
+     * scope is ended and the server session is logged out.
+     *
+     * With a session cache, the cached token's TTL is renewed if it still matches the
+     * token held by this instance. If another process has replaced the cached token in
+     * the meantime, only this instance's now-stale token is logged out, leaving the
+     * newer cached token intact.
+     *
      * @throws Exception
      */
     public function endCommunication(): void
     {
-        $this->restAPI->keepAuth = false;
-        $this->restAPI->logout();
+        $this->restAPI->endCommunication();
     }
 
     /**
