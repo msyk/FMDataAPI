@@ -3,6 +3,7 @@
 namespace INTERMediator\FileMakerServer\RESTAPI\PersistentSession;
 
 use INTERMediator\FileMakerServer\RESTAPI\FMDataAPI;
+use INTERMediator\FileMakerServer\RESTAPI\SessionCache\SessionCacheInterface;
 use RuntimeException;
 
 /**
@@ -77,7 +78,8 @@ class PersistentSession
     public function cacheCurrentSessionToken(FMDataAPI $client): void
     {
         $token = $this->getCurrentSessionTokenOrFail($client);
-        $this->cache->set($this->cacheKey(), $token, self::TOKEN_TTL);
+//        $this->cache->set($this->cacheKey(), $token, self::TOKEN_TTL);
+        $this->cache->set($token);
     }
 
     /**
@@ -85,7 +87,8 @@ class PersistentSession
      */
     public function clearCachedSessionToken(): void
     {
-        $this->cache->delete($this->cacheKey());
+//        $this->cache->delete($this->cacheKey());
+        $this->cache->delete();
     }
 
     /**
@@ -94,7 +97,8 @@ class PersistentSession
      */
     private function getCachedSessionToken(): string|false
     {
-        return $this->cache->get($this->cacheKey());
+//        return $this->cache->get($this->cacheKey());
+        return $this->cache->get();
     }
 
     /**
