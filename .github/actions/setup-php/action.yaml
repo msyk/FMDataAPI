@@ -24,3 +24,6 @@ runs:
         coverage: none
         extensions: ${{ inputs.extensions }}
         tools: ${{ inputs.tools }}
+
+    - name: Setup Takumi Guard
+      uses: flatt-security/setup-takumi-guard-packagist@bed25614416656a553e0a5d2bd379be72adcfd4f # v1.1.0
