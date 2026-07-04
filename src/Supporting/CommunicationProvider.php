@@ -1114,8 +1114,9 @@ class CommunicationProvider
             This fixes SSL validation errors if `php.ini` doesn't have [curl] `curl.cainfo`,
             set properly of if this PEM file isn't up to date.
             Better rely on the OS certificate authorities, which is maintained automatically. */
+            $curlVersion = curl_version();
             if (defined('CURLSSLOPT_NATIVE_CA')
-                && version_compare(curl_version()['version'], '7.71', '>=')) {
+                && is_array($curlVersion) && version_compare($curlVersion['version'], '7.71', '>=')) {
                 curl_setopt($ch, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);
             }
         } else {

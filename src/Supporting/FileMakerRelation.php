@@ -61,7 +61,7 @@ class FileMakerRelation implements Iterator
     /**
      * FileMakerRelation constructor.
      *
-     * @param array<object> $responseData
+     * @param array|object $responseData
      * @param object|array|null $infoData
      * @param string $result
      * @param int $errorCode
@@ -263,7 +263,8 @@ class FileMakerRelation implements Iterator
     private function getNumberedRecord(int $num): ?FileMakerRelation
     {
         $value = null;
-        if (isset($this->data[$num])) {
+        $data = $this->data;
+        if (is_array($data) && isset($data[$num])) {
             $tmpInfo = $this->getDataInfo();
             $dataInfo = null;
             if (is_object($tmpInfo)) {
@@ -271,7 +272,7 @@ class FileMakerRelation implements Iterator
                 $dataInfo->returnedCount = 1;
             }
             $value = new FileMakerRelation(
-                $this->data[$num], $dataInfo, ($this->result == "PORTAL") ? "PORTALRECORD" : "RECORD",
+                $data[$num], $dataInfo, ($this->result == "PORTAL") ? "PORTALRECORD" : "RECORD",
                 $this->errorCode, $this->portalName, $this->restAPI);
         }
         return $value;
@@ -542,7 +543,8 @@ class FileMakerRelation implements Iterator
         switch ($this->result) {
             case "OK":
             case "PORTAL":
-                if (isset($this->data[$this->pointer])) {
+                $data = $this->data;
+                if (is_array($data) && isset($data[$this->pointer])) {
                     $tmpInfo = $this->getDataInfo();
                     $dataInfo = null;
                     if (is_object($tmpInfo)) {
@@ -551,7 +553,7 @@ class FileMakerRelation implements Iterator
                     }
                     $result = ($this->result == "PORTAL") ? "PORTALRECORD" : "RECORD";
                     $portalName = $this->portalName;
-                    $value = new FileMakerRelation($this->data[$this->pointer], $dataInfo, $result,
+                    $value = new FileMakerRelation($data[$this->pointer], $dataInfo, $result,
                         $this->errorCode, $portalName, $this->restAPI);
                 }
                 break;
