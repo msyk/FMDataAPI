@@ -19,7 +19,7 @@ jobs:
         uses: ./.github/actions/setup-php
 
       - name: Install Mago
-        run: composer config --no-plugins allow-plugins.carthage-software/mago true; composer require --dev carthage-software/mago:1.9.1
+        run: composer config --no-plugins allow-plugins.carthage-software/mago true; composer require --dev carthage-software/mago:1.42.0
 
       - name: Run Mago
         run: ./vendor/bin/mago --config .mago/mago.toml analyze
