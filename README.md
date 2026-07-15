@@ -22,6 +22,8 @@ They created pull requests. Thanks for cooperating.
 - Roger Engström
 - Stathis Askaridis
 - filiptorphage-mjuk
+- Luca Plozner
+- junie-agent
 
 ## At a Glance
 
@@ -69,7 +71,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "inter-mediator/fmdataapi":"37"
+  "msyk/fmdataapi":"37"
 } ...
 ```
 
@@ -160,3 +162,4 @@ MIT License
 - 2026-05-31: [Ver.37]
   Add [persistent session token support](https://github.com/msyk/FMDataAPI/pull/156) by @filiptorphage-mjuk.
 - 2026-XX-XX: [Ver.38] Next release version.
+  Add __isset magic method to FileMakerRelation for field existence checks by Luca Plozner and @junie-agent.
