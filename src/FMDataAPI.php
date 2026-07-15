@@ -24,7 +24,7 @@ class FMDataAPI
 {
     /* Document generating:
      * - Install PHP Documentor, and enter the command below.
-     * php ../phpDocumentor.phar run -f ./src/FMDataAPI.php -f ./src/Supporting/CommunicationProvider.php -f ./src/Supporting/FileMakerLayout.php -f ./src/Supporting/FileMakerRelation.php  -t ../INTER-Mediator_Documents/FMDataAPI
+     * php ../phpDocumentor.phar run -f ./src/FMDataAPI.php -f ./src/Supporting/CommunicationProvider.php -f ./src/Supporting/FileMakerLayout.php -f ./src/Supporting/FileMakerRelation.php -f ./src/SessionCache/AbstractSessionCache.php -f ./src/SessionCache/ApcuSessionCache.php -f ./src/SessionCache/SessionCacheInterface.php  -t ../INTER-Mediator_Documents/FMDataAPI
      */
 
     /**
