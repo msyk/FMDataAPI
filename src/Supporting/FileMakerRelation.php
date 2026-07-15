@@ -218,6 +218,22 @@ class FileMakerRelation implements Iterator
     }
 
     /**
+     * Handle the isset() function for the field or portal name.
+     * @param string $key The field or portal name.
+     * @return bool True if the field or portal exists.
+     * @ignore
+     */
+    public function __isset(string $key): bool
+    {
+        try {
+            $this->field($key);
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
      * Return the array of field names.
      *
      * @return array List of field names
