@@ -16,7 +16,8 @@
   },
   "require-dev": {
     "phpunit/phpunit": "*",
-    "phpstan/phpstan": "^2.0"
+    "phpstan/phpstan": "^2.0",
+    "vimeo/psalm": "6.15.1"
   },
   "suggest": {
     "ext-apcu": "Optional: required only by the built-in ApcuSessionCache backend."
