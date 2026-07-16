@@ -15,7 +15,7 @@
     "ext-json": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "*",
+    "phpunit/phpunit": "~13.1.0",
     "phpstan/phpstan": "^2.0"
   },
   "suggest": {
