@@ -22,7 +22,7 @@ jobs:
 #        run: composer require --dev vimeo/psalm:6.16.1
 
       - name: Install dependencies
-        run: composer install --dev --no-interaction --prefer-dist
+        run: composer update
 
       - name: Run Psalm
         run: ./vendor/bin/psalm --no-cache
