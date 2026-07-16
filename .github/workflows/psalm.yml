@@ -18,11 +18,11 @@ jobs:
       - name: Setup PHP
         uses: ./.github/actions/setup-php
 
-#      - name: Install Psalm
-#        run: composer require --dev vimeo/psalm:6.16.1
-
       - name: Install dependencies
         run: composer update
+
+      - name: Install Psalm
+        run: composer require --dev vimeo/psalm:6.16.1
 
       - name: Run Psalm
         run: ./vendor/bin/psalm --no-cache
