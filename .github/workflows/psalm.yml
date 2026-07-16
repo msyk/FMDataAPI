@@ -18,11 +18,11 @@ jobs:
       - name: Setup PHP
         uses: ./.github/actions/setup-php
 
-      - name: Install dependencies
-        run: composer update
+      - name: Remove Lock File
+        run: rm composer.lock
 
       - name: Install Psalm
-        run: composer require --dev vimeo/psalm:*
+        run: composer require --dev vimeo/psalm:6.15.1
 
       - name: Run Psalm
         run: ./vendor/bin/psalm --no-cache
