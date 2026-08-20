@@ -339,13 +339,15 @@ class FileMakerLayout
      * Duplicate the record.
      * @param int|null $recordId The valid recordId value to duplicate.
      * @param array|null $script scripts that should execute the right timings. See FileMakerRelation::query().
+     * @return int|null The recordId of created record.
+     * If the returned value is an integer larger than 0, it shows one record was created.
      * @throws Exception In case of any error, an exception arises.
      */
     public function duplicate(int|null   $recordId,
-                              array|null $script = null): void
+                              array|null $script = null): int|null
     {
         if (is_null($recordId)) {
-            return;
+            return null;
         }
         if ($this->restAPI->login()) {
             $request = "{}"; //FileMaker expects an empty object, so we have to set "{}" here
@@ -355,8 +357,12 @@ class FileMakerLayout
                 $request = $this->buildScriptParameters($script);
             }
             $this->restAPI->callRestAPI($params, true, 'POST', $request, $headers); // Throw Exception
+            $result = $this->restAPI->responseBody;
             $this->restAPI->storeToProperties();
             $this->restAPI->logout();
+            return $result->response->recordId;
+        } else {
+            return null;
         }
     }
 

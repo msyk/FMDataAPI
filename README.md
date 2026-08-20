@@ -163,3 +163,4 @@ MIT License
   Add [persistent session token support](https://github.com/msyk/FMDataAPI/pull/156) by @filiptorphage-mjuk.
 - 2026-XX-XX: [Ver.38] Next release version.
   Add __isset magic method to FileMakerRelation for field existence checks by Luca Plozner and @junie-agent.
+  The duplicate method of the FileMakerRelation class returns the recordId of the created record.
