@@ -300,7 +300,7 @@ class FileMakerLayout
      * @param array|null $data Associated array contains the initial values.
      * Keys are field names and values are these initial values.
      * @param array|null $portal Associated array contains the modifying values in the portal.
-     * Ex.: {"<PortalName>"=>{"<FieldName>"=>"<Value>"...}}. FieldName has to "<TOCName>::<FieldName>".
+     * Ex.: {"<PortalName>"=>{"<FieldName>"=>"<Value>"...}}. FieldName has to be "<TOCName>::<FieldName>".
      * @param array|null $script scripts that should execute the right timings. See FileMakerRelation::query().
      * @param int|null $dateformats Use this option to specify date formats for date, time, and timestamp fields. The relevant values are: 0 for US, 1 for file locale, or 2 for ISO8601
      * @return int|null The recordId of created record.
