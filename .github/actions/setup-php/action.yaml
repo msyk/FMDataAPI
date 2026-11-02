@@ -18,7 +18,7 @@ runs:
   using: "composite"
   steps:
     - name: Setup PHP
-      uses: shivammathur/setup-php@bc12f5cef4c73a871331e196ff380d38232ba293 # v2.40.0-beta
+      uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2.40.0
       with:
         php-version: ${{ inputs.php-version }}
         coverage: none
