@@ -422,11 +422,9 @@ class FileMakerRelation implements Iterator
             switch ($this->result) {
                 case "OK":
                     if (isset($this->data[$this->pointer])) {
-                        if (isset($this->data[$this->pointer]->fieldData->$name)
-                        ) {
+                        if (isset($this->data[$this->pointer]->fieldData->$name)) {
                             $value = $this->data[$this->pointer]->fieldData->$name;
-                        } elseif (isset($this->data[$this->pointer]->portalData->$name)
-                        ) {
+                        } elseif (isset($this->data[$this->pointer]->portalData->$name)) {
                             $infoData = property_exists($this->data[$this->pointer], 'portalDataInfo') ?
                                 $this->data[$this->pointer]->portalDataInfo : null;
                             $value = new FileMakerRelation($this->data[$this->pointer]->portalData->$name,
@@ -437,8 +435,7 @@ class FileMakerRelation implements Iterator
                     }
                     break;
                 case "PORTAL":
-                    if (isset($this->data[$this->pointer]->$fieldName)
-                    ) {
+                    if (isset($this->data[$this->pointer]->$fieldName)) {
                         $value = $this->data[$this->pointer]->$fieldName;
                     }
                     break;
@@ -467,10 +464,14 @@ class FileMakerRelation implements Iterator
         if (is_null($value)) {
             throw new Exception("Field {$fieldName} doesn't exist.");
         }
-        if (!is_object($value)) {
-            $value = (string)$value;
+        if ($value instanceof FileMakerRelation) {
+            return $value;
         }
-        if ($this->restAPI && $this->restAPI->fieldHTMLEncoding && !is_object($value)) {
+        if (!is_scalar($value)) {
+            throw new Exception("Field {$fieldName} has an unsupported value type.");
+        }
+        $value = (string)$value;
+        if ($this->restAPI && $this->restAPI->fieldHTMLEncoding) {
             $value = htmlspecialchars($value);
         }
         return $value;
