@@ -15,7 +15,7 @@ use Exception;
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @property-read FileMakerLayout $layout Returns the FileMakerLayout object from the layout named with the property.
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
- * @version 37
+ * @version 38
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2026 Masayuki Nii
  * (Claris FileMaker is a registered trademark of Claris International Inc. in the U.S. and other countries.)

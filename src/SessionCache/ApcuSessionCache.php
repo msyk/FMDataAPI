@@ -29,7 +29,7 @@ use RuntimeException;
  *
  * @package INTERMediator\FileMakerServer\RESTAPI\SessionCache
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 37
+ * @version 38
  */
 class ApcuSessionCache extends AbstractSessionCache
 {

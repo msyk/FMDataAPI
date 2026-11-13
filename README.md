@@ -1,4 +1,4 @@
-# FMDataAPI Ver.37 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
+# FMDataAPI Ver.38 [![Build Status](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml/badge.svg)](https://github.com/msyk/FMDataAPI/actions/workflows/php.yml)
 
 by Masayuki Nii (nii@msyk.net)
 
@@ -71,7 +71,7 @@ FMDataAPI has "composer.json," so you can add your composer.json file in your pr
 ...
 "require": {
   ...
-  "msyk/fmdataapi":"37"
+  "msyk/fmdataapi":"38"
 } ...
 ```
 
@@ -161,8 +161,9 @@ MIT License
   Deprecated function curl_close was removed (Thanks to @PGMMattias and @matsuo).
 - 2026-05-31: [Ver.37]
   Add [persistent session token support](https://github.com/msyk/FMDataAPI/pull/156) by @filiptorphage-mjuk.
-- 2026-XX-XX: [Ver.38] Next release version.
+- 2026-11-13: [Ver.38]
   Add __isset magic method to FileMakerRelation for field existence checks by Luca Plozner and @junie-agent.
   The duplicate method of the FileMakerRelation class returns the recordId of the created record.
   A lot of refactoring was done to improve code quality with SWE-2 Flash Max.
+- 2027-XX-XX: [Ver.39] Next release version.
 

@@ -11,7 +11,7 @@ use Exception;
  *
  * @package INTERMediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
- * @version 37
+ * @version 38
  * @author Masayuki Nii <nii@msyk.net>
  * @copyright 2017-2026 Masayuki Nii (Claris FileMaker is registered trademarks of Claris International Inc. in the U.S. and other countries.)
  */
