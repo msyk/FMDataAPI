@@ -107,6 +107,11 @@
   "config": {
     "allow-plugins": {
       "symfony/flex": true
+    },
+    "policy": {
+      "cooldown": {
+        "period": "8 days"
+      }
     }
   }
 }
