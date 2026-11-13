@@ -213,11 +213,11 @@ class FileMakerRelation implements Iterator
     /**
      * @param string $key The field or portal name.
      *
-     * @return FileMakerRelation|string|null
+     * @return FileMakerRelation|string
      * @throws Exception
      * @ignore
      */
-    public function __get(string $key): FileMakerRelation|string|null
+    public function __get(string $key): FileMakerRelation|string
     {
         return $this->field($key);
     }
