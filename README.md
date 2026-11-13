@@ -164,3 +164,5 @@ MIT License
 - 2026-XX-XX: [Ver.38] Next release version.
   Add __isset magic method to FileMakerRelation for field existence checks by Luca Plozner and @junie-agent.
   The duplicate method of the FileMakerRelation class returns the recordId of the created record.
+  A lot of refactoring was done to improve code quality with SWE-2 Flash Max.
+

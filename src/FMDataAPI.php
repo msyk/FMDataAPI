@@ -11,7 +11,7 @@ use Exception;
 /**
  * Class FMDataAPI is the wrapper of The REST API in Claris FileMaker Server and FileMaker Cloud for AWS.
  *
- * @package INTER-Mediator\FileMakerServer\RESTAPI
+ * @package INTERMediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @property-read FileMakerLayout $layout Returns the FileMakerLayout object from the layout named with the property.
  *    If the layout doesn't exist, no error arises here. Any errors might arise on methods of FileMakerLayout class.
@@ -34,10 +34,10 @@ class FMDataAPI
     private array $layoutTable = [];
 
     /**
-     * @var null|CommunicationProvider Keeping the CommunicationProvider object.
+     * @var CommunicationProvider Keeping the CommunicationProvider object.
      * @ignore
      */
-    private CommunicationProvider|null $provider;
+    private CommunicationProvider $provider;
 
     /**
      * FMDataAPI constructor. If you want to activate OAuth authentication, $user and $password are set as
@@ -78,10 +78,6 @@ class FMDataAPI
                                 bool                       $isUnitTest = false,
                                 SessionCacheInterface|null $sessionCache = null)
     {
-        if (is_null($password)) {
-            $password = "password"; // For testing purpose.
-        }
-
         if (!$isUnitTest) {
             $this->provider = new Supporting\CommunicationProvider($solution, $user, $password, $host, $port, $protocol, $fmDataSource, $sessionCache);
         } else {
@@ -182,7 +178,7 @@ class FMDataAPI
      * with the htmlspecialchars.
      * This means a kind of compatible mode to FileMaker API for PHP.
      * This feature works whole the FMDataAPI library.
-     * @param bool $value Turn on to verify the certificate if the value is true.
+     * @param bool $value Turn on the HTML encoding if the value is true.
      */
     public function setFieldHTMLEncoding(bool $value): void
     {
@@ -229,7 +225,7 @@ class FMDataAPI
      * The error message of curl, text representation of code.
      * @return string|null The error message of curl.
      */
-    public function curlErrorMessage(): null|string
+    public function curlErrorMessage(): string|null
     {
         return $this->provider->curlError;
     }
@@ -321,13 +317,27 @@ class FMDataAPI
      */
     public function setGlobalField(array $fields): void
     {
-        if ($this->provider->login()) {
+        if (!$this->provider->login()) {
+            if ($this->provider->throwExceptionInError) {
+                throw new Exception("Failed to login to the FileMaker Data API. " .
+                    "HTTP status: {$this->httpStatus()}, error code: {$this->errorCode()}, " .
+                    "error message: {$this->errorMessage()}");
+            }
+            return;
+        }
+        try {
             $headers = ["Content-Type" => "application/json"];
             $params = ["globals" => null];
             $request = ["globalFields" => $fields];
             $this->provider->callRestAPI($params, true, "PATCH", $request, $headers); // Throw Exception
             $this->provider->storeToProperties();
-            $this->provider->logout();
+        } finally {
+            try {
+                $this->provider->logout();
+            } catch (Exception $e) {
+                // A logout failure must not mask the update result.
+                // The server-side session expires by itself after the Data API timeout.
+            }
         }
     }
 
@@ -384,10 +394,10 @@ class FMDataAPI
     /**
      * Get the table occurrence name of just a previous query.
      * Usually this method returns the information of the FileMakerRelation class.
-     * @return null|string  The table name.
+     * @return string|null  The table name.
      * @see FileMakerRelation::getTargetTable()
      */
-    public function getTargetTable(): null|string
+    public function getTargetTable(): string|null
     {
         return $this->provider->targetTable;
     }
@@ -407,7 +417,7 @@ class FMDataAPI
      * Get the founded record count of just a previous query.
      * Usually this method returns the information of the FileMakerRelation class.
      * @return null|int  The founded record count.
-     * @see FileMakerRelation::getFoundCount(): null|int
+     * @see FileMakerRelation::getFoundCount()
      */
     public function getFoundCount(): null|int
     {

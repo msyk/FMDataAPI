@@ -27,7 +27,7 @@ use RuntimeException;
  * re-authentication against the FileMaker Server. This is considered an
  * acceptable trade-off given the constraints of the current implementation.
  *
- * @package INTER-Mediator\FileMakerServer\RESTAPI\SessionCache
+ * @package INTERMediator\FileMakerServer\RESTAPI\SessionCache
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @version 37
  */

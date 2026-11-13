@@ -35,6 +35,10 @@ class TestProvider extends CommunicationProvider
                                 array|null                 $fmDataSource = null,
                                 SessionCacheInterface|null $sessionCache = null)
     {
+        if (is_null($password)) {
+            $password = "password"; // For testing purpose.
+        }
+        
         parent::__construct($solution, $user, $password, $host, $port, $protocol, $fmDataSource, $sessionCache);
         $this->buildResponses();
     }

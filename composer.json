@@ -26,8 +26,7 @@
       "INTERMediator\\FileMakerServer\\RESTAPI\\": "src/"
     },
     "classmap": [
-      "test/FMDataAPIUnitTest.php",
-      "test/TestProvider.php"
+      "test/FMDataAPIUnitTest.php"
     ]
   },
   "description": "FMDataAPI is the class library in PHP for accessing FileMaker database with FileMaker Data API.",

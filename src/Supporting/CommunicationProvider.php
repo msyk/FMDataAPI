@@ -10,7 +10,7 @@ use INTERMediator\FileMakerServer\RESTAPI\SessionCache\SessionCacheInterface;
 /**
  * Class CommunicationProvider is for internal use to communicate with FileMaker Server.
  *
- * @package INTER-Mediator\FileMakerServer\RESTAPI
+ * @package INTERMediator\FileMakerServer\RESTAPI
  * @link https://github.com/msyk/FMDataAPI GitHub Repository
  * @version 37
  * @author Masayuki Nii <nii@msyk.net>
@@ -332,8 +332,11 @@ class CommunicationProvider
                 // if the cache write fails, the token will expire naturally within 15 minutes.
                 // under sustained cache failures with high concurrency, orphaned tokens could
                 // approach FileMaker's session cap (error 953).
-                $this->sessionCache->set($this->accessToken); // renew TTL
-                $this->accessToken = null;
+                try {
+                    $this->sessionCache->set($this->accessToken); // renew TTL
+                } finally {
+                    $this->accessToken = null;
+                }
                 return;
             }
             // Mismatch: another worker replaced the cached token while we were active.
@@ -366,25 +369,29 @@ class CommunicationProvider
             $url .= "/fmi/data/v$vStr" . ((!$isSystem) ? "/databases/$this->solution" : "");
         }
         foreach ($params as $key => $value) {
-            $url .= "/$key" . (is_null($value) ? "" : "/$value");
+            $url .= "/$key" . (is_null($value) ? "" : "/" . rawurlencode((string)$value));
+        }
+        if (is_string($request)) {
+            $request = json_decode($request, true);
         }
         if (!empty($request) && in_array($methodLower, array('get', 'delete'))) {
-            $url .= '?';
+            $queryParts = [];
             foreach ($request as $key => $value) {
-                if (key($request) !== $key) {
-                    $url .= '&';
-                }
                 if ($key === 'sort' && is_array($value)) {
                     $sortParam = $this->_buildSortParameters($value);
                     if ($sortParam !== '[]') {
-                        $url .= '_' . $key . '=' . $sortParam;
+                        $queryParts[] = '_' . $key . '=' . $sortParam;
                     }
                 } elseif ($key === 'limit' || $key === 'offset') {
-                    $url .= '_' . $key . '=' . (is_array($value) ? json_encode($value) : $value);
+                    $queryParts[] = '_' . $key . '=' . (is_array($value) ? json_encode($value) : $value);
                 } else {
                     // handling portal object name etc.
-                    $url .= $key . '=' . (is_array($value) ? $this->_json_urlencode($value) : $value);
+                    $queryParts[] = rawurlencode((string)$key) . '=' .
+                        (is_array($value) ? $this->_json_urlencode($value) : rawurlencode((string)$value));
                 }
+            }
+            if (!empty($queryParts)) {
+                $url .= '?' . implode('&', $queryParts);
             }
         }
         return $url;
@@ -432,13 +439,13 @@ class CommunicationProvider
         // cast a number
         if (isset($result['fieldData'])) {
             foreach ($result['fieldData'] as $fieldName => $fieldValue) {
-                $result['fieldData'][$fieldName] = (string)$fieldValue;
+                $result['fieldData'][$fieldName] = is_null($fieldValue) ? null : (string)$fieldValue;
             }
         }
         if (isset($result['query'])) {
             foreach ($result['query'] as $key => $array) {
                 foreach ($array as $fieldName => $fieldValue) {
-                    if (!is_array($fieldValue)) {
+                    if (!is_array($fieldValue) && !is_null($fieldValue)) {
                         $result['query'][$key][$fieldName] = (string)$fieldValue;
                     }
                 }
@@ -479,7 +486,7 @@ class CommunicationProvider
             }
         } catch (Exception $e) {
             if ($this->httpStatus == 200 && $this->errorCode == 0) {
-                $returnValue = array("version" => 17);
+                $returnValue = (object)array("version" => 17);
             } else {
                 throw $e;
             }
@@ -507,12 +514,15 @@ class CommunicationProvider
         }
         $params = ["databases" => null];
         $request = [];
-        $this->callRestAPI($params, false, "GET", $request, $headers, true); // Throw Exception
-        $this->storeToProperties();
-        if ($this->httpStatus == 200 && $this->errorCode == 0) {
-            $returnValue = $this->responseBody->response->databases;
+        try {
+            $this->callRestAPI($params, false, "GET", $request, $headers, true); // Throw Exception
+            $this->storeToProperties();
+            if ($this->httpStatus == 200 && $this->errorCode == 0) {
+                $returnValue = $this->responseBody->response->databases;
+            }
+        } finally {
+            $this->logoutQuietly();
         }
-        $this->logout();
         return $returnValue;
     }
 
@@ -524,16 +534,19 @@ class CommunicationProvider
     public function getLayoutNames(): null|array
     {
         $returnValue = null;
-        if ($this->login()) {
-            $params = ["layouts" => null];
-            $request = [];
-            $headers = [];
-            $this->callRestAPI($params, true, "GET", $request, $headers); // Throw Exception
-            $this->storeToProperties();
-            if ($this->httpStatus == 200 && $this->errorCode == 0) {
-                $returnValue = $this->responseBody->response->layouts;
+        if ($this->loginOrFail()) {
+            try {
+                $params = ["layouts" => null];
+                $request = [];
+                $headers = [];
+                $this->callRestAPI($params, true, "GET", $request, $headers); // Throw Exception
+                $this->storeToProperties();
+                if ($this->httpStatus == 200 && $this->errorCode == 0) {
+                    $returnValue = $this->responseBody->response->layouts;
+                }
+            } finally {
+                $this->logoutQuietly();
             }
-            $this->logout();
         }
         return $returnValue;
     }
@@ -545,16 +558,19 @@ class CommunicationProvider
     public function getScriptNames(): null|array
     {
         $returnValue = null;
-        if ($this->login()) {
-            $params = ["scripts" => null];
-            $request = [];
-            $headers = [];
-            $this->callRestAPI($params, true, "GET", $request, $headers); // Throw Exception
-            $this->storeToProperties();
-            if ($this->httpStatus == 200 && $this->errorCode == 0) {
-                $returnValue = $this->responseBody->response->scripts;
+        if ($this->loginOrFail()) {
+            try {
+                $params = ["scripts" => null];
+                $request = [];
+                $headers = [];
+                $this->callRestAPI($params, true, "GET", $request, $headers); // Throw Exception
+                $this->storeToProperties();
+                if ($this->httpStatus == 200 && $this->errorCode == 0) {
+                    $returnValue = $this->responseBody->response->scripts;
+                }
+            } finally {
+                $this->logoutQuietly();
             }
-            $this->logout();
         }
         return $returnValue;
     }
@@ -646,6 +662,41 @@ class CommunicationProvider
             $this->callRestAPIWithoutRetry($params, true, "DELETE"); // Throw Exception
         } finally {
             $this->accessToken = null;
+        }
+    }
+
+    /**
+     * Log in to the FileMaker Data API.
+     * If the login fails, an exception is thrown when exceptions are enabled.
+     * @return bool True if logged in. False if the login failed and exceptions are disabled.
+     * @throws Exception In case of any error, an exception arises.
+     * @ignore
+     */
+    private function loginOrFail(): bool
+    {
+        if ($this->login()) {
+            return true;
+        }
+        if ($this->throwExceptionInError) {
+            throw new Exception("Failed to login to the FileMaker Data API. " .
+                "HTTP status: {$this->httpStatus}, error code: {$this->errorCode}, " .
+                "error message: {$this->errorMessage}");
+        }
+        return false;
+    }
+
+    /**
+     * Log out from the FileMaker Data API without throwing an exception.
+     * A logout failure must not mask the result of the database operation.
+     * The server-side session expires by itself after the Data API timeout.
+     * @ignore
+     */
+    private function logoutQuietly(): void
+    {
+        try {
+            $this->logout();
+        } catch (Exception $e) {
+            // Ignore the logout error.
         }
     }
 
@@ -750,13 +801,14 @@ class CommunicationProvider
         $this->accessToken = null;
         $this->keepAuth = false;
         try {
-            if (!$this->login()) {
-                $this->resumeScopeAfterReauth = $resumeScope;
-                return;
-            }
+            $loginSucceeded = $this->login();
         } catch (Exception $e) {
             $this->resumeScopeAfterReauth = $resumeScope;
-            throw new Exception($e->getMessage(), $e->getCode(), $firstAttempt);
+            throw $this->chainWithFirstAttempt($e, $firstAttempt);
+        }
+        if (!$loginSucceeded) {
+            $this->resumeScopeAfterReauth = $resumeScope;
+            throw $this->chainWithFirstAttempt(new Exception("The second log-in attempt failed."), $firstAttempt);
         }
 
         // The login was successful here — retry the original call
@@ -764,8 +816,24 @@ class CommunicationProvider
         try {
             $this->callRestAPIWithoutRetry($params, $isAddToken, $method, $request, $addHeader, $isSystem, $directPath);
         } catch (Exception $e) {
-            throw new Exception($e->getMessage(), $e->getCode(), $firstAttempt);
+            throw $this->chainWithFirstAttempt($e, $firstAttempt);
         }
+    }
+
+    /**
+     * Chains $e with the original token error so that it stays reachable via getPrevious().
+     * Returns $e unchanged when there is no earlier exception, preserving its stack trace.
+     * @param Exception $e The exception raised by the retried request or the re-login.
+     * @param Exception|null $firstAttempt The exception raised by the first attempt, if any.
+     * @return Exception
+     * @ignore
+     */
+    private function chainWithFirstAttempt(Exception $e, ?Exception $firstAttempt): Exception
+    {
+        if ($firstAttempt === null) {
+            return $e;
+        }
+        return new Exception($e->getMessage(), $e->getCode(), $firstAttempt);
     }
 
     /**
@@ -841,10 +909,11 @@ class CommunicationProvider
         }
         if ($this->throwExceptionInError) {
             $httpStatus = $this->getCurlInfo("http_code");
-            $errorCode = $this->responseBody && property_exists($this->responseBody->messages[0], 'code') ?
-                intval($this->responseBody->messages[0]->code) : -1;
-            $errorMessage = $this->responseBody && property_exists($this->responseBody->messages[0], 'message') ?
-                $this->responseBody->messages[0]->message : 'ERROR';
+            $firstMessage = $this->extractFirstMessage();
+            $errorCode = $firstMessage !== null && property_exists($firstMessage, 'code') ?
+                intval($firstMessage->code) : -1;
+            $errorMessage = $firstMessage !== null && property_exists($firstMessage, 'message') ?
+                $firstMessage->message : 'ERROR';
             $description = '';
             if ($this->curlErrorNumber > 0) {
                 $description .= "cURL in PHP / Error Code: {$this->curlErrorNumber}, Error Message: {$this->curlError}. ";
@@ -877,26 +946,39 @@ class CommunicationProvider
     public function accessToContainer(string $url): string
     {
         $cookieFile = tempnam(sys_get_temp_dir(), "CURLCOOKIE"); // Create a cookie file.
-
-        // Visit the container URL to set the cookie.
-        $ch = $this->_createCurlHandle($url);
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
-        curl_exec($ch);
-        if (curl_errno($ch) !== 0) {
-            $errMsg = curl_error($ch);
-            throw new Exception("Error in creating cookie file. {$errMsg}");
+        if ($cookieFile === false) {
+            throw new Exception("Failed to create a temporary cookie file.");
         }
 
-        // Visit the container URL again.
-        $ch = $this->_createCurlHandle($url);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
-        $output = curl_exec($ch);
-        if (curl_errno($ch) !== 0) {
+        try {
+            // Visit the container URL to set the cookie.
+            $ch = $this->_createCurlHandle($url);
+            curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
+            $result = curl_exec($ch);
+            $errno = curl_errno($ch);
             $errMsg = curl_error($ch);
-            throw new Exception("Error in downloading content of file. {$errMsg}");
-        }
+//            curl_close($ch);
+            if ($errno !== 0 || $result === false) {
+                throw new Exception("Error in creating cookie file. {$errMsg}");
+            }
 
-        return base64_encode($output); // Process the data as needed.
+            // Visit the container URL again.
+            $ch = $this->_createCurlHandle($url);
+            curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
+            $output = curl_exec($ch);
+            $errno = curl_errno($ch);
+            $errMsg = curl_error($ch);
+//            curl_close($ch);
+            if ($errno !== 0 || $output === false) {
+                throw new Exception("Error in downloading content of file. {$errMsg}");
+            }
+
+            return base64_encode($output); // Process the data as needed.
+        } finally {
+            if (file_exists($cookieFile)) {
+                unlink($cookieFile);
+            }
+        }
     }
 
     /**
@@ -920,11 +1002,12 @@ class CommunicationProvider
 
         $rbody = $this->responseBody;
         if (is_object($rbody)) {
-            if (property_exists($rbody, 'messages')) {
-                $result = $rbody->messages[0];
+            $firstMessage = $this->extractFirstMessage();
+            if ($firstMessage !== null) {
+                $code = property_exists($firstMessage, 'code') ? intval($firstMessage->code) : -1;
                 $this->httpStatus = $this->getCurlInfo("http_code");
-                $this->errorCode = property_exists($result, 'code') ? $result->code : -1;
-                $this->errorMessage = property_exists($result, 'message') && $result->code != 0 ? $result->message : null;
+                $this->errorCode = $code;
+                $this->errorMessage = property_exists($firstMessage, 'message') && $code != 0 ? $firstMessage->message : null;
             }
             if (property_exists($rbody, 'response')) {
                 $result = $rbody->response;
@@ -1034,17 +1117,32 @@ class CommunicationProvider
     }
 
     /**
+     * Returns the first entry of the response "messages" array as an object, or null when the
+     * response body does not contain a usable message.
+     * @return object|null
+     * @ignore
+     */
+    private function extractFirstMessage(): ?object
+    {
+        if (is_object($this->responseBody) &&
+            property_exists($this->responseBody, 'messages') &&
+            is_array($this->responseBody->messages) &&
+            isset($this->responseBody->messages[0]) &&
+            is_object($this->responseBody->messages[0])) {
+            return $this->responseBody->messages[0];
+        }
+        return null;
+    }
+
+    /**
      * @return int
      * @ignore
      */
     private function extractErrorCode(): int
     {
-        $errorCode = -1;
-        if (is_object($this->responseBody) && property_exists($this->responseBody, 'messages')) {
-            $result = $this->responseBody->messages[0];
-            $errorCode = property_exists($result, 'code') ? intval($result->code) : -1;
-        }
-        return $errorCode;
+        $firstMessage = $this->extractFirstMessage();
+        return $firstMessage !== null && property_exists($firstMessage, 'code') ?
+            intval($firstMessage->code) : -1;
     }
 
     /**
@@ -1133,10 +1231,12 @@ class CommunicationProvider
     {
         $data = [
             $this->user,
+            $this->password,
             $this->solution,
             (string)$this->port,
             $this->host,
             $this->protocol,
+            (string)json_encode($this->fmDataSource),
         ];
 
         $hash = hash('sha256', implode("\0", $data));

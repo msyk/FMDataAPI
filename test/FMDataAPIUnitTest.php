@@ -9,6 +9,7 @@
 namespace INTERMediator\FileMakerServer\RESTAPI;
 
 use \PHPUnit\Framework\TestCase;
+use Exception;
 
 class FMDataAPIUnitTest extends TestCase
 {
@@ -110,8 +111,12 @@ class FMDataAPIUnitTest extends TestCase
     {
         $fm = new FMDataAPI("TestDB", "web", null, "localserver123",
             "443", "https", null, true);
-        $result = $fm->person_layout->query();    // Host name is DNS unaware.
-        $this->assertNull($result, 'No results returns.');
+        try {
+            $fm->person_layout->query();    // Host name is DNS unaware.
+            $this->fail('An exception should be thrown on login failure.');
+        } catch (Exception $e) {
+            $this->assertStringContainsString('Failed to login', $e->getMessage());
+        }
         $this->assertEquals($fm->httpStatus(), 0, 'Returns 0 for http status.');
         $this->assertEquals($fm->errorCode(), -1, 'The error code has to be -1.');
 //        $this->assertEquals($fm->curlErrorCode(), 6, 'The error code has to be 6.');
